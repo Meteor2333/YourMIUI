@@ -1,5 +1,4 @@
--keep class cn.coderstory.miui.water.MainHook
-
+-keep @androidx.annotation.Keep class cn.coderstory.miwater.*
 -repackageclasses
 -allowaccessmodification
 -overloadaggressively

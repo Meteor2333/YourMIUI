@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">淘米水</string>
-    <string name="module_description">MIUI广告救星</string>
+    <string name="module_description">一款优化 MIUI 系统中各种不友好功能的模块</string>
     <string name="corepatch">本插件兼容MIUI 13\n基于红米K40 MIUI 13.0.7版本适配\nPower By CoderStory</string>
     <string name="removeInstallerAd">安装包管理器</string>
     <string name="removeInstallerAuth">禁用账户验证</string>

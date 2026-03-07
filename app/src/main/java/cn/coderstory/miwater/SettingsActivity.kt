@@ -1,4 +1,4 @@
-package cn.coderstory.miui.water
+package cn.coderstory.miwater
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -23,11 +23,12 @@ class SettingsActivity : FragmentActivity() {
         }
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("WorldReadableFiles")
     private fun checkEdXposed() {
         try {
             getSharedPreferences("conf", MODE_WORLD_READABLE)
-        } catch (exception: SecurityException) {
+        } catch (_: SecurityException) {
             AlertDialog.Builder(this)
                 .setMessage(getString(R.string.not_supported))
                 .setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int -> finish() }
@@ -42,13 +43,13 @@ class SettingsActivity : FragmentActivity() {
         }
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
-            if(preference.key == "removeSplashAd" ){
-                if((preference as SwitchPreference).isChecked){
+            if (preference.key == "removeSplashAd") {
+                if ((preference as SwitchPreference).isChecked) {
                     Shell.su("rm -rf /storage/emulated/0/Android/data/com.miui.systemAdSolution/files/miad")
                         .exec()
                     Shell.su("touch /storage/emulated/0/Android/data/com.miui.systemAdSolution/files/miad")
                         .exec()
-                }else{
+                } else {
                     Shell.su("rm -rf /storage/emulated/0/Android/data/com.miui.systemAdSolution/files/miad")
                         .exec()
                 }

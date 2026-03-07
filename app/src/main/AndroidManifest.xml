@@ -4,12 +4,14 @@
 
     <application
         android:allowBackup="false"
+        android:fullBackupContent="@xml/data_extraction_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="MissingApplicationIcon">
         <activity
-            android:name="cn.coderstory.miui.water.SettingsActivity"
+            android:name="cn.coderstory.miwater.SettingsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
