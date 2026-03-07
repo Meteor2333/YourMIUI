@@ -1,8 +1,15 @@
-# mi_water
-a lsposed module for miui 一款基于lsposed的去除miui系统中各种不友好使用限制的模块
+# MiWater
 
-淘米水
-一款基于lsposed开发的针对miui系统的插件
-实现了去除系统自带广告，去除app安装限制等功能
+## 介绍 
+一款优化 `MIUI` 系统中各种不友好功能的模块，基于 [LSPosed](https://github.com/LSPosed/LSPosed)
 
-基于GPLV2协议公开源码
+## 功能列表
+- 移除某些系统软件的开屏广告和应用内广告
+- 移除软件安装器内的赞助商软件推荐
+- 移除短信软件中的推广内容
+- 移除设置中更改危险功能时的各种确认等待
+- 移除安装未知软件时的账户验证
+- 移除软件安装限制
+
+## 许可证
+MIT
