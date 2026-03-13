@@ -1,6 +1,5 @@
-package cn.coderstory.miwater
+package cn.coderstory.miwater.activity
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -8,13 +7,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import cn.coderstory.miwater.R
+import cn.coderstory.miwater.helper.XposedHelper
 import com.topjohnwu.superuser.Shell
 
 class SettingsActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        checkEdXposed()
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
@@ -23,12 +23,13 @@ class SettingsActivity : FragmentActivity() {
         }
     }
 
-    @Suppress("DEPRECATION")
-    @SuppressLint("WorldReadableFiles")
+    override fun onStart() {
+        super.onStart()
+        checkEdXposed()
+    }
+
     private fun checkEdXposed() {
-        try {
-            getSharedPreferences("conf", MODE_WORLD_READABLE)
-        } catch (_: SecurityException) {
+        if (!XposedHelper.isXposedActive()) {
             AlertDialog.Builder(this)
                 .setMessage(getString(R.string.not_supported))
                 .setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int -> finish() }

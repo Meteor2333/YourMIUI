@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="MissingApplicationIcon">
         <activity
-            android:name="cn.coderstory.miwater.SettingsActivity"
+            android:name="cn.coderstory.miwater.activity.SettingsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
