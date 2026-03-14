@@ -1,32 +1,15 @@
-@file:Suppress("unused")
+@file:Suppress("UnUsed", "RemoveRedundantQualifierName")
 
 package cn.coderstory.miwater.helper
 
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
-import java.lang.Boolean
-import java.lang.Byte
-import java.lang.Double
-import java.lang.Float
-import java.lang.Long
-import java.lang.Short
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import kotlin.Any
-import kotlin.Array
-import kotlin.Int
-import kotlin.String
-import kotlin.Suppress
-import kotlin.also
-import kotlin.apply
-import kotlin.arrayOf
-import kotlin.let
 import kotlin.reflect.KClass
-import kotlin.run
-import kotlin.to
 
 class ReflectHelper<T : Any>(private val delegate: Class<T>) {
     companion object {
@@ -170,41 +153,41 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
          * Maps primitive `Class`es to their corresponding wrapper `Class`.
          */
         private val primitiveWrapperMap = mapOf(
-            Boolean.TYPE to Boolean::class.java,
-            Byte.TYPE to Byte::class.java,
-            Character.TYPE to Character::class.java,
-            Short.TYPE to Short::class.java,
-            Integer.TYPE to Integer::class.java,
-            Long.TYPE to Long::class.java,
-            Double.TYPE to Double::class.java,
-            Float.TYPE to Float::class.java,
-            Void.TYPE to Void::class.java,
+            java.lang.Boolean.TYPE to Boolean::class.java,
+            java.lang.Byte.TYPE to Byte::class.java,
+            java.lang.Character.TYPE to Character::class.java,
+            java.lang.Short.TYPE to Short::class.java,
+            java.lang.Integer.TYPE to Integer::class.java,
+            java.lang.Long.TYPE to Long::class.java,
+            java.lang.Double.TYPE to Double::class.java,
+            java.lang.Float.TYPE to Float::class.java,
+            java.lang.Void.TYPE to Void::class.java,
         )
 
         /**
          * Maps wrapper `Class`es to their corresponding primitive types.
          */
         private val wrapperPrimitiveMap = mapOf(
-            Boolean::class.java to Boolean.TYPE,
-            Byte::class.java to Byte.TYPE,
-            Character::class.java to Character.TYPE,
-            Short::class.java to Short.TYPE,
-            Integer::class.java to Integer.TYPE,
-            Long::class.java to Long.TYPE,
-            Double::class.java to Double.TYPE,
-            Float::class.java to Float.TYPE,
-            Void::class.java to Void.TYPE,
+            Boolean::class.java to java.lang.Boolean.TYPE,
+            Byte::class.java to java.lang.Byte.TYPE,
+            Character::class.java to java.lang.Character.TYPE,
+            Short::class.java to java.lang.Short.TYPE,
+            Integer::class.java to java.lang.Integer.TYPE,
+            Long::class.java to java.lang.Long.TYPE,
+            Double::class.java to java.lang.Double.TYPE,
+            Float::class.java to java.lang.Float.TYPE,
+            Void::class.java to java.lang.Void.TYPE,
         )
 
         /** Array of primitive number types ordered by "promotability"  */
         private val orderedPrimitiveTypes = arrayOf(
-            Byte.TYPE,
-            Short.TYPE,
-            Character.TYPE,
-            Integer.TYPE,
-            Long.TYPE,
-            Float.TYPE,
-            Double.TYPE
+            java.lang.Byte.TYPE,
+            java.lang.Short.TYPE,
+            java.lang.Character.TYPE,
+            java.lang.Integer.TYPE,
+            java.lang.Long.TYPE,
+            java.lang.Float.TYPE,
+            java.lang.Double.TYPE
         )
     }
 
@@ -233,7 +216,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
      * @param destArgs The destination arguments
      * @return The total transformation cost
      */
-    private fun getTotalTransformationCost(srcArgs: Array<out Class<*>>, destArgs: Array<out Class<*>>): kotlin.Float {
+    private fun getTotalTransformationCost(srcArgs: Array<out Class<*>>, destArgs: Array<out Class<*>>): Float {
         var totalCost = 0.0f
         for (i in srcArgs.indices) {
             val srcClass: Class<*> = srcArgs[i]
@@ -251,15 +234,15 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
      * @param destClass The destination class
      * @return The cost of transforming an object
      */
-    private fun getObjectTransformationCost(srcClass: Class<*>, destClass: Class<*>): kotlin.Float {
+    private fun getObjectTransformationCost(srcClass: Class<*>, destClass: Class<*>): Float {
         if (destClass.isPrimitive) {
             return getPrimitivePromotionCost(srcClass, destClass)
         }
 
         var cost = 0.0f
-        var srcClass: Class<*>? = srcClass
-        while (srcClass != null && destClass != srcClass) {
-            if (destClass.isInterface && isAssignable(srcClass, destClass)) {
+        var superClass: Class<*>? = srcClass
+        while (superClass != null && destClass != superClass) {
+            if (destClass.isInterface && isAssignable(superClass, destClass)) {
                 // slight penalty for interface match.
                 // we still want an exact match to override an interface match,
                 // but
@@ -269,13 +252,13 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
                 break
             }
             cost++
-            srcClass = srcClass.getSuperclass()
+            superClass = superClass.getSuperclass()
         }
         /*
          * If the destination class is null, we've travelled all the way up to
          * an Object match. We'll penalize this by adding 1.5 to the cost.
          */
-        if (srcClass == null) {
+        if (superClass == null) {
             cost += 1.5f
         }
         return cost
@@ -312,7 +295,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
      * @param toClass  the Class to try to assign into, returns false if null
      * @return `true` if assignment possible
      */
-    fun isAssignable(cls: Class<*>?, toClass: Class<*>?): kotlin.Boolean {
+    fun isAssignable(cls: Class<*>?, toClass: Class<*>?): Boolean {
         var cls = cls
         if (toClass == null) {
             return false
@@ -342,33 +325,36 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
                 return false
             }
             when (cls) {
-                Integer.TYPE -> {
-                    return Long.TYPE == toClass || Float.TYPE == toClass || Double.TYPE == toClass
+                java.lang.Integer.TYPE -> {
+                    return java.lang.Long.TYPE == toClass
+                            || java.lang.Float.TYPE == toClass
+                            || java.lang.Double.TYPE == toClass
                 }
-                Long.TYPE -> {
-                    return Float.TYPE == toClass || Double.TYPE == toClass
+                java.lang.Long.TYPE -> {
+                    return java.lang.Float.TYPE == toClass
+                            || java.lang.Double.TYPE == toClass
                 }
-                Boolean.TYPE -> {
+                java.lang.Boolean.TYPE -> {
                     return false
                 }
-                Double.TYPE -> {
+                java.lang.Double.TYPE -> {
                     return false
                 }
-                Float.TYPE -> {
-                    return Double.TYPE == toClass
+                java.lang.Float.TYPE -> {
+                    return java.lang.Double.TYPE == toClass
                 }
-                Short.TYPE, Character.TYPE -> {
-                    return Integer.TYPE == toClass
-                            || Long.TYPE == toClass
-                            || Float.TYPE == toClass
-                            || Double.TYPE == toClass
+                java.lang.Short.TYPE, java.lang.Character.TYPE -> {
+                    return java.lang.Integer.TYPE == toClass
+                            || java.lang.Long.TYPE == toClass
+                            || java.lang.Float.TYPE == toClass
+                            || java.lang.Double.TYPE == toClass
                 }
-                Byte.TYPE -> {
-                    return Short.TYPE == toClass
-                            || Integer.TYPE == toClass
-                            || Long.TYPE == toClass
-                            || Float.TYPE == toClass
-                            || Double.TYPE == toClass
+                java.lang.Byte.TYPE -> {
+                    return java.lang.Short.TYPE == toClass
+                            || java.lang.Integer.TYPE == toClass
+                            || java.lang.Long.TYPE == toClass
+                            || java.lang.Float.TYPE == toClass
+                            || java.lang.Double.TYPE == toClass
                 }
             }
             // should never get here
@@ -385,7 +371,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
      * @param destClass the (primitive) destination class
      * @return The cost of promoting the primitive
      */
-    private fun getPrimitivePromotionCost(srcClass: Class<*>, destClass: Class<*>): kotlin.Float {
+    private fun getPrimitivePromotionCost(srcClass: Class<*>, destClass: Class<*>): Float {
         var cost = 0.0f
         var cls = srcClass
         if (!cls.isPrimitive) {
