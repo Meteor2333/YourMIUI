@@ -2,13 +2,11 @@ package cn.coderstory.miwater
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-abstract class App(private val packageName: String) {
-    fun getPackageName(): String {
-        return packageName
-    }
+abstract class App(private vararg val packages: String) {
+    fun getPackages() = packages.toList()
 
     open fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        if (lpparam.packageName != packageName) {
+        if (!packages.contains(lpparam.packageName)) {
             return
         }
 
