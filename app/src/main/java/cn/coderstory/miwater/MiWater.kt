@@ -1,6 +1,7 @@
 package cn.coderstory.miwater
 
 import androidx.annotation.Keep
+import cn.coderstory.miwater.app.App
 import cn.coderstory.miwater.helper.ReflectHelper
 import cn.coderstory.miwater.helper.XposedHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
