@@ -291,12 +291,12 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
      * *[The Java Language Specification](http://java.sun.com/docs/books/jls/)*,
      * sections 5.1.1, 5.1.2 and 5.1.4 for details.
      *
-     * @param cls  the Class to check, may be null
+     * @param clazz  the Class to check, may be null
      * @param toClass  the Class to try to assign into, returns false if null
      * @return `true` if assignment possible
      */
-    fun isAssignable(cls: Class<*>?, toClass: Class<*>?): Boolean {
-        var cls = cls
+    fun isAssignable(clazz: Class<*>?, toClass: Class<*>?): Boolean {
+        var cls = clazz
         if (toClass == null) {
             return false
         }
