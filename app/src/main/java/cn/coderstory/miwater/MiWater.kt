@@ -1,6 +1,6 @@
 package cn.coderstory.miwater
 
-import androidx.annotation.Keep
+import cn.coderstory.miwater.annotation.DontObfuscate
 import cn.coderstory.miwater.app.App
 import cn.coderstory.miwater.helper.ReflectHelper
 import cn.coderstory.miwater.helper.XposedHelper
@@ -8,7 +8,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-@Keep
+@DontObfuscate
 class MiWater: IXposedHookLoadPackage {
     companion object {
         private const val APP_VERSION = BuildConfig.VERSION_NAME

@@ -2,12 +2,12 @@
 -allowaccessmodification
 -overloadaggressively
 
--keep @androidx.annotation.Keep class *
+-keep @cn.coderstory.miwater.annotation.DontObfuscate class *
 
 -keepclassmembers class * {
-    @androidx.annotation.Keep <fields>;
+    @cn.coderstory.miwater.annotation.DontObfuscate <fields>;
 }
 
 -keepclassmembers class * {
-    @androidx.annotation.Keep <methods>;
+    @cn.coderstory.miwater.annotation.DontObfuscate <methods>;
 }

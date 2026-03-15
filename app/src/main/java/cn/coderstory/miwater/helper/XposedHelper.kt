@@ -1,11 +1,11 @@
 package cn.coderstory.miwater.helper
 
-import androidx.annotation.Keep
+import cn.coderstory.miwater.annotation.DontObfuscate
 
 class XposedHelper {
     companion object {
         // This method is hooked in cn.coderstory.miwater.MiWater#handleLoadPackage()
-        @Keep
+        @DontObfuscate
         fun isXposedActive(): Boolean {
             return false
         }
