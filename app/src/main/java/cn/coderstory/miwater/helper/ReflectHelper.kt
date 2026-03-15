@@ -2,6 +2,7 @@
 
 package cn.coderstory.miwater.helper
 
+import cn.coderstory.miwater.MiWater
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
@@ -22,7 +23,7 @@ class ReflectHelper<T : Any>(val delegate: Class<T>) {
                 @Suppress("UNCHECKED_CAST")
                 ReflectHelper(XposedHelpers.findClass(className, classLoader ?: ClassLoader.getSystemClassLoader()) as Class<Any>)
             } catch (_: XposedHelpers.ClassNotFoundError) {
-                XposedBridge.log("Class not found: $className")
+                MiWater.log("Class not found: $className!")
                 null
             }
         }
@@ -36,7 +37,12 @@ class ReflectHelper<T : Any>(val delegate: Class<T>) {
 class ReflectScope<T : Any>(private val clazz: Class<T>) {
     fun constructor(vararg paramTypes: Class<*>): ConstructorOps<T>? {
         @Suppress("UNCHECKED_CAST")
-        return (XposedHelpers.findConstructorExactIfExists(clazz, *paramTypes) as Constructor<T>?)?.let { ConstructorOps(it) }
+        return try {
+            ConstructorOps((XposedHelpers.findConstructorExact(clazz, *paramTypes) as Constructor<T>))
+        } catch (_: NoSuchMethodError) {
+            MiWater.log("Constructor not found: ${clazz.getName()}#(${getParametersString(*paramTypes)})!")
+            null
+        }
     }
 
     fun constructors(): List<ConstructorOps<*>> {
@@ -49,7 +55,12 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
     }
 
     fun field(name: String): FieldOps<T>? {
-        return XposedHelpers.findFieldIfExists(clazz, name)?.let { FieldOps(it) }
+        return try {
+            FieldOps(XposedHelpers.findField(clazz, name))
+        } catch (_: NoSuchFieldError) {
+            MiWater.log("Field not found: ${clazz.getName()}#$name!")
+            null
+        }
     }
 
     fun field(type: Class<*>): List<FieldOps<T>> {
@@ -75,7 +86,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
     }
 
     fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
-        val fullMethodName = clazz.getName() + '#' + name + getParametersString(*paramTypes)
+        val fullMethodName = "${clazz.getName()}#${name}${getParametersString(*paramTypes)}"
 
         if (methodCache.containsKey(fullMethodName)) {
             @Suppress("UNCHECKED_CAST")
@@ -122,22 +133,13 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
             method
         } else {
             methodCache.remove(fullMethodName)
+            MiWater.log("Method not found: $fullMethodName!")
             null
         }
     }
 
-    private fun getParametersString(vararg clazzes: Class<*>?): String {
-        val sb = StringBuilder("(")
-        var first = true
-        for (clazz in clazzes) {
-            if (first) first = false
-            else sb.append(",")
-
-            if (clazz != null) sb.append(clazz.getCanonicalName())
-            else sb.append("null")
-        }
-        sb.append(")")
-        return sb.toString()
+    private fun getParametersString(vararg clazzes: Class<*>): String {
+        return "(${clazzes.joinToString(",") { it.getName() }})"
     }
 
     /* --------- commons-lang start --------- */

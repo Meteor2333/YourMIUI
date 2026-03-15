@@ -10,7 +10,11 @@ abstract class App(private vararg val packages: String) {
             return
         }
 
-        this.getHooks().forEach { it.init(lpparam) }
+        try {
+            this.getHooks().forEach { it.init(lpparam) }
+        } catch (t: Throwable) {
+            MiWater.log(t)
+        }
     }
 
     abstract fun getHooks(): Iterable<Hook>
