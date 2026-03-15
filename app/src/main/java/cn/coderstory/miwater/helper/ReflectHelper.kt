@@ -11,7 +11,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
-class ReflectHelper<T : Any>(private val delegate: Class<T>) {
+class ReflectHelper<T : Any>(val delegate: Class<T>) {
     companion object {
         fun <T : Any> fromJava(clazz: Class<T>) = ReflectHelper(clazz)
 
@@ -26,10 +26,6 @@ class ReflectHelper<T : Any>(private val delegate: Class<T>) {
                 null
             }
         }
-    }
-
-    fun getDelegate(): Class<T> {
-        return delegate
     }
 
     fun <R> operate(block: ReflectScope<T>.() -> R): R {
@@ -161,7 +157,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
             java.lang.Long.TYPE to Long::class.java,
             java.lang.Double.TYPE to Double::class.java,
             java.lang.Float.TYPE to Float::class.java,
-            java.lang.Void.TYPE to Void::class.java,
+            java.lang.Void.TYPE to Void::class.java
         )
 
         /**
@@ -176,7 +172,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
             Long::class.java to java.lang.Long.TYPE,
             Double::class.java to java.lang.Double.TYPE,
             Float::class.java to java.lang.Float.TYPE,
-            Void::class.java to java.lang.Void.TYPE,
+            Void::class.java to java.lang.Void.TYPE
         )
 
         /** Array of primitive number types ordered by "promotability"  */
