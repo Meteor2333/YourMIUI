@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="scope">
-        <item>com.android.thememanager</item>
-        <item>com.miui.packageinstaller</item>
-        <item>com.miui.securitycenter</item>
-        <item>com.miui.analytics</item>
-        <item>com.android.traceur</item>
-        <item>com.miui.systemAdSolution</item>
-        <item>com.android.mms</item>
+    <string-array name="module_scope">
+
     </string-array>
 </resources>

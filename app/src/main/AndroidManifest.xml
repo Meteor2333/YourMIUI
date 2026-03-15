@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
     <application
-        android:allowBackup="false"
-        android:fullBackupContent="@xml/data_extraction_rules"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="MissingApplicationIcon">
+            android:allowBackup="false"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="MissingApplicationIcon">
 
         <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
+                android:name="xposedmodule"
+                android:value="true" />
         <meta-data
-            android:name="xposeddescription"
-            android:value="@string/module_description" />
+                android:name="xposedminversion"
+                android:value="93" />
         <meta-data
-            android:name="xposedminversion"
-            android:value="93" />
+                android:name="xposeddescription"
+                android:value="@string/module_description" />
         <meta-data
-            android:name="xposedscope"
-            android:resource="@array/scope" />
+                android:name="xposedscope"
+                android:resource="@array/module_scope" />
     </application>
-
 </manifest>
