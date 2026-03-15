@@ -6,7 +6,6 @@ import cn.coderstory.miwater.helper.ReflectHelper
 import cn.coderstory.miwater.helper.XposedHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 @Keep
@@ -19,7 +18,6 @@ class MiWater: IXposedHookLoadPackage {
     private val apps = listOf<App>(
         // ...
     ).flatMap { app -> app.getPackages().map { it to app } }.toMap()
-    private val prefs = XSharedPreferences(APP_PACKAGE, "conf")
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
