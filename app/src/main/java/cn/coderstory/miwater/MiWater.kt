@@ -26,7 +26,7 @@ class MiWater: IXposedHookLoadPackage {
 
     private val apps = listOf<App>(
         // ...
-    ).flatMap { app -> app.getPackages().map { it to app } }.toMap()
+    ).flatMap { app -> app.packages.map { it to app } }.toMap()
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
