@@ -18,10 +18,6 @@ class MiWater: IXposedHookLoadPackage {
         fun log(message: String) {
             XposedBridge.log("[MiWater] $message")
         }
-
-        fun log(t: Throwable) {
-            XposedBridge.log(t)
-        }
     }
 
     private val apps = listOf<App>(

@@ -1,5 +1,6 @@
 package cn.coderstory.miwater.app
 
+import android.util.Log
 import cn.coderstory.miwater.MiWater
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
@@ -16,12 +17,14 @@ abstract class App(
             return
         }
 
-        try {
-            this.getHooks().forEach { it.init(lpparam) }
-            enabled = true
-        } catch (t: Throwable) {
-            MiWater.log(t)
+        this.getHooks().forEach {
+            try {
+                it.init(lpparam)
+            } catch (t: Throwable) {
+                MiWater.log("Failed to initialize hook '${it.name}' in app '$name':\n${Log.getStackTraceString(t)}")
+            }
         }
+        enabled = true
     }
 
     abstract fun getHooks(): Iterable<Hook>
