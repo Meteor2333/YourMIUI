@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="module_scope">
-
+        <item>android</item>
+        <item>com.xiaomi.market</item>
+        <item>com.miui.packageinstaller</item>
+        <item>com.miui.securitycenter</item>
+        <item>com.miui.miwallpaper.earth</item>
+        <item>com.miui.miwallpaper.geometry</item>
+        <item>com.miui.miwallpaper.mars</item>
+        <item>com.miui.miwallpaper.saturn</item>
+        <item>com.miui.miwallpaper.snowmountain</item>
     </string-array>
 </resources>

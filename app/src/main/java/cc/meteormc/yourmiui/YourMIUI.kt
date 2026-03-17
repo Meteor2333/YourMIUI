@@ -1,7 +1,11 @@
 package cc.meteormc.yourmiui
 
 import cc.meteormc.yourmiui.annotation.DontObfuscate
-import cc.meteormc.yourmiui.app.App
+import cc.meteormc.yourmiui.app.android.Android
+import cc.meteormc.yourmiui.app.market.Market
+import cc.meteormc.yourmiui.app.packageinstaller.PackageInstaller
+import cc.meteormc.yourmiui.app.securitycenter.SecurityCenter
+import cc.meteormc.yourmiui.app.superwallpaper.SuperWallpaper
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import cc.meteormc.yourmiui.helper.XposedHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
@@ -20,8 +24,12 @@ class YourMIUI: IXposedHookLoadPackage {
         }
     }
 
-    private val apps = listOf<App>(
-        // ...
+    private val apps = listOf(
+        Android,
+        Market,
+        PackageInstaller,
+        SecurityCenter,
+        SuperWallpaper
     ).flatMap { app -> app.packages.map { it to app } }.toMap()
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
