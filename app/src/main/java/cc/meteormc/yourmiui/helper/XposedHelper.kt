@@ -1,6 +1,6 @@
-package cn.coderstory.miwater.helper
+package cc.meteormc.yourmiui.helper
 
-import cn.coderstory.miwater.annotation.DontObfuscate
+import cc.meteormc.yourmiui.annotation.DontObfuscate
 
 class XposedHelper {
     companion object {

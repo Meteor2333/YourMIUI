@@ -1,4 +1,4 @@
-# MiWater
+# YourMIUI
 
 ## 介绍 
 一款优化 `MIUI` 系统中各种不友好功能的模块，基于 [LSPosed](https://github.com/LSPosed/LSPosed)

@@ -1,8 +1,8 @@
 @file:Suppress("UnUsed", "RemoveRedundantQualifierName")
 
-package cn.coderstory.miwater.helper
+package cc.meteormc.yourmiui.helper
 
-import cn.coderstory.miwater.MiWater
+import cc.meteormc.yourmiui.YourMIUI
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
@@ -23,7 +23,7 @@ class ReflectHelper<T : Any>(val delegate: Class<T>) {
                 @Suppress("UNCHECKED_CAST")
                 ReflectHelper(XposedHelpers.findClass(className, classLoader ?: ClassLoader.getSystemClassLoader()) as Class<Any>)
             } catch (_: XposedHelpers.ClassNotFoundError) {
-                MiWater.log("Class not found: $className!")
+                YourMIUI.log("Class not found: $className!")
                 null
             }
         }
@@ -40,7 +40,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
         return try {
             ConstructorOps((XposedHelpers.findConstructorExact(clazz, *paramTypes) as Constructor<T>))
         } catch (_: NoSuchMethodError) {
-            MiWater.log("Constructor not found: ${clazz.getName()}#(${getParametersString(*paramTypes)})!")
+            YourMIUI.log("Constructor not found: ${clazz.getName()}#(${getParametersString(*paramTypes)})!")
             null
         }
     }
@@ -58,7 +58,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
         return try {
             FieldOps(XposedHelpers.findField(clazz, name))
         } catch (_: NoSuchFieldError) {
-            MiWater.log("Field not found: ${clazz.getName()}#$name!")
+            YourMIUI.log("Field not found: ${clazz.getName()}#$name!")
             null
         }
     }
@@ -133,7 +133,7 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
             method
         } else {
             methodCache.remove(fullMethodName)
-            MiWater.log("Method not found: $fullMethodName!")
+            YourMIUI.log("Method not found: $fullMethodName!")
             null
         }
     }

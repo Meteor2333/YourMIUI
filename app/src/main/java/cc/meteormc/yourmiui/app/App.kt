@@ -1,7 +1,7 @@
-package cn.coderstory.miwater.app
+package cc.meteormc.yourmiui.app
 
 import android.util.Log
-import cn.coderstory.miwater.MiWater
+import cc.meteormc.yourmiui.YourMIUI
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 abstract class App(
@@ -21,7 +21,7 @@ abstract class App(
             try {
                 it.init(lpparam)
             } catch (t: Throwable) {
-                MiWater.log("Failed to initialize hook '${it.name}' in app '$name':\n${Log.getStackTraceString(t)}")
+                YourMIUI.log("Failed to initialize hook '${it.name}' in app '$name':\n${Log.getStackTraceString(t)}")
             }
         }
         enabled = true

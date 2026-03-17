@@ -1,22 +1,22 @@
-package cn.coderstory.miwater
+package cc.meteormc.yourmiui
 
-import cn.coderstory.miwater.annotation.DontObfuscate
-import cn.coderstory.miwater.app.App
-import cn.coderstory.miwater.helper.ReflectHelper
-import cn.coderstory.miwater.helper.XposedHelper
+import cc.meteormc.yourmiui.annotation.DontObfuscate
+import cc.meteormc.yourmiui.app.App
+import cc.meteormc.yourmiui.helper.ReflectHelper
+import cc.meteormc.yourmiui.helper.XposedHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 @DontObfuscate
-class MiWater: IXposedHookLoadPackage {
+class YourMIUI: IXposedHookLoadPackage {
     companion object {
         private const val APP_VERSION = BuildConfig.VERSION_NAME
         private const val APP_PACKAGE = BuildConfig.APPLICATION_ID
 
         fun log(message: String) {
-            XposedBridge.log("[MiWater] $message")
+            XposedBridge.log("[YourMIUI] $message")
         }
     }
 

@@ -1,4 +1,4 @@
-package cn.coderstory.miwater.app
+package cc.meteormc.yourmiui.app
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
