@@ -9,7 +9,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -24,36 +23,56 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Build with Gradle
       run: ./gradlew build
 
+    - name: Decode keystore
+      run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/keystore.jks
+
     - name: Sign Android release
-      # You may pin to the exact commit or the version.
-      # uses: r0adkll/sign-android-release@dbeba6b98a60b0fd540c02443c7f428cdedf0e7f
-      uses: r0adkll/sign-android-release@v1.0.4
-      id: sign_app
-      with:
-        # The directory to find your release to sign
-        releaseDirectory: app/build/outputs/apk/release
-        # The key used to sign your release in base64 encoded format
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        # The key alias
-        alias: ${{ secrets.ALIAS }}
-        # The password to the keystore
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        # The password for the key
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
+      id: sign_apk
+      run: |
+        outputs_dir="/apk_outputs"
+        mkdir -p "$outputs_dir"
+        for file in $(find 'app/build/outputs/apk/release' -type f \( -name "*.apk" \)); do
+          echo "Processing $file..."
+
+          aligned_file="${file%.apk}-aligned.apk"
+          signed_file="${file%.apk}-signed.apk"
+
+          # Zipalign
+          zipalign -v -p 4 "$file" "$aligned_file"
+
+          # Sign
+          apksigner sign \
+            --ks ${{ runner.temp }}/keystore.jks \
+            --ks-key-alias "${{ secrets.ALIAS }}" \
+            --ks-pass pass:"${{ secrets.KEY_STORE_PASSWORD }}" \
+            --key-pass pass:"${{ secrets.KEY_PASSWORD }}" \
+            --out "$signed_file" \
+            "$aligned_file"
+
+          # Verify
+          apksigner verify "$signed_file"
+
+          outputs="$outputs_dir/${file%-unsigned.apk}.apk"
+          sudo mv "$signed_file" "$outputs/${file%-unsigned.apk}.apk"
+          
+          echo "Done: $outputs"
+        done
+        echo "apk_outputs=$outputs_dir" >> $GITHUB_OUTPUT
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
       with:
         name: Signed app bundle
-        path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+        path: ${{ steps.sign_apk.outputs.apk_outputs }}
 
     - name: Github release
-      uses: softprops/action-gh-release@v2.6.1
+      uses: softprops/action-gh-release@v2
       if: github.ref_type == 'tag'
       with:
-        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
+        files: ${{ steps.sign_apk.outputs.apk_outputs }}
         generate_release_notes: true
         
