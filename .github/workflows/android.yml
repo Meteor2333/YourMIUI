@@ -64,8 +64,9 @@ jobs:
           # Verify
           apksigner verify "$signed_file"
 
-          outputs="$outputs_dir/${file%-unsigned.apk}.apk"
-          sudo mv "$signed_file" "$outputs/${file%-unsigned.apk}.apk"
+          filename=$(basename "$file")
+          outputs="$outputs_dir/${filename%-unsigned.apk}.apk"
+          sudo mv "$signed_file" "$outputs"
           
           echo "Done: $outputs"
         done
