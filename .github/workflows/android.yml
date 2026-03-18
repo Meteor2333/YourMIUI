@@ -34,7 +34,7 @@ jobs:
       id: sign_apk
       run: |
         outputs_dir="/apk_outputs"
-        mkdir -p "$outputs_dir"
+        sudo mkdir -p "$outputs_dir"
         for file in $(find 'app/build/outputs/apk/release' -type f \( -name "*.apk" \)); do
           echo "Processing $file..."
 
