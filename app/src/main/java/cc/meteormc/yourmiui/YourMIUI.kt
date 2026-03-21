@@ -19,18 +19,18 @@ class YourMIUI: IXposedHookLoadPackage {
         private const val APP_VERSION = BuildConfig.VERSION_NAME
         private const val APP_PACKAGE = BuildConfig.APPLICATION_ID
 
+        val apps = listOf(
+            Android,
+            Market,
+            PackageInstaller,
+            SecurityCenter,
+            SuperWallpaper
+        ).flatMap { app -> app.packages.map { it to app } }.toMap()
+
         fun log(message: String) {
             XposedBridge.log("[YourMIUI] $message")
         }
     }
-
-    private val apps = listOf(
-        Android,
-        Market,
-        PackageInstaller,
-        SecurityCenter,
-        SuperWallpaper
-    ).flatMap { app -> app.packages.map { it to app } }.toMap()
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
