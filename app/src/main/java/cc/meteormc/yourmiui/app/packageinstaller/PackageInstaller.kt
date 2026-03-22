@@ -6,7 +6,6 @@ import cc.meteormc.yourmiui.app.packageinstaller.hook.DisableSafeCheck
 import cc.meteormc.yourmiui.app.packageinstaller.hook.RemoveAd
 
 object PackageInstaller: App(
-    "应用安装器",
     "com.miui.packageinstaller"
 ) {
     override fun getHooks(): Iterable<Hook> {

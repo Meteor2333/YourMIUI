@@ -1,7 +1,6 @@
 package cc.meteormc.yourmiui.helper
 
 import cc.meteormc.yourmiui.annotation.DontObfuscate
-import cc.meteormc.yourmiui.app.App
 
 @DontObfuscate
 class BridgeHelper {

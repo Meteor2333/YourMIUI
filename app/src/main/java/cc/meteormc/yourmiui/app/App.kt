@@ -5,13 +5,8 @@ import cc.meteormc.yourmiui.YourMIUI
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 abstract class App(
-    val name: String,
     vararg val packages: String
 ) {
-    private var enabled = false
-
-    fun isEnabled(): Boolean = enabled
-
     open fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (!packages.contains(lpparam.packageName)) {
             return
@@ -21,10 +16,10 @@ abstract class App(
             try {
                 it.init(lpparam)
             } catch (t: Throwable) {
-                YourMIUI.log("Failed to initialize hook '${it.name}' in app '$name':\n${Log.getStackTraceString(t)}")
+                YourMIUI.log("Failed to initialize hook '${it.name}' " +
+                        "in app '${this.javaClass.simpleName}':\n${Log.getStackTraceString(t)}")
             }
         }
-        enabled = true
     }
 
     abstract fun getHooks(): Iterable<Hook>

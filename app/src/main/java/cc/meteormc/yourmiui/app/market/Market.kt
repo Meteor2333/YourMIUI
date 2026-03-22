@@ -6,7 +6,6 @@ import cc.meteormc.yourmiui.app.market.hook.HideTab
 import cc.meteormc.yourmiui.app.market.hook.RemoveAd
 
 object Market: App(
-    "应用商店",
     "com.xiaomi.market"
 ) {
     override fun getHooks(): Iterable<Hook> {

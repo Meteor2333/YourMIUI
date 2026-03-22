@@ -5,7 +5,6 @@ import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.app.superwallpaper.hook.DisablePause
 
 object SuperWallpaper: App(
-    "超级壁纸",
     "com.miui.miwallpaper.earth",
     "com.miui.miwallpaper.geometry",
     "com.miui.miwallpaper.mars",

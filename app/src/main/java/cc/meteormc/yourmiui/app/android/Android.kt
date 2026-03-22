@@ -5,7 +5,6 @@ import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.app.android.hook.BlockKillProcess
 
 object Android: App(
-    "系统框架",
     "android"
 ) {
     override fun getHooks(): Iterable<Hook> {
