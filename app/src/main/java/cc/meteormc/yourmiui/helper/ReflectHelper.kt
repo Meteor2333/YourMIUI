@@ -424,7 +424,7 @@ class FieldOps<T : Any?>(private val field: Field) {
 }
 
 class MethodOps<T : Any?>(private val method: Method) {
-    fun call(obj: T, vararg args: Any?): Any? {
+    fun call(obj: T?, vararg args: Any?): Any? {
         return method.apply { isAccessible = true }.invoke(obj, *args)
     }
 
