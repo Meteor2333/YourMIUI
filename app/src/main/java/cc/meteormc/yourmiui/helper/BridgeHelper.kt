@@ -6,8 +6,8 @@ import cc.meteormc.yourmiui.annotation.DontObfuscate
 class BridgeHelper {
     // These method is hooked in cn.coderstory.miwater.MiWater#handleLoadPackage()
     companion object {
-        fun getApiName(): String {
-            return "Unknown"
+        fun getApiName(): String? {
+            return null
         }
 
         fun getApiVersion(): Int {

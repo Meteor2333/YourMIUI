@@ -35,7 +35,7 @@ class YourMIUI: IXposedHookLoadPackage {
             log("Module is active with version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})!")
             ReflectHelper.of(BridgeHelper.Companion::class.java.name, lpparam.classLoader)?.operate {
                 val apiName = ReflectHelper.fromJava(XposedBridge::class.java).operate {
-                    field("TAG")?.get(null) as String
+                    field("TAG")?.get(null) as String?
                 }
                 method("getApiName")?.hook(XC_MethodReplacement.returnConstant(apiName))
                 method("getApiVersion")?.hook(XC_MethodReplacement.returnConstant(XposedBridge.getXposedVersion()))

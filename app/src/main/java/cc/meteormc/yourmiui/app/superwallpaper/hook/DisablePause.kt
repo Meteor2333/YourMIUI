@@ -19,7 +19,9 @@ object DisablePause: Hook(
             method("getWallPaperAod2LockPauseDelay")?.hook(XC_MethodReplacement.returnConstant(Int.MAX_VALUE))
             // modifier: protected | signature: getWallPaperOffsetDelay()I
             method("getWallPaperOffsetDelay")?.hook(XC_MethodReplacement.returnConstant(Int.MAX_VALUE))
-            // modifier: public | signature: sendInitBlockPause()V
+
+            // unknown effect
+//            // modifier: public | signature: sendInitBlockPause()V
 //            method("sendInitBlockPause")?.hook(XC_MethodReplacement.DO_NOTHING)
         }
     }
