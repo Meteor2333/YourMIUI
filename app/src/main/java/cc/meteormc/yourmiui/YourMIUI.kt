@@ -6,8 +6,8 @@ import cc.meteormc.yourmiui.app.market.Market
 import cc.meteormc.yourmiui.app.packageinstaller.PackageInstaller
 import cc.meteormc.yourmiui.app.securitycenter.SecurityCenter
 import cc.meteormc.yourmiui.app.superwallpaper.SuperWallpaper
-import cc.meteormc.yourmiui.helper.ReflectHelper
 import cc.meteormc.yourmiui.helper.BridgeHelper
+import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
@@ -22,7 +22,9 @@ class YourMIUI: IXposedHookLoadPackage {
             PackageInstaller,
             SecurityCenter,
             SuperWallpaper
-        ).flatMap { app -> app.packages.map { it to app } }.toMap()
+        ).flatMap { app ->
+            app.packages.map { it to app }
+        }.toMap()
 
         fun log(message: String) {
             XposedBridge.log("[YourMIUI] $message")
@@ -32,7 +34,8 @@ class YourMIUI: IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
         if (packageName == BuildConfig.APPLICATION_ID) {
-            log("Module is active with version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})!")
+            log("Module is active with version ${BuildConfig.VERSION_NAME}(code: ${BuildConfig.VERSION_CODE})!")
+
             ReflectHelper.of(BridgeHelper.Companion::class.java.name, lpparam.classLoader)?.operate {
                 val apiName = ReflectHelper.fromJava(XposedBridge::class.java).operate {
                     field("TAG")?.get(null) as String?
