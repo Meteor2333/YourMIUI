@@ -13,30 +13,8 @@ object RemoveAd: Hook(
     testEnvironment= R.string.market_remove_ad_test_environment,
     originalAuthor = "owo233"
 ) {
-    private var classLoader: ClassLoader? = null
-    
-    private val CLASS_LIST_APP_COMPONENT by lazy {
-        ReflectHelper.of("com.xiaomi.market.common.component.componentbeans.ListAppComponent", classLoader)?.delegate
-    }
-    private val CLASS_SEARCH_HISTORY_COMPONENT by lazy {
-        ReflectHelper.of("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent", classLoader)?.delegate
-    }
-    private val ENUM_PAGE_STATE_EXPAND by lazy {
-        ReflectHelper.of("com.xiaomi.market.ui.UpdateListRvAdapter\$PageCollapseState", classLoader)?.operate {
-            // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
-            field("Expand")?.get(null)
-        }
-    }
-    private val ENUM_DETAIL_TYPE_UNKNOWN by lazy {
-        ReflectHelper.of("com.xiaomi.market.business_ui.detail.DetailType", classLoader)?.operate {
-            // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
-            field("UNKNOWN")?.get(null)
-        }
-    }
-
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        this.classLoader = lpparam.classLoader
-        ReflectHelper.of("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3", lpparam.classLoader)?.operate {
             setOf(
                 // modifier: public,final | signature: isBrowserMarketAdOff()Z
                 "isBrowserMarketAdOff",
@@ -81,8 +59,6 @@ object RemoveAd: Hook(
                 "needShowGrayBtn",
                 // modifier: public,final | signature: needShowPISafeModeStyle()Z
                 "needShowPISafeModeStyle",
-                // modifier: public,final | signature: supportAutoLoadDeepLink()Z
-                "supportAutoLoadDeepLink",
                 // modifier: public,final | signature: supportShowCompatAlert()Z
                 "supportShowCompatAlert",
                 // modifier: public,final | signature: supportShowCompatChildForbidDownloadAlert()Z
@@ -92,7 +68,7 @@ object RemoveAd: Hook(
             }
         }
 
-        ReflectHelper.of("com.xiaomi.market.ui.splash.DetailSplashAdManager", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.ui.splash.DetailSplashAdManager", lpparam.classLoader)?.operate {
             setOf(
                 // modifier: public,static,final | signature: canRequestSplashAd(Lcom/xiaomi/market/ui/splash/DetailSplashAdManager$Env;)Z
                 "canRequestSplashAd",
@@ -108,7 +84,7 @@ object RemoveAd: Hook(
             method("tryToRequestSplashAd")?.hook(XC_MethodReplacement.returnConstant(null))
         }
 
-        ReflectHelper.of("com.xiaomi.market.ui.splash.SplashManager", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.ui.splash.SplashManager", lpparam.classLoader)?.operate {
             setOf(
                 // modifier: public,static | signature: canShowSplash(Landroid/app/Activity;)Z
                 "canShowSplash",
@@ -132,7 +108,7 @@ object RemoveAd: Hook(
             }
         }
 
-        ReflectHelper.of("com.xiaomi.market.business_ui.main.MarketTabActivity", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.business_ui.main.MarketTabActivity", lpparam.classLoader)?.operate {
             setOf(
                 // modifier: public | signature: tryShowRecommend()V
                 "tryShowRecommend",
@@ -148,7 +124,7 @@ object RemoveAd: Hook(
         }
 
         // 搜索建议页面
-        ReflectHelper.of("com.xiaomi.market.business_ui.search.NativeSearchSugFragment", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.business_ui.search.NativeSearchSugFragment", lpparam.classLoader)?.operate {
             // modifier: public | signature: getRequestParams()Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;
             method("getRequestParams")?.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
@@ -161,30 +137,28 @@ object RemoveAd: Hook(
         }
 
         // 搜索结果页面
-        ReflectHelper.of("com.xiaomi.market.business_ui.search.NativeSearchResultFragment", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.business_ui.search.NativeSearchResultFragment", lpparam.classLoader)?.operate {
+            val clazz = ReflectHelper.of("com.xiaomi.market.common.component.componentbeans.ListAppComponent", lpparam.classLoader)?.delegate
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
             method("parseResponseData")?.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     @Suppress("UNCHECKED_CAST")
                     val parsedComponents = (param.result as? List<Any>)?.toMutableList() ?: return
-                    parsedComponents.retainAll {
-                        CLASS_LIST_APP_COMPONENT?.isInstance(it) ?: true
-                    }
+                    parsedComponents.retainAll { clazz?.isInstance(it) ?: true }
                     param.result = parsedComponents
                 }
             })
         }
 
         // 搜索页面
-        ReflectHelper.of("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment", lpparam.classLoader)?.operate {
+            val clazz = ReflectHelper.of("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent", lpparam.classLoader)?.delegate
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
             method("parseResponseData")?.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     @Suppress("UNCHECKED_CAST")
                     val parsedComponents = (param.result as? List<Any>)?.toMutableList() ?: return
-                    parsedComponents.retainAll {
-                        CLASS_SEARCH_HISTORY_COMPONENT?.isInstance(it) ?: true
-                    }
+                    parsedComponents.retainAll { clazz?.isInstance(it) ?: true }
                     param.result = parsedComponents
                 }
             })
@@ -194,7 +168,11 @@ object RemoveAd: Hook(
         }
 
         // 更新页面
-        ReflectHelper.of("com.xiaomi.market.ui.UpdateListRvAdapter", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.ui.UpdateListRvAdapter", lpparam.classLoader)?.operate {
+            val enum = ReflectHelper.of("com.xiaomi.market.ui.UpdateListRvAdapter\$PageCollapseState", lpparam.classLoader)?.operate {
+                // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
+                field("Expand")?.get(null)
+            }
             // modifier: public | signature: <init>(Lcom/xiaomi/market/common/component/base/INativeFragmentContext<Lcom/xiaomi/market/ui/BaseFragment;>;)V
             declaredConstructors().forEach {
                 it.hook(object : XC_MethodHook() {
@@ -208,7 +186,7 @@ object RemoveAd: Hook(
                         }[thisObj] = false
                         thisObj.javaClass.getDeclaredField("pageCollapseState").apply {
                             isAccessible = true
-                        }[thisObj] = ENUM_PAGE_STATE_EXPAND
+                        }[thisObj] = enum
                     }
                 })
             }
@@ -218,17 +196,21 @@ object RemoveAd: Hook(
         }
 
         // 下载页面
-        ReflectHelper.of("com.xiaomi.market.ui.DownloadListFragment", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.ui.DownloadListFragment", lpparam.classLoader)?.operate {
             // modifier: private,final | signature: parseRecommendGroupResult(Lorg/json/JSONObject;)Lcom/xiaomi/market/viewmodels/RecommendGroupResult;
             method("parseRecommendGroupResult")?.hook(XC_MethodReplacement.returnConstant(null))
         }
 
         // 应用详情页面
-        ReflectHelper.of("com.xiaomi.market.ui.detail.BaseDetailActivity", classLoader)?.operate {
+        ReflectHelper.of("com.xiaomi.market.ui.detail.BaseDetailActivity", lpparam.classLoader)?.operate {
+            val enum = ReflectHelper.of("com.xiaomi.market.business_ui.detail.DetailType", lpparam.classLoader)?.operate {
+                // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
+                field("UNKNOWN")?.get(null)
+            }
             // modifier: public | signature: initParams()Landroid/os/Bundle;
             method("initParams")?.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
-                    field("detailType")?.set(param.thisObject, ENUM_DETAIL_TYPE_UNKNOWN)
+                    field("detailType")?.set(param.thisObject, enum)
                 }
             })
         }

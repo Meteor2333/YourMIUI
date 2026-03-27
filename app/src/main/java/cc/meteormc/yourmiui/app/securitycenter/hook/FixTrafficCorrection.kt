@@ -1,5 +1,6 @@
 package cc.meteormc.yourmiui.app.securitycenter.hook
 
+import android.os.Looper
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
@@ -22,7 +23,15 @@ object FixTrafficCorrection: Hook(
                         // 由于一些神秘原因 网络助手的校正号码白名单总是不更新
                         // 导致运营商的响应短信被过滤掉 (打印日志为`onProcessSms 解析失败 need block sms`)
                         // 所以我们来帮他手动校正
-                        refreshMethod.call(param.thisObject, param.args[1])
+                        @Suppress("unused")
+                        for (i in 0 until 5) {
+                            val result = refreshMethod.call(param.thisObject, param.args[1]) as List<*>
+                            if (result.isNotEmpty()) break
+                            if (Looper.myLooper() != Looper.getMainLooper()) {
+                                // 刷新有时会失败 多尝试几次
+                                Thread.sleep(3000)
+                            }
+                        }
                     }
                 })
             }
