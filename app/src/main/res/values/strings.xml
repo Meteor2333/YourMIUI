@@ -27,9 +27,17 @@
     <string name="securitycenter_disable_countdown_dialog_description">取消更改危险设置时的对话框确定倒计时</string>
     <string name="securitycenter_disable_countdown_dialog_test_environment">7.5.4–230317.0.2版本</string>
 
+    <string name="securitycenter_disable_minor_scan_name">禁用不重要的扫描项</string>
+    <string name="securitycenter_disable_minor_scan_description">禁用手机管家中的开发者模式、USB调试开关等扫描项</string>
+    <string name="securitycenter_disable_minor_scan_test_environment">7.5.4–230317.0.2版本</string>
+
     <string name="securitycenter_fix_traffic_correction_name">修复流量校正</string>
     <string name="securitycenter_fix_traffic_correction_description">修复网络助手的校正总是失败的问题</string>
     <string name="securitycenter_fix_traffic_correction_test_environment">7.5.4–230317.0.2版本</string>
+
+    <string name="settings_remove_new_version_tag_name">清除新版本标记</string>
+    <string name="settings_remove_new_version_tag_description">清除设置中的系统新版本标记</string>
+    <string name="settings_remove_new_version_tag_test_environment">7.5.4–230317.0.2版本</string>
 
     <string name="superwallpaper_disable_pause_name">禁止壁纸暂停</string>
     <string name="superwallpaper_disable_pause_description">解决超级壁纸在锁屏界面仅显示5秒动画的问题，需要在作用域中勾选你所使用的超级壁纸</string>

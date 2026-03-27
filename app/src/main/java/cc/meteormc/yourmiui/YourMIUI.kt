@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.app.android.Android
 import cc.meteormc.yourmiui.app.market.Market
 import cc.meteormc.yourmiui.app.packageinstaller.PackageInstaller
 import cc.meteormc.yourmiui.app.securitycenter.SecurityCenter
+import cc.meteormc.yourmiui.app.settings.Settings
 import cc.meteormc.yourmiui.app.superwallpaper.SuperWallpaper
 import cc.meteormc.yourmiui.helper.BridgeHelper
 import cc.meteormc.yourmiui.helper.ReflectHelper
@@ -21,6 +22,7 @@ class YourMIUI: IXposedHookLoadPackage {
             Market,
             PackageInstaller,
             SecurityCenter,
+            Settings,
             SuperWallpaper
         ).flatMap { app ->
             app.packages.map { it to app }
