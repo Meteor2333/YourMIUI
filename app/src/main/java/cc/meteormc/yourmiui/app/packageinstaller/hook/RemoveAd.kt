@@ -1,14 +1,14 @@
 package cc.meteormc.yourmiui.app.packageinstaller.hook
 
+import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 object RemoveAd: Hook(
-    name = "去广告",
-    description = "去除安装器中的赞助商软件推荐",
-    testEnvironment= "新版本疑似已无广告，无法测试"
+    name = R.string.packageinstaller_remove_ad_name,
+    description = R.string.packageinstaller_remove_ad_description
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.packageInstaller.model.CloudParams", lpparam.classLoader)?.operate {

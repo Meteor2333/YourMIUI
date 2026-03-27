@@ -1,14 +1,15 @@
 package cc.meteormc.yourmiui.app.securitycenter.hook
 
+import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 object FixTrafficCorrection: Hook(
-    name = "修复流量校正",
-    description = "修复网络助手的校正总是失败的问题",
-    testEnvironment = "7.5.4-230317.0.2版本"
+    name = R.string.securitycenter_fix_traffic_correction_name,
+    description = R.string.securitycenter_fix_traffic_correction_description,
+    testEnvironment = R.string.securitycenter_fix_traffic_correction_test_environment,
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.sdk.tc.TcManager", lpparam.classLoader)?.operate {

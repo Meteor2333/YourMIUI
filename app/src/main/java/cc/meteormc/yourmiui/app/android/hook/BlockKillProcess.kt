@@ -3,15 +3,16 @@ package cc.meteormc.yourmiui.app.android.hook
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Handler
+import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 object BlockKillProcess: Hook(
-    name = "阻止结束进程",
-    description = "阻止系统或第三方应用结束本应用的进程",
-    testEnvironment = "Android13的MIUI14版本",
+    name = R.string.android_block_kill_process_name,
+    description = R.string.android_block_kill_process_description,
+    testEnvironment = R.string.android_block_kill_process_test_environment,
     originalAuthor = "dantmnf"
 ) {
     private var classLoader: ClassLoader? = null

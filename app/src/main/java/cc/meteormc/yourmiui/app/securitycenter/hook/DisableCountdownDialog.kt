@@ -1,6 +1,7 @@
 package cc.meteormc.yourmiui.app.securitycenter.hook
 
 import android.os.Handler
+import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import cc.meteormc.yourmiui.helper.ReflectScope
@@ -8,9 +9,9 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 object DisableCountdownDialog: Hook(
-    name = "取消倒计时对话框",
-    description = "取消更改危险设置时的对话框确定倒计时",
-    testEnvironment = "7.5.4-230317.0.2版本"
+    name = R.string.securitycenter_disable_countdown_dialog_name,
+    description = R.string.securitycenter_disable_countdown_dialog_description,
+    testEnvironment = R.string.securitycenter_disable_countdown_dialog_test_environment,
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.permcenter.privacymanager.InterceptBaseFragment", lpparam.classLoader)?.operate {

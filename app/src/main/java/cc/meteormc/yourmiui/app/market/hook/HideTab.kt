@@ -1,5 +1,6 @@
 package cc.meteormc.yourmiui.app.market.hook
 
+import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodHook
@@ -7,9 +8,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import org.json.JSONObject
 
 object HideTab: Hook(
-    name = "隐藏底边栏",
-    description = "隐藏应用商店的底边栏中无用的项",
-    testEnvironment= "4.112.7版本",
+    name = R.string.market_hide_tab_name,
+    description = R.string.market_hide_tab_description,
+    testEnvironment= R.string.market_hide_tab_test_environment,
     originalAuthor = "owo233"
 ) {
     /**

@@ -1,5 +1,6 @@
 package cc.meteormc.yourmiui.app.market.hook
 
+import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodHook
@@ -7,9 +8,9 @@ import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 object RemoveAd: Hook(
-    name = "去广告",
-    description = "去除应用商店中的各种广告和赞助商软件推荐",
-    testEnvironment= "4.112.7版本",
+    name = R.string.market_remove_ad_name,
+    description = R.string.market_remove_ad_description,
+    testEnvironment= R.string.market_remove_ad_test_environment,
     originalAuthor = "owo233"
 ) {
     private var classLoader: ClassLoader? = null
