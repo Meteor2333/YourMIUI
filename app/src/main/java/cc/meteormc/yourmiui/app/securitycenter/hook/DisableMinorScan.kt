@@ -12,9 +12,7 @@ object DisableMinorScan: Hook(
     testEnvironment = R.string.securitycenter_disable_minor_scan_test_environment,
 ) {
     private val minorScan = setOf(
-        "com.miui.securityscan.model.manualitem.AutoUpdateModel",
         "com.miui.securityscan.model.manualitem.PermissionRootModel",
-        "com.miui.securityscan.model.manualitem.defaultapp.DefaultBrowserModel",
         "com.miui.securityscan.model.system.AutoDownloadModel",
         "com.miui.securityscan.model.system.DevModeModel",
         "com.miui.securityscan.model.system.UsbModel"
@@ -23,6 +21,7 @@ object DisableMinorScan: Hook(
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         for (scan in minorScan) {
             ReflectHelper.of(scan, lpparam.classLoader)?.operate {
+                // modifier: public | signature: scan()V
                 method("scan")?.hook(XC_MethodReplacement.DO_NOTHING)
             }
         }

@@ -15,32 +15,24 @@ object BlockKillProcess: Hook(
     testEnvironment = R.string.android_block_kill_process_test_environment,
     originalAuthor = "dantmnf"
 ) {
-    private var classLoader: ClassLoader? = null
     private val blockedPackages = setOf(
         "com.github.metacubex.clash.meta"
     )
 
-    private val SCOPE_PROCESS_RECORD by lazy {
+    override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         // 这个类在系统框架中
         // 从 /system/framework/services.jar 提取而来
-        ReflectHelper.of("com.android.server.am.ProcessRecord", classLoader)
-    }
-    private val CLASS_PROCESS_RECORD by lazy {
-        SCOPE_PROCESS_RECORD?.delegate
-    }
-    private val FIELD_PROCESS_RECORD_INFO by lazy {
-        // name: info | type: android.content.pm.ApplicationInfo
-        SCOPE_PROCESS_RECORD?.operate { field("info") }
-    }
+        val scopeProcessRecord = ReflectHelper.of("com.android.server.am.ProcessRecord", lpparam.classLoader) ?: return
 
-    override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        this.classLoader = lpparam.classLoader
         // 这个类在系统框架中 是 MIUI 独有的
         // 从 /system_ext/framework/miui-services.jar 提取而来
-        ReflectHelper.of("com.android.server.am.ProcessCleanerBase", classLoader)?.operate {
-            val classProcessRecord = CLASS_PROCESS_RECORD
-            val fieldProcessRecordInfo = FIELD_PROCESS_RECORD_INFO
-            if (classProcessRecord == null || fieldProcessRecordInfo == null) return@operate Unit
+        ReflectHelper.of("com.android.server.am.ProcessCleanerBase", lpparam.classLoader)?.operate {
+            val classProcessRecord = scopeProcessRecord.delegate
+            val fieldProcessRecordInfo = scopeProcessRecord.operate {
+                // name: info | type: android.content.pm.ApplicationInfo
+                field("info")
+            } ?: return@operate
+
             // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
             method(
                 "killOnce",

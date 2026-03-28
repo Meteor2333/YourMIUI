@@ -15,9 +15,6 @@
     <string name="market_hide_tab_description">隐藏应用商店的底边栏中无用的项</string>
     <string name="market_hide_tab_test_environment">4.112.7版本</string>
 
-    <string name="packageinstaller_remove_ad_name">去广告</string>
-    <string name="packageinstaller_remove_ad_description">去除安装器中的赞助商软件推荐</string>
-
     <string name="packageinstaller_disable_safe_check_name">禁用应用安全检测</string>
     <string name="packageinstaller_disable_safe_check_description">禁止安装应用时对应用进行安全检测</string>
     <string name="packageinstaller_disable_safe_check_warning">开启此功能可能导致安装无法察觉的恶意软件</string>

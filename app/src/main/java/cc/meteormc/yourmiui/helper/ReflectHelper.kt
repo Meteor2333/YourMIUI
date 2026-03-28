@@ -361,7 +361,6 @@ class ReflectScope<T : Any>(val delegate: Class<T>) {
         return toClass.isAssignableFrom(cls)
     }
 
-
     /**
      * Gets the number of steps required to promote a primitive number to another
      * type.

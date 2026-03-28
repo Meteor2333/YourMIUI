@@ -14,6 +14,7 @@ object DisableSafeCheck: Hook(
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.packageInstaller.model.CloudParams", lpparam.classLoader)?.operate {
+            // modifier: public | signature: <init>()V
             declaredConstructors().forEach { ctor -> ctor.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     // name: safeType | type: java.lang.String

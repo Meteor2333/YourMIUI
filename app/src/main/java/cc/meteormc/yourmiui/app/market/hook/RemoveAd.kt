@@ -210,6 +210,7 @@ object RemoveAd: Hook(
             // modifier: public | signature: initParams()Landroid/os/Bundle;
             method("initParams")?.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
+                    // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType
                     field("detailType")?.set(param.thisObject, enum)
                 }
             })

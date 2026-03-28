@@ -18,8 +18,10 @@ object DisableCountdownDialog: Hook(
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hook(object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
+                    // name: (obfuscated) | type: (obfuscated)
                     val handler = field(Handler::class.java).firstOrNull()?.get(param.thisObject) as Handler? ?: return
                     ReflectHelper.fromJava(handler.javaClass).operate {
+                        // name: (obfuscated) | type: int
                         field(Int::class.java).firstOrNull()?.set(handler, -1)
                     }
                     handler.removeMessages(100)
@@ -32,7 +34,9 @@ object DisableCountdownDialog: Hook(
             object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     val thisObject = param.thisObject
+                    // name: (obfuscated) | type: int
                     scope.field(Int::class.java).firstOrNull { it[thisObject] == 5 }?.set(thisObject, 1)
+                    // name: (obfuscated) | type: android.os.Handler
                     val handler = scope.field(Handler::class.java).firstOrNull()?.get(thisObject) as Handler? ?: return
                     handler.removeMessages(100)
                     handler.sendEmptyMessage(100)
