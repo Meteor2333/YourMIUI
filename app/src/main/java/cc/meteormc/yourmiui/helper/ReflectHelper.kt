@@ -34,38 +34,38 @@ class ReflectHelper<T : Any>(val delegate: Class<T>) {
     }
 }
 
-class ReflectScope<T : Any>(private val clazz: Class<T>) {
+class ReflectScope<T : Any>(val delegate: Class<T>) {
     fun constructor(vararg paramTypes: Class<*>): ConstructorOps<T>? {
         @Suppress("UNCHECKED_CAST")
         return try {
-            ConstructorOps((XposedHelpers.findConstructorExact(clazz, *paramTypes) as Constructor<T>))
+            ConstructorOps((XposedHelpers.findConstructorExact(delegate, *paramTypes) as Constructor<T>))
         } catch (_: NoSuchMethodError) {
-            YourMIUI.log("Constructor not found: ${clazz.getName()}#(${getParametersString(*paramTypes)})!")
+            YourMIUI.log("Constructor not found: ${delegate.getName()}#(${getParametersString(*paramTypes)})!")
             null
         }
     }
 
     fun constructors(): List<ConstructorOps<*>> {
-        return clazz.constructors.map { ConstructorOps(it) }
+        return delegate.constructors.map { ConstructorOps(it) }
     }
 
     fun declaredConstructors(): List<ConstructorOps<T>> {
         @Suppress("UNCHECKED_CAST")
-        return (clazz.declaredConstructors as Array<Constructor<T>>).map { ConstructorOps(it) }
+        return (delegate.declaredConstructors as Array<Constructor<T>>).map { ConstructorOps(it) }
     }
 
     fun field(name: String): FieldOps<T>? {
         return try {
-            FieldOps(XposedHelpers.findField(clazz, name))
+            FieldOps(XposedHelpers.findField(delegate, name))
         } catch (_: NoSuchFieldError) {
-            YourMIUI.log("Field not found: ${clazz.getName()}#$name!")
+            YourMIUI.log("Field not found: ${delegate.getName()}#$name!")
             null
         }
     }
 
     fun field(type: Class<*>): List<FieldOps<T>> {
         val result = mutableListOf<FieldOps<T>>()
-        var superClass: Class<*> = clazz
+        var superClass: Class<*> = delegate
         do {
             for (field in superClass.declaredFields) {
                 if (type.isAssignableFrom(field.type)) {
@@ -78,15 +78,15 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
     }
 
     fun fields(): List<FieldOps<T>> {
-        return clazz.fields.map { FieldOps(it) }
+        return delegate.fields.map { FieldOps(it) }
     }
 
     fun declaredFields(): List<FieldOps<T>> {
-        return clazz.declaredFields.map { FieldOps(it) }
+        return delegate.declaredFields.map { FieldOps(it) }
     }
 
     fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
-        val fullMethodName = "${clazz.getName()}#${name}${getParametersString(*paramTypes)}"
+        val fullMethodName = "${delegate.getName()}#${name}${getParametersString(*paramTypes)}"
 
         if (methodCache.containsKey(fullMethodName)) {
             @Suppress("UNCHECKED_CAST")
@@ -94,14 +94,14 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
         }
 
         try {
-            val method = MethodOps<T>(XposedHelpers.findMethodExact(clazz, name, *paramTypes))
+            val method = MethodOps<T>(XposedHelpers.findMethodExact(delegate, name, *paramTypes))
             methodCache[fullMethodName] = method
             return method
         } catch (_: NoSuchMethodError) {
         }
 
         var bestMatch: Method? = null
-        var clz: Class<*> = clazz
+        var clz: Class<*> = delegate
         var considerPrivateMethods = true
         do {
             try {
@@ -393,43 +393,43 @@ class ReflectScope<T : Any>(private val clazz: Class<T>) {
     /* ---------- commons-lang end ---------- */
 
     fun methods(): List<MethodOps<T>> {
-        return clazz.methods.map { MethodOps(it) }
+        return delegate.methods.map { MethodOps(it) }
     }
 
     fun declaredMethods(): List<MethodOps<T>> {
-        return clazz.declaredMethods.map { MethodOps(it) }
+        return delegate.declaredMethods.map { MethodOps(it) }
     }
 }
 
-class ConstructorOps<T : Any>(private val ctor: Constructor<T>) {
+class ConstructorOps<T : Any>(val delegate: Constructor<T>) {
     fun new(vararg args: Any?): T {
-        return ctor.apply { isAccessible = true }.newInstance(*args)
+        return delegate.apply { isAccessible = true }.newInstance(*args)
     }
 
     fun hook(callback: XC_MethodHook): ConstructorOps<T> {
-        XposedBridge.hookMethod(ctor, callback)
+        XposedBridge.hookMethod(delegate, callback)
         return this
     }
 }
 
-class FieldOps<T : Any?>(private val field: Field) {
+class FieldOps<T : Any?>(val delegate: Field) {
     operator fun get(obj: T?): Any? {
-        return field.apply { isAccessible = true }[obj]
+        return delegate.apply { isAccessible = true }[obj]
     }
 
     operator fun set(obj: T?, value: Any?): FieldOps<T> {
-        field.apply { isAccessible = true }[obj] = value
+        delegate.apply { isAccessible = true }[obj] = value
         return this
     }
 }
 
-class MethodOps<T : Any?>(private val method: Method) {
+class MethodOps<T : Any?>(val delegate: Method) {
     fun call(obj: T?, vararg args: Any?): Any? {
-        return method.apply { isAccessible = true }.invoke(obj, *args)
+        return delegate.apply { isAccessible = true }.invoke(obj, *args)
     }
 
     fun hook(callback: XC_MethodHook): MethodOps<T> {
-        XposedBridge.hookMethod(method, callback)
+        XposedBridge.hookMethod(delegate, callback)
         return this
     }
 }

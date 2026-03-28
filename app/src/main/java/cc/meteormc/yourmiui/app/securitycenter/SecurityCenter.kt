@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.app.Hook
 import cc.meteormc.yourmiui.app.securitycenter.hook.DisableCountdownDialog
 import cc.meteormc.yourmiui.app.securitycenter.hook.DisableMinorScan
 import cc.meteormc.yourmiui.app.securitycenter.hook.FixTrafficCorrection
+import cc.meteormc.yourmiui.app.securitycenter.hook.RemoveAdbSwitchRestriction
 
 object SecurityCenter: App(
     "com.miui.securitycenter"
@@ -13,7 +14,8 @@ object SecurityCenter: App(
         return listOf(
             DisableCountdownDialog,
             DisableMinorScan,
-            FixTrafficCorrection
+            FixTrafficCorrection,
+            RemoveAdbSwitchRestriction
         )
     }
 }
