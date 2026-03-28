@@ -13,18 +13,18 @@ abstract class App(
         }
 
         val appName = this.javaClass.simpleName
-        YourMIUI.log("Initializing app '$appName'")
+        YourMIUI.log("Initializing app '$appName'", true)
         this.getHooks().forEach {
             val hookName = it.javaClass.simpleName
             try {
-                YourMIUI.log("Initializing hook '$hookName' in app '$appName'")
+                YourMIUI.log("Initializing hook '$hookName' in app '$appName'", true)
                 it.init(lpparam)
             } catch (t: Throwable) {
                 val stackTrace = Log.getStackTraceString(t)
-                YourMIUI.log("Failed to initialize hook '$hookName' in app '$appName':\n$stackTrace")
+                YourMIUI.log("Failed to initialize hook '$hookName' in app '$appName':\n$stackTrace", true)
             }
         }
-        YourMIUI.log("Initialized app '$appName'")
+        YourMIUI.log("Initialized app '$appName'", true)
     }
 
     abstract fun getHooks(): Iterable<Hook>

@@ -28,21 +28,22 @@ class YourMIUI: IXposedHookLoadPackage {
             app.packages.map { it to app }
         }.toMap()
 
-        fun log(message: String) {
-            XposedBridge.log("[YourMIUI] $message")
+        fun log(message: String, debug: Boolean = false) {
+            if (!debug) XposedBridge.log("[YourMIUI] $message")
         }
     }
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
         if (packageName == BuildConfig.APPLICATION_ID) {
-            log("Module is active with version ${BuildConfig.VERSION_NAME}(code: ${BuildConfig.VERSION_CODE})!")
+            log("Module is active with version ${BuildConfig.VERSION_NAME}(code: ${BuildConfig.VERSION_CODE})!", true)
 
             ReflectHelper.of(BridgeHelper.Companion::class.java.name, lpparam.classLoader)?.operate {
-                val apiName = ReflectHelper.fromJava(XposedBridge::class.java).operate {
-                    field("TAG")?.get(null) as String?
-                }
-                method("getApiName")?.hook(XC_MethodReplacement.returnConstant(apiName))
+                method("getApiName")?.hook(XC_MethodReplacement.returnConstant(
+                    ReflectHelper.fromJava(XposedBridge::class.java).operate {
+                        field("TAG")?.get(null) as String?
+                    }
+                ))
                 method("getApiVersion")?.hook(XC_MethodReplacement.returnConstant(XposedBridge.getXposedVersion()))
                 method("isModuleActive")?.hook(XC_MethodReplacement.returnConstant(true))
             }
