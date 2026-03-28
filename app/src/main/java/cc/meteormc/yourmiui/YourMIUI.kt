@@ -49,8 +49,8 @@ class YourMIUI : IXposedHookLoadPackage {
                 method("getApiVersion")?.hook(XC_MethodReplacement.returnConstant(XposedBridge.getXposedVersion()))
                 method("isModuleActive")?.hook(XC_MethodReplacement.returnConstant(true))
             }
-        } else {
-            apps[packageName]?.init(lpparam)
         }
+
+        apps[packageName]?.init(lpparam)
     }
 }

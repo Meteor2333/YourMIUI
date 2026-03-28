@@ -18,10 +18,10 @@ class ReflectHelper<T : Any>(val delegate: Class<T>) {
 
         fun <T : Any> fromKt(clazz: KClass<T>) = ReflectHelper(clazz.java)
 
-        fun of(className: String, classLoader: ClassLoader?): ReflectHelper<Any>? {
+        fun of(className: String, classLoader: ClassLoader): ReflectHelper<Any>? {
             return try {
                 @Suppress("UNCHECKED_CAST")
-                ReflectHelper(XposedHelpers.findClass(className, classLoader ?: ClassLoader.getSystemClassLoader()) as Class<Any>)
+                ReflectHelper(XposedHelpers.findClass(className, classLoader) as Class<Any>)
             } catch (_: XposedHelpers.ClassNotFoundError) {
                 YourMIUI.log("Class not found: $className!")
                 null
