@@ -7,7 +7,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import org.json.JSONObject
 
-object HideTab: Hook(
+object HideTab : Hook(
     name = R.string.market_hide_tab_name,
     description = R.string.market_hide_tab_description,
     testEnvironment= R.string.market_hide_tab_test_environment,

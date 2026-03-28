@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.app.securitycenter.hook.DisableMinorScan
 import cc.meteormc.yourmiui.app.securitycenter.hook.FixTrafficCorrection
 import cc.meteormc.yourmiui.app.securitycenter.hook.RemoveAdbSwitchRestriction
 
-object SecurityCenter: App(
+object SecurityCenter : App(
     "com.miui.securitycenter"
 ) {
     override fun getHooks(): Iterable<Hook> {

@@ -12,8 +12,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-
-object RemoveAdbSwitchRestriction: Hook(
+object RemoveAdbSwitchRestriction : Hook(
     name = R.string.securitycenter_remove_adb_switch_restriction_name,
     description = R.string.securitycenter_remove_adb_switch_restriction_description,
     testEnvironment = R.string.securitycenter_remove_adb_switch_restriction_test_environment

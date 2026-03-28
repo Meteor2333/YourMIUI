@@ -8,10 +8,10 @@ import cc.meteormc.yourmiui.helper.ReflectScope
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object DisableCountdownDialog: Hook(
+object DisableCountdownDialog : Hook(
     name = R.string.securitycenter_disable_countdown_dialog_name,
     description = R.string.securitycenter_disable_countdown_dialog_description,
-    testEnvironment = R.string.securitycenter_disable_countdown_dialog_test_environment,
+    testEnvironment = R.string.securitycenter_disable_countdown_dialog_test_environment
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.permcenter.privacymanager.InterceptBaseFragment", lpparam.classLoader)?.operate {

@@ -6,11 +6,11 @@ import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object DisablePause: Hook(
+object DisablePause : Hook(
     name = R.string.superwallpaper_disable_pause_name,
     description = R.string.superwallpaper_disable_pause_description,
     warning = R.string.superwallpaper_disable_pause_warning,
-    testEnvironment = R.string.superwallpaper_disable_pause_test_environment,
+    testEnvironment = R.string.superwallpaper_disable_pause_test_environment
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.miwallpaper.basesuperwallpaper.SuperWallpaper", lpparam.classLoader)?.operate {

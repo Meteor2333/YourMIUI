@@ -6,11 +6,11 @@ import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object DisableSafeCheck: Hook(
+object DisableSafeCheck : Hook(
     name = R.string.packageinstaller_disable_safe_check_name,
     description = R.string.packageinstaller_disable_safe_check_description,
     warning = R.string.packageinstaller_disable_safe_check_warning,
-    testEnvironment = R.string.packageinstaller_disable_safe_check_test_environment,
+    testEnvironment = R.string.packageinstaller_disable_safe_check_test_environment
 ) {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         ReflectHelper.of("com.miui.packageInstaller.model.CloudParams", lpparam.classLoader)?.operate {

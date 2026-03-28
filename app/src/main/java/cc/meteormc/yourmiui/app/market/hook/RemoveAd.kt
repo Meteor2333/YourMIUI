@@ -7,7 +7,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object RemoveAd: Hook(
+object RemoveAd : Hook(
     name = R.string.market_remove_ad_name,
     description = R.string.market_remove_ad_description,
     testEnvironment= R.string.market_remove_ad_test_environment,

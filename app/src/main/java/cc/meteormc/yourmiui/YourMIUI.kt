@@ -15,7 +15,7 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 @DontObfuscate
-class YourMIUI: IXposedHookLoadPackage {
+class YourMIUI : IXposedHookLoadPackage {
     companion object {
         private val apps = listOf(
             Android,

@@ -6,7 +6,7 @@ import cc.meteormc.yourmiui.helper.ReflectHelper
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object RemoveNewVersionTag: Hook(
+object RemoveNewVersionTag : Hook(
     name = R.string.settings_remove_new_version_tag_name,
     description = R.string.settings_remove_new_version_tag_description,
     testEnvironment = R.string.settings_remove_new_version_tag_test_environment
