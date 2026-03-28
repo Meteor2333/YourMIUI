@@ -29,7 +29,9 @@ class YourMIUI: IXposedHookLoadPackage {
         }.toMap()
 
         fun log(message: String, debug: Boolean = false) {
-            if (!debug) XposedBridge.log("[YourMIUI] $message")
+            if (!debug || BuildConfig.DEBUG) {
+                XposedBridge.log("[YourMIUI] $message")
+            }
         }
     }
 
