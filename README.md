@@ -17,8 +17,8 @@
 
 ## 鸣谢
 - [mi_water](https://github.com/coderstory/mi_water) 为本项目提供了灵感和基础
-- [NoSwipeToKill](https://github.com/dantmnf/NoSwipeToKill) 为本项目的 '阻止结束进程' 功能提供了技术支持
-- [FuckMarketAds](https://github.com/callng/FuckMarketAds) 为本项目商店相关的功能提供了技术支持
+- [NoSwipeToKill](https://github.com/dantmnf/NoSwipeToKill) 为本项目的 `阻止结束进程` 功能提供了技术支持
+- [FuckMarketAds](https://github.com/callng/FuckMarketAds) 为本项目应用商店相关的功能提供了技术支持
 
 ## 许可证
 MIT
