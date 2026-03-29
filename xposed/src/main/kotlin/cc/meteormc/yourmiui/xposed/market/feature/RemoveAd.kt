@@ -168,7 +168,7 @@ object RemoveAd : HookFeature(
 
         // 更新页面
         ReflectHelper.of("com.xiaomi.market.ui.UpdateListRvAdapter", lpparam.classLoader)?.operate {
-            val enum = ReflectHelper.of("com.xiaomi.market.ui.UpdateListRvAdapter\$PageCollapseState", lpparam.classLoader)?.operate {
+            val enum = ReflectHelper.of($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState", lpparam.classLoader)?.operate {
                 // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
                 field("Expand")?.get(null)
             }

@@ -1,4 +1,4 @@
-@file:Suppress("UnUsed", "RemoveRedundantQualifierName")
+@file:Suppress("unused")
 
 package cc.meteormc.yourmiui.xposed
 
