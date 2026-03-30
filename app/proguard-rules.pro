@@ -1,0 +1,3 @@
+-dontobfuscate
+-dontwarn de.robv.android.xposed.**
+-keep class cc.meteormc.yourmiui.** { *; }

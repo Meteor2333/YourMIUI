@@ -18,7 +18,7 @@ import java.lang.reflect.Proxy
 
 class XposedEntry : IXposedHookLoadPackage {
     companion object {
-        private val scopes = listOf<XposedScope>(
+        private val scopes = listOf(
             Android,
             Market,
             PackageInstaller,
@@ -71,7 +71,10 @@ class XposedEntry : IXposedHookLoadPackage {
                                 target.javaClass.getMethod(
                                     method.name,
                                     *method.parameterTypes
-                                ).invoke(target, *(args ?: emptyArray()))
+                                ).invoke(
+                                    target,
+                                    *(args ?: emptyArray())
+                                )
                             }
                         }
 

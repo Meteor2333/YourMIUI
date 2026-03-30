@@ -20,6 +20,6 @@ kotlin {
 }
 
 dependencies {
-    compileOnly(project(":core"))
+    implementation(project(":core"))
     compileOnly("de.robv.android.xposed:api:82")
 }

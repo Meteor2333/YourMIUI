@@ -143,6 +143,7 @@ class ReflectScope<T : Any>(val delegate: Class<T>) {
 
     /* --------- commons-lang start --------- */
 
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     companion object {
         private val methodCache = mutableMapOf<String, MethodOps<*>>()
 
@@ -410,7 +411,7 @@ class ConstructorOps<T : Any>(val delegate: Constructor<T>) {
     }
 }
 
-class FieldOps<T : Any?>(val delegate: Field) {
+class FieldOps<T : Any>(val delegate: Field) {
     operator fun get(obj: T?): Any? {
         return delegate.apply { isAccessible = true }[obj]
     }
@@ -421,7 +422,7 @@ class FieldOps<T : Any?>(val delegate: Field) {
     }
 }
 
-class MethodOps<T : Any?>(val delegate: Method) {
+class MethodOps<T : Any>(val delegate: Method) {
     fun call(obj: T?, vararg args: Any?): Any? {
         return delegate.apply { isAccessible = true }.invoke(obj, *args)
     }

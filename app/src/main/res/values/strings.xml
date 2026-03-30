@@ -10,7 +10,7 @@
     <string name="android_block_kill_process_test_environment">Android13的MIUI14版本</string>
 
     <string name="market_remove_ad_name">去广告</string>
-    <string name="market_remove_ad_description">去除应用商店中的各种广告和赞助商软件推荐</string>
+    <string name="market_remove_ad_description">去除应用商店中的各种广告和赞助商应用推荐</string>
     <string name="market_remove_ad_test_environment">4.112.7版本</string>
 
     <string name="market_hide_tab_name">隐藏底边栏</string>

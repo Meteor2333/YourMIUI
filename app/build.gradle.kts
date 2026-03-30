@@ -10,6 +10,17 @@ android {
         applicationId = "cc.meteormc.yourmiui"
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
     buildFeatures {
         buildConfig = true
         viewBinding = true
@@ -21,7 +32,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core"))
+    compileOnly(project(":core"))
     runtimeOnly(project(":xposed"))
 
     implementation("androidx.core:core-ktx:1.18.0")
