@@ -1,4 +1,5 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+import com.android.build.gradle.BaseExtension
+
 plugins {
     id("com.android.application") version "8.12.3" apply false
     id("com.android.library") version "8.12.3" apply false
@@ -7,7 +8,7 @@ plugins {
 
 subprojects {
     plugins.withId("com.android.base") {
-        extensions.configure<com.android.build.gradle.BaseExtension> {
+        extensions.configure<BaseExtension> {
             compileSdkVersion(36)
 
             defaultConfig {

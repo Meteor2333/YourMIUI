@@ -1,3 +1,5 @@
+import java.util.*
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -10,8 +12,27 @@ android {
         applicationId = "cc.meteormc.yourmiui"
     }
 
+    val keystoreProp = Properties()
+    val keystorePropFile = rootProject.file("keystore.properties")
+    if (keystorePropFile.exists()) {
+        keystoreProp.load(keystorePropFile.inputStream())
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = keystoreProp.getProperty("storeFile")?.let { rootProject.file(it) }
+            storePassword = keystoreProp.getProperty("storePassword")
+            keyAlias = keystoreProp.getProperty("keyAlias")
+            keyPassword = keystoreProp.getProperty("keyPassword")
+        }
+    }
+
     buildTypes {
         release {
+            if (keystorePropFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
