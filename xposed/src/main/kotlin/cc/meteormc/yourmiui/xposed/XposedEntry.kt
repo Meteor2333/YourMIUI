@@ -43,7 +43,7 @@ class XposedEntry : IXposedHookLoadPackage {
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
-        if (this.javaClass.packageName.startsWith(packageName)) {
+        if (this.javaClass.name.startsWith(packageName)) {
             val bridgeClass = getClass(lpparam.classLoader, Bridge::class.java.name, true) ?: return
             XposedFeature.ReflectHelper(bridgeClass).operate {
                 method("getApiName")?.hook(XC_MethodReplacement.returnConstant(
@@ -164,13 +164,13 @@ abstract class XposedFeature(
     }
 
     class ReflectHelper<T : Any>(val delegate: Class<T>) {
-        fun <R> operate(block: ReflectOperater<T>.() -> R): R {
-            return ReflectOperater(delegate).run(block)
+        fun <R> operate(block: ReflectOperator<T>.() -> R): R {
+            return ReflectOperator(delegate).run(block)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    class ReflectOperater<T : Any>(val delegate: Class<T>) {
+    class ReflectOperator<T : Any>(val delegate: Class<T>) {
         companion object {
             private val constructorCache = mutableMapOf<String, ConstructorOps<*>>()
             private val fieldCache = mutableMapOf<String, FieldOps<*>>()
@@ -309,7 +309,7 @@ abstract class XposedFeature(
     class FieldOps<T : Any>(private val delegate: Field) {
         fun type(): Class<*> = delegate.type
 
-        operator fun <R> get(obj: T?, rtn: Class<R>): R? {
+        operator fun <R> get(obj: T?, returnType: Class<R>): R? {
             return delegate.apply { isAccessible = true }[obj] as R?
         }
 
@@ -329,8 +329,7 @@ abstract class XposedFeature(
         }
 
         fun callSuper(obj: T?, vararg args: Any?): Any? {
-            XposedBridge.invokeOriginalMethod(delegate, obj, args)
-            return delegate.apply { isAccessible = true }.invoke(obj, *args)
+            return XposedBridge.invokeOriginalMethod(delegate, obj, args)
         }
 
         fun hook(callback: XC_MethodHook): MethodOps<T> {

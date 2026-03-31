@@ -27,14 +27,14 @@ object DisableCountdownDialog : XposedFeature(
             })
         }
 
-        val hookGetter = { operater: ReflectOperater<Any> ->
+        val hookGetter = { operator: ReflectOperator<Any> ->
             object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     val thisObject = param.thisObject
                     // name: (obfuscated) | type: int
-                    operater.fields(Int::class.java).firstOrNull { it[thisObject, Integer.TYPE] == 5 }?.set(thisObject, 1)
+                    operator.fields(Int::class.java).firstOrNull { it[thisObject, Integer.TYPE] == 5 }?.set(thisObject, 1)
                     // name: (obfuscated) | type: android.os.Handler
-                    val handler = operater.fields(Handler::class.java).firstOrNull()?.get(thisObject, Handler::class.java) ?: return
+                    val handler = operator.fields(Handler::class.java).firstOrNull()?.get(thisObject, Handler::class.java) ?: return
                     handler.removeMessages(100)
                     handler.sendEmptyMessage(100)
                 }

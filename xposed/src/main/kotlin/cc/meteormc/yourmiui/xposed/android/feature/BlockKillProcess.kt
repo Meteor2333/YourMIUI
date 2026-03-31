@@ -23,7 +23,8 @@ object BlockKillProcess : XposedFeature(
         helper("com.android.server.am.ProcessCleanerBase")?.operate {
             // 这个类在系统框架中
             // 从 /system/framework/services.jar 提取而来
-            val fieldProcessRecordInfo = helper("com.android.server.am.ProcessRecord")?.operate {
+            val helperProcessRecord = helper("com.android.server.am.ProcessRecord")
+            val fieldProcessRecordInfo = helperProcessRecord?.operate {
                 // name: info | type: android.content.pm.ApplicationInfo
                 field("info")
             } ?: return@operate
@@ -31,7 +32,7 @@ object BlockKillProcess : XposedFeature(
             // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
             method(
                 "killOnce",
-                delegate,
+                helperProcessRecord.delegate,
                 String::class.java,
                 Integer.TYPE,
                 Handler::class.java,
