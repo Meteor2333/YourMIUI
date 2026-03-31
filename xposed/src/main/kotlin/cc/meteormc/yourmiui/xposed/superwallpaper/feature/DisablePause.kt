@@ -1,18 +1,17 @@
 package cc.meteormc.yourmiui.xposed.superwallpaper.feature
 
-import cc.meteormc.yourmiui.xposed.HookFeature
-import cc.meteormc.yourmiui.xposed.ReflectHelper
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object DisablePause : HookFeature(
-    name = "superwallpaper_disable_pause_name",
-    description = "superwallpaper_disable_pause_description",
-    warning = "superwallpaper_disable_pause_warning",
-    testEnvironment = "superwallpaper_disable_pause_test_environment"
+object DisablePause : XposedFeature(
+    nameRes = R.string.feature_superwallpaper_disable_pause_name,
+    descriptionRes = R.string.feature_superwallpaper_disable_pause_description,
+    warningRes = R.string.feature_superwallpaper_disable_pause_warning,
+    testEnvironmentRes = R.string.feature_superwallpaper_disable_pause_test_environment
 ) {
-    override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        ReflectHelper.of("com.miui.miwallpaper.basesuperwallpaper.SuperWallpaper", lpparam.classLoader)?.operate {
+    override fun init() {
+        helper("com.miui.miwallpaper.basesuperwallpaper.SuperWallpaper")?.operate {
             // modifier: protected | signature: getDeskPauseDelay()I
             method("getDeskPauseDelay")?.hook(XC_MethodReplacement.returnConstant(Int.MAX_VALUE))
             // modifier: protected | signature: getWallPaperAod2LockPauseDelay()I

@@ -5,14 +5,6 @@ plugins {
 
 android {
     namespace = "cc.meteormc.yourmiui.xposed"
-
-    defaultConfig {
-        buildConfigField("String", "PACKAGE_NAME", "\"cc.meteormc.yourmiui\"")
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 kotlin {

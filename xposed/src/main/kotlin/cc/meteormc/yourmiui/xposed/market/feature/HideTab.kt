@@ -1,15 +1,14 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
-import cc.meteormc.yourmiui.xposed.ConfigurableHookFeature
-import cc.meteormc.yourmiui.xposed.ReflectHelper
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import org.json.JSONObject
 
-object HideTab : ConfigurableHookFeature(
-    name = "market_hide_tab_name",
-    description = "market_hide_tab_description",
-    testEnvironment= "market_hide_tab_test_environment",
+object HideTab : XposedFeature(
+    nameRes = R.string.feature_market_hide_tab_name,
+    descriptionRes = R.string.feature_market_hide_tab_description,
+    testEnvironmentRes = R.string.feature_market_hide_tab_test_environment,
     originalAuthor = "owo233"
 ) {
     /**
@@ -23,8 +22,8 @@ object HideTab : ConfigurableHookFeature(
      */
     private val keptTags = setOf("native_market_home", "native_market_mine")
 
-    override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        ReflectHelper.of("com.xiaomi.market.model.PageConfig", lpparam.classLoader)?.operate {
+    override fun init() {
+        helper("com.xiaomi.market.model.PageConfig")?.operate {
             // modifier: private | signature: initTabs(Lorg/json/JSONObject;)V
             method("initTabs")?.hook(object : XC_MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {

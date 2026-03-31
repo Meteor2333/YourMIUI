@@ -1,18 +1,17 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.Looper
-import cc.meteormc.yourmiui.xposed.HookFeature
-import cc.meteormc.yourmiui.xposed.ReflectHelper
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object FixTrafficCorrection : HookFeature(
-    name = "securitycenter_fix_traffic_correction_name",
-    description = "securitycenter_fix_traffic_correction_description",
-    testEnvironment = "securitycenter_fix_traffic_correction_test_environment"
+object FixTrafficCorrection : XposedFeature(
+    nameRes = R.string.feature_securitycenter_fix_traffic_correction_name,
+    descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,
+    testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment
 ) {
-    override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        ReflectHelper.of("com.miui.sdk.tc.TcManager", lpparam.classLoader)?.operate {
+    override fun init() {
+        helper("com.miui.sdk.tc.TcManager")?.operate {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;
             val refreshMethod = method("getAllInstructions")
             refreshMethod?.let {
@@ -37,7 +36,7 @@ object FixTrafficCorrection : HookFeature(
         }
 
         // for debug
-//        ReflectHelper.of("com.miui.networkassistant.service.tm.TrafficSimManager", lpparam.classLoader)?.operate {
+//        helper("com.miui.networkassistant.service.tm.TrafficSimManager", lpparam.classLoader)?.operate {
 //            // modifier: public | signature: checkCorrectTime(IZZII)I
 //            method("checkCorrectTime")?.hook(XC_MethodReplacement.returnConstant(-1))
 //        }

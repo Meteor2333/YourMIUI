@@ -1,9 +1,9 @@
 package cc.meteormc.yourmiui.core
 
 abstract class Feature(
-    val name: String,
-    val description: String,
-    val warning: String? = null,
-    val testEnvironment: String? = null,
-    val originalAuthor: String? = null
+    val nameRes: Int,
+    val descriptionRes: Int,
+    val warningRes: Int?,
+    val testEnvironmentRes: Int?,
+    val originalAuthor: String?
 )

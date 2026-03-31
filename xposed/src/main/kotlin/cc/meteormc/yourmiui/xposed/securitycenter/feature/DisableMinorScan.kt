@@ -1,14 +1,13 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
-import cc.meteormc.yourmiui.xposed.HookFeature
-import cc.meteormc.yourmiui.xposed.ReflectHelper
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-object DisableMinorScan : HookFeature(
-    name = "securitycenter_disable_minor_scan_name",
-    description = "securitycenter_disable_minor_scan_description",
-    testEnvironment = "securitycenter_disable_minor_scan_test_environment"
+object DisableMinorScan : XposedFeature(
+    nameRes = R.string.feature_securitycenter_disable_minor_scan_name,
+    descriptionRes = R.string.feature_securitycenter_disable_minor_scan_description,
+    testEnvironmentRes = R.string.feature_securitycenter_disable_minor_scan_test_environment
 ) {
     private val minorScan = setOf(
         "com.miui.securityscan.model.manualitem.PermissionRootModel",
@@ -17,9 +16,9 @@ object DisableMinorScan : HookFeature(
         "com.miui.securityscan.model.system.UsbModel"
     )
 
-    override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
+    override fun init() {
         for (scan in minorScan) {
-            ReflectHelper.of(scan, lpparam.classLoader)?.operate {
+            helper(scan)?.operate {
                 // modifier: public | signature: scan()V
                 method("scan")?.hook(XC_MethodReplacement.DO_NOTHING)
             }

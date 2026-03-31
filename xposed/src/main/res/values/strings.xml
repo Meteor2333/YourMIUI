@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_android_block_kill_process_name">阻止结束进程</string>
+    <string name="feature_android_block_kill_process_description">阻止系统或第三方应用结束本应用的进程</string>
+    <string name="feature_android_block_kill_process_test_environment">Android13的MIUI14版本</string>
+
+    <string name="feature_market_remove_ad_name">去广告</string>
+    <string name="feature_market_remove_ad_description">去除应用商店中的各种广告和赞助商应用推荐</string>
+    <string name="feature_market_remove_ad_test_environment">4.112.7版本</string>
+    <string name="feature_market_hide_tab_name">隐藏底边栏</string>
+    <string name="feature_market_hide_tab_description">隐藏应用商店的底边栏中无用的项</string>
+    <string name="feature_market_hide_tab_test_environment">4.112.7版本</string>
+
+    <string name="feature_packageinstaller_disable_safe_check_name">禁用应用安全检测</string>
+    <string name="feature_packageinstaller_disable_safe_check_description">禁止安装应用时对应用进行安全检测</string>
+    <string name="feature_packageinstaller_disable_safe_check_warning">开启此功能可能导致安装无法察觉的恶意软件</string>
+    <string name="feature_packageinstaller_disable_safe_check_test_environment">5.0.6.2–20221107版本</string>
+
+    <string name="feature_securitycenter_disable_countdown_dialog_name">取消倒计时对话框</string>
+    <string name="feature_securitycenter_disable_countdown_dialog_description">取消更改危险设置时的对话框确定倒计时</string>
+    <string name="feature_securitycenter_disable_countdown_dialog_test_environment">7.5.4–230317.0.2版本</string>
+    <string name="feature_securitycenter_disable_minor_scan_name">禁用不重要的扫描项</string>
+    <string name="feature_securitycenter_disable_minor_scan_description">禁用手机管家中的开发者模式、USB调试开关等扫描项</string>
+    <string name="feature_securitycenter_disable_minor_scan_test_environment">7.5.4–230317.0.2版本</string>
+    <string name="feature_securitycenter_fix_traffic_correction_name">修复流量校正</string>
+    <string name="feature_securitycenter_fix_traffic_correction_description">修复网络助手的校正总是失败的问题</string>
+    <string name="feature_securitycenter_fix_traffic_correction_test_environment">7.5.4–230317.0.2版本</string>
+    <string name="feature_securitycenter_remove_adb_switch_restriction_name">移除ADB开关限制</string>
+    <string name="feature_securitycenter_remove_adb_switch_restriction_description">移除设置中ADB的开关限制（如要求联网、插入SIM卡、登录小米账号）</string>
+    <string name="feature_securitycenter_remove_adb_switch_restriction_test_environment">Android13版本</string>
+
+    <string name="feature_settings_remove_new_version_tag_name">清除新版本标记</string>
+    <string name="feature_settings_remove_new_version_tag_description">清除设置中的系统新版本标记</string>
+    <string name="feature_settings_remove_new_version_tag_test_environment">Android13版本</string>
+
+    <string name="scope_superwallpaper">超级壁纸</string>
+    <string name="feature_superwallpaper_disable_pause_name">禁止壁纸暂停</string>
+    <string name="feature_superwallpaper_disable_pause_description">解决超级壁纸在锁屏界面仅显示5秒动画的问题，需要在作用域中勾选你所使用的超级壁纸</string>
+    <string name="feature_superwallpaper_disable_pause_warning">开启此功能可能导致不必要的性能占用</string>
+    <string name="feature_superwallpaper_disable_pause_test_environment">所有样式超级壁纸的ALPHA–2.6.555–03232016-ogl-64版本</string>
+</resources>
