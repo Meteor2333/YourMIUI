@@ -9,7 +9,7 @@ android {
     namespace = "cc.meteormc.yourmiui"
 
     defaultConfig {
-        applicationId = "cc.meteormc.yourmiui"
+        applicationId = namespace
     }
 
     val keystoreProp = Properties()

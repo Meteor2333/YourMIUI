@@ -6,6 +6,7 @@ import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.Scope
 import cc.meteormc.yourmiui.core.util.compareParameterTypes
 import cc.meteormc.yourmiui.core.util.getClass
+import cc.meteormc.yourmiui.core.util.proxyClass
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.market.Market
 import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
@@ -20,7 +21,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import java.lang.reflect.Proxy
 
 class XposedEntry : IXposedHookLoadPackage {
     companion object {
@@ -54,36 +54,9 @@ class XposedEntry : IXposedHookLoadPackage {
                 method("getApiVersion")?.hook(XC_MethodReplacement.returnConstant(XposedBridge.getXposedVersion()))
                 method("isModuleActivated")?.hook(XC_MethodReplacement.returnConstant(true))
                 method("getScopes")?.hook(object : XC_MethodReplacement() {
-                    // 由于这里的ClassLoader与调用方的ClassLoader不同
-                    // 直接返回对象会导致ClassCastException
-                    // 所以使用Proxy来优雅地解决这个问题
                     override fun replaceHookedMethod(param: MethodHookParam): Any {
-                        // 获取调用方期望的接口类型（此类被调用方的ClassLoader加载）
                         val interfaceClass = param.args[0] as Class<*>
-                        // 为真实对象创建Proxy（这些类都被这里的ClassLoader加载）
-                        val proxies = scopes.map { target ->
-                            // 使用调用方的ClassLoader创建代理
-                            // 让Proxy"看起来"好像实现了这个接口
-                            Proxy.newProxyInstance(
-                                interfaceClass.classLoader,
-                                arrayOf(interfaceClass)
-                            ) { _, method, args ->
-                                // 注意:
-                                // `method`是被调用方ClassLoader加载的方法
-                                // `target`是被这里ClassLoader加载的对象
-                                // 二者互相不认识 所以不能直接 method.invoke(target)
-                                // 必须从method找到target对应的真实方法并调用
-                                target.javaClass.getMethod(
-                                    method.name,
-                                    *method.parameterTypes
-                                ).invoke(
-                                    target,
-                                    *(args ?: emptyArray())
-                                )
-                            }
-                        }
-
-                        return proxies.toTypedArray()
+                        return scopes.map { proxyClass(interfaceClass, it) }.toTypedArray()
                     }
                 })
             }

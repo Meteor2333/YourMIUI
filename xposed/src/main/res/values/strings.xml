@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_android_block_kill_process_name">阻止结束进程</string>
-    <string name="feature_android_block_kill_process_description">阻止系统或第三方应用结束本应用的进程</string>
+    <string name="feature_android_block_kill_process_description">阻止系统或第三方应用结束指定软件的进程</string>
     <string name="feature_android_block_kill_process_test_environment">Android13的MIUI14版本</string>
 
     <string name="feature_market_remove_ad_name">去广告</string>
