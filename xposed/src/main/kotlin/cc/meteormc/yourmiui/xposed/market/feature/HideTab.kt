@@ -6,6 +6,7 @@ import de.robv.android.xposed.XC_MethodHook
 import org.json.JSONObject
 
 object HideTab : XposedFeature(
+    key = "market_hide_tab",
     nameRes = R.string.feature_market_hide_tab_name,
     descriptionRes = R.string.feature_market_hide_tab_description,
     testEnvironmentRes = R.string.feature_market_hide_tab_test_environment,

@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodHook
 
 object DisableSafeCheck : XposedFeature(
+    key = "packageinstaller_disable_safe_check",
     nameRes = R.string.feature_packageinstaller_disable_safe_check_name,
     descriptionRes = R.string.feature_packageinstaller_disable_safe_check_description,
     warningRes = R.string.feature_packageinstaller_disable_safe_check_warning,

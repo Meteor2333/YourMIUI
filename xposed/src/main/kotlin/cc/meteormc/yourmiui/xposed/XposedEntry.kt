@@ -99,6 +99,7 @@ abstract class XposedScope : Scope {
 
 @Suppress("unused")
 abstract class XposedFeature(
+    private val key: String,
     private val nameRes: Int,
     private val descriptionRes: Int,
     private val warningRes: Int? = null,
@@ -113,6 +114,10 @@ abstract class XposedFeature(
     }
 
     protected abstract fun init()
+
+    override fun getPreferenceKey(): String {
+        return this.key
+    }
 
     override fun getNameRes(): Int {
         return this.nameRes

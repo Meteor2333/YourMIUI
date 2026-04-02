@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodReplacement
 
 object DisableMinorScan : XposedFeature(
+    key = "securitycenter_disable_minor_scan",
     nameRes = R.string.feature_securitycenter_disable_minor_scan_name,
     descriptionRes = R.string.feature_securitycenter_disable_minor_scan_description,
     testEnvironmentRes = R.string.feature_securitycenter_disable_minor_scan_test_environment

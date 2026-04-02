@@ -6,6 +6,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodHook
 
 object FixTrafficCorrection : XposedFeature(
+    key = "securitycenter_fix_traffic_correction",
     nameRes = R.string.feature_securitycenter_fix_traffic_correction_name,
     descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,
     testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment

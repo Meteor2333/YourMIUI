@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodReplacement
 
 object RemoveNewVersionTag : XposedFeature(
+    key = "settings_remove_new_version_tag",
     nameRes = R.string.feature_settings_remove_new_version_tag_name,
     descriptionRes = R.string.feature_settings_remove_new_version_tag_description,
     testEnvironmentRes = R.string.feature_settings_remove_new_version_tag_test_environment

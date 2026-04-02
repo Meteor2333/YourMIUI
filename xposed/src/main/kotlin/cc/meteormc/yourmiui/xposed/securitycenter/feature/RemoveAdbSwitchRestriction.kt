@@ -9,6 +9,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodHook
 
 object RemoveAdbSwitchRestriction : XposedFeature(
+    key = "securitycenter_remove_adb_switch_restriction",
     nameRes = R.string.feature_securitycenter_remove_adb_switch_restriction_name,
     descriptionRes = R.string.feature_securitycenter_remove_adb_switch_restriction_description,
     testEnvironmentRes = R.string.feature_securitycenter_remove_adb_switch_restriction_test_environment

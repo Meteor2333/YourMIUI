@@ -8,6 +8,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodHook
 
 object BlockKillProcess : XposedFeature(
+    key = "android_block_kill_process",
     nameRes = R.string.feature_android_block_kill_process_name,
     descriptionRes = R.string.feature_android_block_kill_process_description,
     testEnvironmentRes = R.string.feature_android_block_kill_process_test_environment,

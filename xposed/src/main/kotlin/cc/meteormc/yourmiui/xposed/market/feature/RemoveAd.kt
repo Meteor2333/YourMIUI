@@ -6,6 +6,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 
 object RemoveAd : XposedFeature(
+    key = "market_remove_ad",
     nameRes = R.string.feature_market_remove_ad_name,
     descriptionRes = R.string.feature_market_remove_ad_description,
     testEnvironmentRes = R.string.feature_market_remove_ad_test_environment,

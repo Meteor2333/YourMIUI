@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import de.robv.android.xposed.XC_MethodReplacement
 
 object DisablePause : XposedFeature(
+    key = "superwallpaper_disable_pause",
     nameRes = R.string.feature_superwallpaper_disable_pause_name,
     descriptionRes = R.string.feature_superwallpaper_disable_pause_description,
     warningRes = R.string.feature_superwallpaper_disable_pause_warning,
