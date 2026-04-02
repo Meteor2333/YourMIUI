@@ -2,7 +2,6 @@
 
 package cc.meteormc.yourmiui.core.util
 
-
 // From commons-lang
 
 /**

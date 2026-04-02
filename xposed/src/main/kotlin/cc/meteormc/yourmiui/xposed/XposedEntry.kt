@@ -42,7 +42,7 @@ class XposedEntry : IXposedHookLoadPackage {
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
-        if (this.javaClass.name.startsWith(packageName)) {
+        if (packageName == BuildConfig.APPLICATION_ID) {
             val bridgeClass = getClass(lpparam.classLoader, Bridge::class.java.name, true) ?: return
             XposedFeature.ReflectHelper(bridgeClass).operate {
                 method("getApiName")?.hook(XC_MethodReplacement.returnConstant(

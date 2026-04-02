@@ -3,8 +3,18 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val projectNamespace: String by rootProject.extra
+
 android {
-    namespace = "cc.meteormc.yourmiui.xposed"
+    namespace = "$projectNamespace.xposed"
+
+    defaultConfig {
+        buildConfigField("String", "APPLICATION_ID", "\"$projectNamespace\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 kotlin {

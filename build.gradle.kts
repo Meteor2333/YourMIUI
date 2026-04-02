@@ -6,16 +6,24 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.3.20" apply false
 }
 
+val sdkMinVersion by extra(24)
+val sdkTargetVersion by extra(36)
+
+val appVersionCode by extra(1)
+val appVersionName by extra("1.0")
+
+val projectNamespace by extra("cc.meteormc.yourmiui")
+
 subprojects {
     plugins.withId("com.android.base") {
         extensions.configure<BaseExtension> {
-            compileSdkVersion(36)
+            compileSdkVersion(sdkTargetVersion)
 
             defaultConfig {
-                minSdk = 24
-                targetSdk = 36
-                versionCode = 1
-                versionName = "1.0"
+                minSdk = sdkMinVersion
+                targetSdk = sdkTargetVersion
+                versionCode = appVersionCode
+                versionName = appVersionName
             }
 
             compileOptions {

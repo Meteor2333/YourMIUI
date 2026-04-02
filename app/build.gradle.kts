@@ -5,11 +5,13 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val projectNamespace: String by rootProject.extra
+
 android {
-    namespace = "cc.meteormc.yourmiui"
+    namespace = projectNamespace
 
     defaultConfig {
-        applicationId = namespace
+        applicationId = projectNamespace
     }
 
     val keystoreProp = Properties()
