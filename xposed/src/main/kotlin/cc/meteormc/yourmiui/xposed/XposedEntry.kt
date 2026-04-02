@@ -6,7 +6,6 @@ import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.Scope
 import cc.meteormc.yourmiui.core.util.compareParameterTypes
 import cc.meteormc.yourmiui.core.util.getClass
-import cc.meteormc.yourmiui.core.util.proxyClass
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.market.Market
 import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
@@ -53,12 +52,7 @@ class XposedEntry : IXposedHookLoadPackage {
                 ))
                 method("getApiVersion")?.hook(XC_MethodReplacement.returnConstant(XposedBridge.getXposedVersion()))
                 method("isModuleActivated")?.hook(XC_MethodReplacement.returnConstant(true))
-                method("getScopes")?.hook(object : XC_MethodReplacement() {
-                    override fun replaceHookedMethod(param: MethodHookParam): Any {
-                        val interfaceClass = param.args[0] as Class<*>
-                        return scopes.map { proxyClass(interfaceClass, it) }.toTypedArray()
-                    }
-                })
+                method("getScopes")?.hook(XC_MethodReplacement.returnConstant(scopes))
             }
         } else {
             packageToScope[packageName]?.init(lpparam)
@@ -83,6 +77,8 @@ abstract class XposedScope : Scope {
         return this.packages
     }
 
+    abstract override fun getFeatures(): Iterable<Feature>
+
     open fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (!packages.contains(lpparam.packageName)) {
             return
@@ -103,18 +99,12 @@ abstract class XposedScope : Scope {
 
 @Suppress("unused")
 abstract class XposedFeature(
-    nameRes: Int,
-    descriptionRes: Int,
-    warningRes: Int? = null,
-    testEnvironmentRes: Int? = null,
-    originalAuthor: String? = null
-) : Feature(
-    nameRes,
-    descriptionRes,
-    warningRes,
-    testEnvironmentRes,
-    originalAuthor
-) {
+    private val nameRes: Int,
+    private val descriptionRes: Int,
+    private val warningRes: Int? = null,
+    private val testEnvironmentRes: Int? = null,
+    private val originalAuthor: String? = null
+) : Feature {
     private lateinit var classLoader: ClassLoader
 
     fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam) {
@@ -123,6 +113,26 @@ abstract class XposedFeature(
     }
 
     protected abstract fun init()
+
+    override fun getNameRes(): Int {
+        return this.nameRes
+    }
+
+    override fun getDescriptionRes(): Int {
+        return this.descriptionRes
+    }
+
+    override fun getWarningRes(): Int? {
+        return this.warningRes
+    }
+
+    override fun getTestEnvironmentRes(): Int? {
+        return this.testEnvironmentRes
+    }
+
+    override fun getOriginalAuthor(): String? {
+        return this.originalAuthor
+    }
 
     protected fun <T : Any> helper(clazz: Class<T>) = ReflectHelper(clazz)
 

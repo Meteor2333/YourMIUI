@@ -1,5 +1,8 @@
 package cc.meteormc.yourmiui.core;
 
+import java.util.Collections;
+import java.util.List;
+
 // These method is hooked in cc.meteormc.yourmiui.xposed.XposedEntry#handleLoadPackage()
 public interface Bridge {
     static String getApiName() {
@@ -14,7 +17,7 @@ public interface Bridge {
         return false;
     }
 
-    static Object[] getScopes(Class<Scope> interfaceClass) {
-        return new Object[0];
+    static List<?> getScopes() {
+        return Collections.emptyList();
     }
 }

@@ -30,7 +30,7 @@
     <string name="feature_securitycenter_remove_adb_switch_restriction_test_environment">Android13版本</string>
 
     <string name="feature_settings_remove_new_version_tag_name">清除新版本标记</string>
-    <string name="feature_settings_remove_new_version_tag_description">清除设置中的系统新版本标记</string>
+    <string name="feature_settings_remove_new_version_tag_description">清除设置中的系统新版本标记（不会阻止系统进行更新）</string>
     <string name="feature_settings_remove_new_version_tag_test_environment">Android13版本</string>
 
     <string name="scope_superwallpaper">超级壁纸</string>

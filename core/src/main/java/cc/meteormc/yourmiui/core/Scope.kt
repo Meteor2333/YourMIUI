@@ -5,5 +5,5 @@ interface Scope {
 
     fun getPackages(): Array<String>
 
-    fun getFeatures(): Iterable<Feature>
+    fun getFeatures(): Iterable<Any>
 }

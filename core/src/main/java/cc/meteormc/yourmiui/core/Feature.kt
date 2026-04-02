@@ -1,9 +1,13 @@
 package cc.meteormc.yourmiui.core
 
-abstract class Feature(
-    val nameRes: Int,
-    val descriptionRes: Int,
-    val warningRes: Int?,
-    val testEnvironmentRes: Int?,
-    val originalAuthor: String?
-)
+interface Feature {
+    fun getNameRes(): Int
+
+    fun getDescriptionRes(): Int
+
+    fun getWarningRes(): Int?
+
+    fun getTestEnvironmentRes(): Int?
+
+    fun getOriginalAuthor(): String?
+}
