@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package cc.meteormc.yourmiui.xposed
 
 import android.util.Log
@@ -20,6 +22,7 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
+import java.lang.reflect.Member
 import java.lang.reflect.Method
 
 class XposedEntry : IXposedHookLoadPackage {
@@ -46,15 +49,15 @@ class XposedEntry : IXposedHookLoadPackage {
         val packageName = lpparam.packageName
         if (packageName == BuildConfig.APPLICATION_ID) {
             val bridgeClass = getClass(lpparam.classLoader, Bridge::class.java.name, true) ?: return
-            XposedFeature.ReflectHelper(bridgeClass).operate {
-                method("getApiName")?.hook(XC_MethodReplacement.returnConstant(
-                    XposedFeature.ReflectHelper(XposedBridge::class.java).operate {
-                        field("TAG")?.get(null, String::class.java)
+            ReflectOperator(bridgeClass).run {
+                method("getApiName")?.hookResult(
+                    ReflectOperator(XposedBridge::class.java).run {
+                        field("TAG")?.get(null, String::class.java) ?: "Unknown"
                     }
-                ))
-                method("getApiVersion")?.hook(XC_MethodReplacement.returnConstant(XposedBridge.getXposedVersion()))
-                method("isModuleActivated")?.hook(XC_MethodReplacement.returnConstant(true))
-                method("getScopes")?.hook(XC_MethodReplacement.returnConstant(scopes))
+                )
+                method("getApiVersion")?.hookResult(XposedBridge.getXposedVersion())
+                method("isModuleActivated")?.hookResult(true)
+                method("getScopes")?.hookResult(scopes)
             }
         } else {
             packageToScope[packageName]?.init(lpparam)
@@ -86,11 +89,11 @@ abstract class XposedScope : Scope {
             return
         }
 
-        val scopeName = this.javaClass.simpleName
         this.getFeatures()
             .filterIsInstance<XposedFeature>()
             .forEach {
                 runCatching { it.initInternal(lpparam) }.onFailure { ex ->
+                    val scopeName = this.javaClass.simpleName
                     val featureName = it.javaClass.simpleName
                     val stackTrace = Log.getStackTraceString(ex)
                     XposedEntry.log("Failed to initialize hook feature '$featureName' in scope '$scopeName':\n$stackTrace")
@@ -99,7 +102,6 @@ abstract class XposedScope : Scope {
     }
 }
 
-@Suppress("unused")
 abstract class XposedFeature(
     private val key: String,
     private val nameRes: Int,
@@ -141,190 +143,209 @@ abstract class XposedFeature(
         return this.originalAuthor
     }
 
-    protected fun <T : Any> helper(clazz: Class<T>) = ReflectHelper(clazz)
+    protected fun <T : Any, R> helper(clazz: Class<T>, operate: ReflectOperator<T>.() -> R): R {
+        return ReflectOperator(clazz).run(operate)
+    }
 
-    protected fun helper(className: String): ReflectHelper<Any>? {
+    protected fun <R> helper(className: String, operate: ReflectOperator<Any>.() -> R): R? {
         val clazz = getClass(classLoader, className, false)
         return if (clazz != null) {
             @Suppress("UNCHECKED_CAST")
-            ReflectHelper(clazz as Class<Any>)
+            ReflectOperator(clazz as Class<Any>).run(operate)
         } else {
+            XposedEntry.log("Class not found: $className!")
+            null
+        }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class ReflectOperator<T : Any>(val delegate: Class<T>) {
+    companion object {
+        private val constructorCache = mutableMapOf<String, ConstructorOps<*>>()
+        private val fieldCache = mutableMapOf<String, FieldOps<*>>()
+        private val methodCache = mutableMapOf<String, MethodOps<*>>()
+    }
+
+    fun constructor(vararg paramTypes: Class<*>): ConstructorOps<T>? {
+        val fullName = "${delegate.getName()}${getParametersString(*paramTypes)}"
+        if (constructorCache.containsKey(fullName)) {
+            return constructorCache[fullName] as ConstructorOps<T>
+        }
+
+        return runCatching {
+            val constructor = ConstructorOps(delegate.getDeclaredConstructor(*paramTypes))
+            constructorCache[fullName] = constructor
+            constructor
+        }.onFailure {
+            XposedEntry.log("Constructor not found: $fullName!")
+        }.getOrNull()
+    }
+
+    fun constructors(): List<ConstructorOps<*>> {
+        return delegate.constructors.map { ConstructorOps(it) }
+    }
+
+    fun declaredConstructors(): List<ConstructorOps<T>> {
+        return (delegate.declaredConstructors as Array<Constructor<T>>).map { ConstructorOps(it) }
+    }
+
+    fun field(name: String): FieldOps<T>? {
+        val fullName = "${delegate.getName()}#$name"
+        if (fieldCache.containsKey(fullName)) {
+            return fieldCache[fullName] as FieldOps<T>
+        }
+
+        val field = findRecursive {
+            runCatching { it.getDeclaredField(name) }.getOrNull()
+        }?.let { FieldOps<T>(it) }
+        if (field == null) {
+            XposedEntry.log("Field not found: $fullName!")
+            return null
+        }
+
+        fieldCache[fullName] = field
+        return field
+    }
+
+    fun fields(type: Class<*>): List<FieldOps<T>> {
+        val result = mutableListOf<FieldOps<T>>()
+        var superClass: Class<*> = delegate
+        do {
+            for (field in superClass.declaredFields) {
+                if (!type.isAssignableFrom(field.type)) continue
+                result.add(FieldOps(field))
+            }
+        } while ((superClass.getSuperclass()?.also { superClass = it }) != null)
+        return result
+    }
+
+    fun fields(): List<FieldOps<T>> {
+        return delegate.fields.map { FieldOps(it) }
+    }
+
+    fun declaredFields(): List<FieldOps<T>> {
+        return delegate.declaredFields.map { FieldOps(it) }
+    }
+
+    fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
+        val fullName = "${delegate.getName()}#$name${getParametersString(*paramTypes)}"
+        if (methodCache.containsKey(fullName)) {
+            return methodCache[fullName] as MethodOps<T>
+        }
+
+        var result: Method? = null
+        findRecursive {
+            runCatching { it.getDeclaredMethod(name) }.getOrNull()?.let { dm -> return@findRecursive dm }
+            for (method in it.getDeclaredMethods()) {
+                // compare name and parameters
+                if (method.name == name && (result == null || compareParameterTypes(
+                        method.parameterTypes,
+                        result!!.parameterTypes,
+                        paramTypes
+                    ) < 0)) {
+                    // get accessible version of method
+                    result = method
+                }
+            }
+            return@findRecursive null
+        }?.let { result = it }
+
+        return if (result != null) {
+            val method = MethodOps<T>(result)
+            methodCache[fullName] = method
+            method
+        } else {
+            XposedEntry.log("Method not found: $fullName!")
             null
         }
     }
 
-    class ReflectHelper<T : Any>(val delegate: Class<T>) {
-        fun <R> operate(block: ReflectOperator<T>.() -> R): R {
-            return ReflectOperator(delegate).run(block)
-        }
+    fun methods(): List<MethodOps<T>> {
+        return delegate.methods.map { MethodOps(it) }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class ReflectOperator<T : Any>(val delegate: Class<T>) {
-        companion object {
-            private val constructorCache = mutableMapOf<String, ConstructorOps<*>>()
-            private val fieldCache = mutableMapOf<String, FieldOps<*>>()
-            private val methodCache = mutableMapOf<String, MethodOps<*>>()
-        }
+    fun declaredMethods(): List<MethodOps<T>> {
+        return delegate.declaredMethods.map { MethodOps(it) }
+    }
 
-        fun constructor(vararg paramTypes: Class<*>): ConstructorOps<T>? {
-            val fullName = "${delegate.getName()}${getParametersString(*paramTypes)}"
-            if (constructorCache.containsKey(fullName)) {
-                return constructorCache[fullName] as ConstructorOps<T>
-            }
+    private fun getParametersString(vararg clazzes: Class<*>): String {
+        return "(${clazzes.joinToString(",") { it.getName() }})"
+    }
 
-            return runCatching {
-                val constructor = ConstructorOps(delegate.getDeclaredConstructor(*paramTypes))
-                constructorCache[fullName] = constructor
-                constructor
-            }.onFailure {
-                XposedEntry.log("Constructor not found: $fullName!")
-            }.getOrNull()
-        }
+    private fun <R> findRecursive(func: (Class<*>) -> R?): R? {
+        var superClass: Class<*> = delegate
+        do {
+            func(superClass)?.let { return it }
+        } while ((superClass.getSuperclass()?.also { superClass = it }) != null)
+        return null
+    }
+}
 
-        fun constructors(): List<ConstructorOps<*>> {
-            return delegate.constructors.map { ConstructorOps(it) }
-        }
+abstract class Hookable(private val member: Member) {
+    fun hookResult(result: Any?) {
+        XposedBridge.hookMethod(member, XC_MethodReplacement.returnConstant(result))
+    }
 
-        fun declaredConstructors(): List<ConstructorOps<T>> {
-            return (delegate.declaredConstructors as Array<Constructor<T>>).map { ConstructorOps(it) }
-        }
+    fun hookDoNothing() {
+        XposedBridge.hookMethod(member, XC_MethodReplacement.DO_NOTHING)
+    }
 
-        fun field(name: String): FieldOps<T>? {
-            val fullName = "${delegate.getName()}#$name"
-            if (fieldCache.containsKey(fullName)) {
-                return fieldCache[fullName] as FieldOps<T>
-            }
-
-            val field = findRecursive {
-                runCatching { it.getDeclaredField(name) }.getOrNull()
-            }?.let { FieldOps<T>(it) }
-            if (field == null) {
-                XposedEntry.log("Field not found: $fullName!")
-                return null
-            }
-
-            fieldCache[fullName] = field
-            return field
-        }
-
-        fun fields(type: Class<*>): List<FieldOps<T>> {
-            val result = mutableListOf<FieldOps<T>>()
-            var superClass: Class<*> = delegate
-            do {
-                for (field in superClass.declaredFields) {
-                    if (!type.isAssignableFrom(field.type)) continue
-                    result.add(FieldOps(field))
+    fun hookBefore(callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+        XposedBridge.hookMethod(
+            member,
+            object : XC_MethodHook() {
+                override fun beforeHookedMethod(param: MethodHookParam) {
+                    callback(param)
                 }
-            } while ((superClass.getSuperclass()?.also { superClass = it }) != null)
-            return result
-        }
-
-        fun fields(): List<FieldOps<T>> {
-            return delegate.fields.map { FieldOps(it) }
-        }
-
-        fun declaredFields(): List<FieldOps<T>> {
-            return delegate.declaredFields.map { FieldOps(it) }
-        }
-
-        fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
-            val fullName = "${delegate.getName()}#$name${getParametersString(*paramTypes)}"
-            if (methodCache.containsKey(fullName)) {
-                return methodCache[fullName] as MethodOps<T>
             }
+        )
+    }
 
-            var result: Method? = null
-            findRecursive {
-                runCatching { it.getDeclaredMethod(name) }.getOrNull()?.let { dm -> return@findRecursive dm }
-                for (method in it.getDeclaredMethods()) {
-                    // compare name and parameters
-                    if (method.name == name && (result == null || compareParameterTypes(
-                            method.parameterTypes,
-                            result!!.parameterTypes,
-                            paramTypes
-                        ) < 0)) {
-                        // get accessible version of method
-                        result = method
-                    }
+    fun hookAfter(callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+        XposedBridge.hookMethod(
+            member,
+            object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
+                    callback(param)
                 }
-                return@findRecursive null
-            }?.let { result = it }
-
-            return if (result != null) {
-                val method = MethodOps<T>(result)
-                methodCache[fullName] = method
-                method
-            } else {
-                XposedEntry.log("Method not found: $fullName!")
-                null
             }
-        }
+        )
+    }
+}
 
-        fun methods(): List<MethodOps<T>> {
-            return delegate.methods.map { MethodOps(it) }
-        }
+class ConstructorOps<T : Any>(private val delegate: Constructor<T>) : Hookable(delegate) {
+    fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
 
-        fun declaredMethods(): List<MethodOps<T>> {
-            return delegate.declaredMethods.map { MethodOps(it) }
-        }
+    fun new(vararg args: Any?): T {
+        return delegate.apply { isAccessible = true }.newInstance(*args)
+    }
+}
 
-        private fun getParametersString(vararg clazzes: Class<*>): String {
-            return "(${clazzes.joinToString(",") { it.getName() }})"
-        }
+@Suppress("UNCHECKED_CAST")
+class FieldOps<T : Any>(private val delegate: Field) {
+    fun type(): Class<*> = delegate.type
 
-        private fun <R> findRecursive(func: (Class<*>) -> R?): R? {
-            var superClass: Class<*> = delegate
-            do {
-                func(superClass)?.let { return it }
-            } while ((superClass.getSuperclass()?.also { superClass = it }) != null)
-            return null
-        }
+    operator fun <R> get(obj: T?, returnType: Class<R>? = null): R? {
+        return delegate.apply { isAccessible = true }[obj] as? R?
     }
 
-    class ConstructorOps<T : Any>(private val delegate: Constructor<T>) {
-        fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
+    operator fun set(obj: T?, value: Any?): FieldOps<T> {
+        delegate.apply { isAccessible = true }[obj] = value
+        return this
+    }
+}
 
-        fun new(vararg args: Any?): T {
-            return delegate.apply { isAccessible = true }.newInstance(*args)
-        }
+class MethodOps<T : Any>(private val delegate: Method) : Hookable(delegate) {
+    fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
 
-        fun hook(callback: XC_MethodHook): ConstructorOps<T> {
-            XposedBridge.hookMethod(delegate, callback)
-            return this
-        }
+    fun returnType(): Class<*> = delegate.returnType
+
+    fun call(obj: T?, vararg args: Any?): Any? {
+        return delegate.apply { isAccessible = true }.invoke(obj, *args)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class FieldOps<T : Any>(private val delegate: Field) {
-        fun type(): Class<*> = delegate.type
-
-        operator fun <R> get(obj: T?, returnType: Class<R>): R? {
-            return delegate.apply { isAccessible = true }[obj] as R?
-        }
-
-        operator fun set(obj: T?, value: Any?): FieldOps<T> {
-            delegate.apply { isAccessible = true }[obj] = value
-            return this
-        }
-    }
-
-    class MethodOps<T : Any>(private val delegate: Method) {
-        fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
-
-        fun returnType(): Class<*> = delegate.returnType
-
-        fun call(obj: T?, vararg args: Any?): Any? {
-            return delegate.apply { isAccessible = true }.invoke(obj, *args)
-        }
-
-        fun callSuper(obj: T?, vararg args: Any?): Any? {
-            return XposedBridge.invokeOriginalMethod(delegate, obj, args)
-        }
-
-        fun hook(callback: XC_MethodHook): MethodOps<T> {
-            XposedBridge.hookMethod(delegate, callback)
-            return this
-        }
+    fun callSuper(obj: T?, vararg args: Any?): Any? {
+        return XposedBridge.invokeOriginalMethod(delegate, obj, args)
     }
 }

@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo
 import android.os.Handler
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import de.robv.android.xposed.XC_MethodHook
 
 object BlockKillProcess : XposedFeature(
     key = "android_block_kill_process",
@@ -21,32 +20,29 @@ object BlockKillProcess : XposedFeature(
     override fun init() {
         // 这个类在系统框架中 是 MIUI 独有的
         // 从 /system_ext/framework/miui-services.jar 提取而来
-        helper("com.android.server.am.ProcessCleanerBase")?.operate {
+        helper("com.android.server.am.ProcessCleanerBase") {
             // 这个类在系统框架中
             // 从 /system/framework/services.jar 提取而来
-            val helperProcessRecord = helper("com.android.server.am.ProcessRecord")
-            val fieldProcessRecordInfo = helperProcessRecord?.operate {
+            helper("com.android.server.am.ProcessRecord") inner@{
                 // name: info | type: android.content.pm.ApplicationInfo
-                field("info")
-            } ?: return@operate
+                val processRecordInfoField = field("info") ?: return@inner
 
-            // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
-            method(
-                "killOnce",
-                helperProcessRecord.delegate,
-                String::class.java,
-                Integer.TYPE,
-                Handler::class.java,
-                Context::class.java
-            )?.hook(object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val process = param.args[0]
-                    val info = fieldProcessRecordInfo[process, ApplicationInfo::class.java] ?: return
+                // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
+                this@helper.method(
+                    "killOnce",
+                    this@helper.delegate,
+                    String::class.java,
+                    Integer.TYPE,
+                    Handler::class.java,
+                    Context::class.java
+                )?.hookBefore {
+                    val process = it.args[0]
+                    val info = processRecordInfoField[process, ApplicationInfo::class.java] ?: return@hookBefore
                     if (blockedPackages.contains(info.packageName)) {
-                        param.setResult(null)
+                        it.result = null
                     }
                 }
-            })
+            }
         }
     }
 }

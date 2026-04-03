@@ -4,9 +4,9 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.app.Activity
 import android.os.AsyncTask
+import cc.meteormc.yourmiui.xposed.MethodOps
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import de.robv.android.xposed.XC_MethodHook
 
 object RemoveAdbSwitchRestriction : XposedFeature(
     key = "securitycenter_remove_adb_switch_restriction",
@@ -17,38 +17,36 @@ object RemoveAdbSwitchRestriction : XposedFeature(
     override fun init() {
         // 由于这个类被严重混淆 所以在保证兼容性的情况下只能使用一种比较monkey的方法
         // 效果不太好而且毫无可读性 无奈之举
-        helper("com.miui.permcenter.install.AdbInstallVerifyActivity")?.operate {
+        helper("com.miui.permcenter.install.AdbInstallVerifyActivity") {
             // 这个onCreate方法在AdbInstallVerifyActivity的父级类AlertActivity中
             // hook它是因为这是为数不多的没有被混淆 或者说不能被混淆的方法了
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
-            val method = method("onCreate") ?: return@operate
-            method.hook(object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val activity = param.thisObject as Activity
-                    // 由于hook的是父级方法 所以判断当前环境是否为AdbInstallVerifyActivity
-                    if (!delegate.isInstance(activity)) return
+            val onCreateMethod = method("onCreate") ?: return@helper
+            onCreateMethod.hookBefore {
+                val activity = it.thisObject as Activity
+                // 由于hook的是父级方法 所以判断当前环境是否为AdbInstallVerifyActivity
+                if (!delegate.isInstance(activity)) return@hookBefore
 
-                    // 调用super.onCreate以防止SuperNotCalledException报错
-                    method.callSuper(param.thisObject, param.args)
+                // 调用super.onCreate以防止SuperNotCalledException报错
+                onCreateMethod.callSuper(it.thisObject, it.args)
 
-                    @Suppress("UNCHECKED_CAST")
-                    // name: (obfuscated) | type: (obfuscated)
-                    fields(AsyncTask::class.java).firstOrNull()?.let { field ->
-                        helper(field.type()).operate suboperate@ {
-                            // 由于当前hook的位置还没有初始化各种字段 所以手动创建一个$AsyncTask实例
-                            // modifier: (default) | signature: <init>(Lcom/miui/permcenter/install/AdbInstallVerifyActivity;)V
-                            val task = constructor(this@operate.delegate)?.new(activity) ?: return@suboperate
-                            // 在onPostExecute中有操作adb开关的逻辑 并且这个方法没有混淆 所以直接找到并调用它
-                            // 并且里面已经finish掉这个Activity了 无需重复操作
-                            // modifier: public | signature: onPostExecute(Ljava/lang/String;)V
-                            (method("onPostExecute") as MethodOps<Any>?)?.call(task, null)
-                        }
+                @Suppress("UNCHECKED_CAST")
+                // name: (obfuscated) | type: (obfuscated)
+                fields(AsyncTask::class.java).firstOrNull()?.let { field ->
+                    helper(field.type()) suboperate@ {
+                        // 由于当前hook的位置还没有初始化各种字段 所以手动创建一个$AsyncTask实例
+                        // modifier: (default) | signature: <init>(Lcom/miui/permcenter/install/AdbInstallVerifyActivity;)V
+                        val task = constructor(delegate)?.new(activity) ?: return@suboperate
+                        // 在onPostExecute中有操作adb开关的逻辑 并且这个方法没有混淆 所以直接找到并调用它
+                        // 并且里面已经finish掉这个Activity了 无需重复操作
+                        // modifier: public | signature: onPostExecute(Ljava/lang/String;)V
+                        (method("onPostExecute") as MethodOps<Any>?)?.call(task, null)
                     }
-
-                    // 你也别初始化画面和乱七八糟的开关判断了 直接返回吧
-                    param.result = null
                 }
-            })
+
+                // 不要继续初始化AlertActivity了 直接返回
+                it.result = null
+            }
         }
     }
 }

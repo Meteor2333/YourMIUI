@@ -2,7 +2,6 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import de.robv.android.xposed.XC_MethodReplacement
 
 object DisableMinorScan : XposedFeature(
     key = "securitycenter_disable_minor_scan",
@@ -19,9 +18,9 @@ object DisableMinorScan : XposedFeature(
 
     override fun init() {
         for (scan in minorScan) {
-            helper(scan)?.operate {
+            helper(scan) {
                 // modifier: public | signature: scan()V
-                method("scan")?.hook(XC_MethodReplacement.DO_NOTHING)
+                method("scan")?.hookDoNothing()
             }
         }
     }

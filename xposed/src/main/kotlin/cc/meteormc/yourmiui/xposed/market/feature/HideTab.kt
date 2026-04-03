@@ -2,7 +2,6 @@ package cc.meteormc.yourmiui.xposed.market.feature
 
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import de.robv.android.xposed.XC_MethodHook
 import org.json.JSONObject
 
 object HideTab : XposedFeature(
@@ -24,19 +23,17 @@ object HideTab : XposedFeature(
     private val keptTags = setOf("native_market_home", "native_market_mine")
 
     override fun init() {
-        helper("com.xiaomi.market.model.PageConfig")?.operate {
+        helper("com.xiaomi.market.model.PageConfig") {
             // modifier: private | signature: initTabs(Lorg/json/JSONObject;)V
-            method("initTabs")?.hook(object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val json = (param.args[0] as JSONObject).getJSONArray("tabs")
-                    var i = 0
-                    while (i < json.length()) {
-                        val tag = json.getJSONObject(i).getString("tag")
-                        if (keptTags.contains(tag)) i++
-                        else json.remove(i)
-                    }
+            method("initTabs")?.hookBefore {
+                val json = (it.args[0] as JSONObject).getJSONArray("tabs")
+                var i = 0
+                while (i < json.length()) {
+                    val tag = json.getJSONObject(i).getString("tag")
+                    if (keptTags.contains(tag)) i++
+                    else json.remove(i)
                 }
-            })
+            }
         }
     }
 }

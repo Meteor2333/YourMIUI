@@ -2,8 +2,6 @@ package cc.meteormc.yourmiui.xposed.market.feature
 
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XC_MethodReplacement
 
 object RemoveAd : XposedFeature(
     key = "market_remove_ad",
@@ -13,7 +11,7 @@ object RemoveAd : XposedFeature(
     originalAuthor = "owo233"
 ) {
     override fun init() {
-        helper("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3")?.operate {
+        helper("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
             setOf(
                 // modifier: public,final | signature: isBrowserMarketAdOff()Z
                 "isBrowserMarketAdOff",
@@ -22,7 +20,7 @@ object RemoveAd : XposedFeature(
                 // modifier: private,final | signature: supportShowCompat64bitAlert()Z
                 "supportShowCompat64bitAlert"
             ).forEach {
-                method(it)?.hook(XC_MethodReplacement.returnConstant(true))
+                method(it)?.hookResult(true)
             }
 
             setOf(
@@ -63,11 +61,11 @@ object RemoveAd : XposedFeature(
                 // modifier: public,final | signature: supportShowCompatChildForbidDownloadAlert()Z
                 "supportShowCompatChildForbidDownloadAlert"
             ).forEach {
-                method(it)?.hook(XC_MethodReplacement.returnConstant(false))
+                method(it)?.hookResult(false)
             }
         }
 
-        helper("com.xiaomi.market.ui.splash.DetailSplashAdManager")?.operate {
+        helper("com.xiaomi.market.ui.splash.DetailSplashAdManager") {
             setOf(
                 // modifier: public,static,final | signature: canRequestSplashAd(Lcom/xiaomi/market/ui/splash/DetailSplashAdManager$Env;)Z
                 "canRequestSplashAd",
@@ -76,14 +74,14 @@ object RemoveAd : XposedFeature(
                 // modifier: private,final | signature: isOpenFromMsa(Lcom/xiaomi/market/ui/splash/DetailSplashAdManager$Env;)Z
                 "isOpenFromMsa"
             ).forEach {
-                method(it)?.hook(XC_MethodReplacement.returnConstant(false))
+                method(it)?.hookResult(false)
             }
 
             // modifier: public,static,final | signature: isOpenFromMsa(Lcom/xiaomi/market/ui/BaseActivity;Ljava/lang/Runnable;Ljava/lang/Runnable;)V
-            method("tryToRequestSplashAd")?.hook(XC_MethodReplacement.returnConstant(null))
+            method("tryToRequestSplashAd")?.hookResult(null)
         }
 
-        helper("com.xiaomi.market.ui.splash.SplashManager")?.operate {
+        helper("com.xiaomi.market.ui.splash.SplashManager") {
             setOf(
                 // modifier: public,static | signature: canShowSplash(Landroid/app/Activity;)Z
                 "canShowSplash",
@@ -94,7 +92,7 @@ object RemoveAd : XposedFeature(
                 // modifier: public,static | signature: isPassiveSplashAd(Landroid/app/Activity;)Z
                 "isPassiveSplashAd"
             ).forEach {
-                method(it)?.hook(XC_MethodReplacement.returnConstant(false))
+                method(it)?.hookResult(false)
             }
 
             setOf(
@@ -103,11 +101,11 @@ object RemoveAd : XposedFeature(
                 // modifier: public | signature: trySplashWhenApplicationForeground(Landroid/app/Activity;)V
                 "trySplashWhenApplicationForeground"
             ).forEach {
-                method(it)?.hook(XC_MethodReplacement.returnConstant(null))
+                method(it)?.hookResult(null)
             }
         }
 
-        helper("com.xiaomi.market.business_ui.main.MarketTabActivity")?.operate {
+        helper("com.xiaomi.market.business_ui.main.MarketTabActivity") {
             setOf(
                 // modifier: public | signature: tryShowRecommend()V
                 "tryShowRecommend",
@@ -118,101 +116,93 @@ object RemoveAd : XposedFeature(
                 // modifier: private | signature: fetchSearchHotList()V
                 "fetchSearchHotList"
             ).forEach {
-                method(it)?.hook(XC_MethodReplacement.returnConstant(null))
+                method(it)?.hookResult(null)
             }
         }
 
         // 搜索建议页面
-        helper("com.xiaomi.market.business_ui.search.NativeSearchSugFragment")?.operate {
+        helper("com.xiaomi.market.business_ui.search.NativeSearchSugFragment") {
             // modifier: public | signature: getRequestParams()Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;
-            method("getRequestParams")?.hook(object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    @Suppress("UNCHECKED_CAST")
-                    val baseParametersForH5ToNative = (param.result as? Map<String, Any?>)?.toMutableMap() ?: return
-                    baseParametersForH5ToNative["adFlag"] = 0
-                    param.result = baseParametersForH5ToNative
-                }
-            })
+            method("getRequestParams")?.hookAfter {
+                @Suppress("UNCHECKED_CAST")
+                val baseParametersForH5ToNative = (it.result as? Map<String, Any?>)?.toMutableMap() ?: return@hookAfter
+                baseParametersForH5ToNative["adFlag"] = 0
+                it.result = baseParametersForH5ToNative
+            }
         }
 
         // 搜索结果页面
-        helper("com.xiaomi.market.business_ui.search.NativeSearchResultFragment")?.operate {
-            val clazz = helper("com.xiaomi.market.common.component.componentbeans.ListAppComponent")?.delegate
-            // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-            method("parseResponseData")?.hook(object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
+        helper("com.xiaomi.market.business_ui.search.NativeSearchResultFragment") {
+            helper("com.xiaomi.market.common.component.componentbeans.ListAppComponent") inner@{
+                // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
+                this@helper.method("parseResponseData")?.hookAfter {
                     @Suppress("UNCHECKED_CAST")
-                    val parsedComponents = (param.result as? List<Any>)?.toMutableList() ?: return
-                    parsedComponents.retainAll { clazz?.isInstance(it) ?: true }
-                    param.result = parsedComponents
+                    val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
+                    parsedComponents.retainAll { component -> delegate.isInstance(component) }
+                    it.result = parsedComponents
                 }
-            })
+            }
         }
 
         // 搜索页面
-        helper("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment")?.operate {
-            val clazz = helper("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent")?.delegate
-            // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-            method("parseResponseData")?.hook(object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
+        helper("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment") {
+            helper("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") inner@{
+                // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
+                this@helper.method("parseResponseData")?.hookAfter {
                     @Suppress("UNCHECKED_CAST")
-                    val parsedComponents = (param.result as? List<Any>)?.toMutableList() ?: return
-                    parsedComponents.retainAll { clazz?.isInstance(it) ?: true }
-                    param.result = parsedComponents
+                    val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
+                    parsedComponents.retainAll { component -> delegate.isInstance(component) }
+                    it.result = parsedComponents
                 }
-            })
+            }
 
             // modifier: public | signature: isLoadMoreEndGone()Z
-            method("isLoadMoreEndGone")?.hook(XC_MethodReplacement.returnConstant(true))
+            method("isLoadMoreEndGone")?.hookResult(true)
         }
 
         // 更新页面
-        helper("com.xiaomi.market.ui.UpdateListRvAdapter")?.operate {
-            val enum = helper($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState")?.operate {
+        helper("com.xiaomi.market.ui.UpdateListRvAdapter") {
+            val enum = helper($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
                 // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
                 field("Expand")?.get(null, delegate)
             }
             // modifier: public | signature: <init>(Lcom/xiaomi/market/common/component/base/INativeFragmentContext<Lcom/xiaomi/market/ui/BaseFragment;>;)V
             declaredConstructors().forEach {
-                it.hook(object : XC_MethodHook() {
-                    override fun afterHookedMethod(param: MethodHookParam) {
-                        val thisObj = param.thisObject
-                        thisObj.javaClass.getDeclaredField("forceExpanded").apply {
-                            isAccessible = true
-                        }[thisObj] = true
-                        thisObj.javaClass.getDeclaredField("foldButtonVisible").apply {
-                            isAccessible = true
-                        }[thisObj] = false
-                        thisObj.javaClass.getDeclaredField("pageCollapseState").apply {
-                            isAccessible = true
-                        }[thisObj] = enum
-                    }
-                })
+                it.hookAfter { param ->
+                    val thisObj = param.thisObject
+                    thisObj.javaClass.getDeclaredField("forceExpanded").apply {
+                        isAccessible = true
+                    }[thisObj] = true
+                    thisObj.javaClass.getDeclaredField("foldButtonVisible").apply {
+                        isAccessible = true
+                    }[thisObj] = false
+                    thisObj.javaClass.getDeclaredField("pageCollapseState").apply {
+                        isAccessible = true
+                    }[thisObj] = enum
+                }
             }
 
             // modifier: private,final | signature: generateRecommendGroupItems(Ljava/util/ArrayList;I)Z
-            method("generateRecommendGroupItems")?.hook(XC_MethodReplacement.returnConstant(null))
+            method("generateRecommendGroupItems")?.hookResult(null)
         }
 
         // 下载页面
-        helper("com.xiaomi.market.ui.DownloadListFragment")?.operate {
+        helper("com.xiaomi.market.ui.DownloadListFragment") {
             // modifier: private,final | signature: parseRecommendGroupResult(Lorg/json/JSONObject;)Lcom/xiaomi/market/viewmodels/RecommendGroupResult;
-            method("parseRecommendGroupResult")?.hook(XC_MethodReplacement.returnConstant(null))
+            method("parseRecommendGroupResult")?.hookResult(null)
         }
 
         // 应用详情页面
-        helper("com.xiaomi.market.ui.detail.BaseDetailActivity")?.operate {
-            val enum = helper("com.xiaomi.market.business_ui.detail.DetailType")?.operate {
+        helper("com.xiaomi.market.ui.detail.BaseDetailActivity") {
+            val enum = helper("com.xiaomi.market.business_ui.detail.DetailType") {
                 // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
                 field("UNKNOWN")?.get(null, delegate)
             }
             // modifier: public | signature: initParams()Landroid/os/Bundle;
-            method("initParams")?.hook(object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType
-                    field("detailType")?.set(param.thisObject, enum)
-                }
-            })
+            method("initParams")?.hookAfter {
+                // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType
+                field("detailType")?.set(it.thisObject, enum)
+            }
         }
     }
 }
