@@ -7,6 +7,7 @@ import cc.meteormc.yourmiui.core.Scope
 import cc.meteormc.yourmiui.core.util.compareParameterTypes
 import cc.meteormc.yourmiui.core.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
+import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.market.Market
 import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
 import cc.meteormc.yourmiui.xposed.securitycenter.SecurityCenter
@@ -25,6 +26,7 @@ class XposedEntry : IXposedHookLoadPackage {
     companion object {
         private val scopes = listOf(
             Android,
+            ContentExtension,
             Market,
             PackageInstaller,
             SecurityCenter,

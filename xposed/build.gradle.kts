@@ -24,4 +24,6 @@ kotlin {
 dependencies {
     implementation(project(":core"))
     compileOnly("de.robv.android.xposed:api:82")
+
+    implementation("androidx.core:core-ktx:1.18.0")
 }

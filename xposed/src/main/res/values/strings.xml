@@ -4,6 +4,10 @@
     <string name="feature_android_block_kill_process_description">阻止系统或第三方应用结束指定软件的进程</string>
     <string name="feature_android_block_kill_process_test_environment">Android13的MIUI14版本</string>
 
+    <string name="feature_contentextension_fix_link_open_name">修复链接打开方式</string>
+    <string name="feature_contentextension_fix_link_open_description">修复默认浏览器被修改后无法正常打开链接的问题</string>
+    <string name="feature_contentextension_fix_link_open_test_environment">2.6.24版本</string>
+
     <string name="feature_market_remove_ad_name">去广告</string>
     <string name="feature_market_remove_ad_description">去除应用商店中的各种广告和赞助商应用推荐</string>
     <string name="feature_market_remove_ad_test_environment">4.112.7版本</string>

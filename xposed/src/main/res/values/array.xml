@@ -2,6 +2,7 @@
 <resources>
     <string-array name="module_scope">
         <item>android</item>
+        <item>com.miui.contentextension</item>
         <item>com.xiaomi.market</item>
         <item>com.miui.packageinstaller</item>
         <item>com.miui.securitycenter</item>
