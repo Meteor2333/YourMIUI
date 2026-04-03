@@ -73,13 +73,9 @@ abstract class XposedScope : Scope {
         this.packages = arrayOf(*packages)
     }
 
-    final override fun getNameRes(): Int? {
-        return this.nameRes
-    }
+    final override fun getNameRes() = this.nameRes
 
-    final override fun getPackages(): Array<String> {
-        return this.packages
-    }
+    final override fun getPackages() = this.packages
 
     abstract override fun getFeatures(): Iterable<Feature>
 
@@ -111,40 +107,26 @@ abstract class XposedFeature(
 ) : Feature {
     private lateinit var classLoader: ClassLoader
 
+    protected abstract fun init()
+
     fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam) {
         this.classLoader = lpparam.classLoader
         init()
     }
 
-    protected abstract fun init()
+    final override fun getPreferenceKey() = this.key
 
-    override fun getPreferenceKey(): String {
-        return this.key
-    }
+    final override fun getNameRes() = this.nameRes
 
-    override fun getNameRes(): Int {
-        return this.nameRes
-    }
+    final override fun getDescriptionRes() = this.descriptionRes
 
-    override fun getDescriptionRes(): Int {
-        return this.descriptionRes
-    }
+    final override fun getWarningRes() = this.warningRes
 
-    override fun getWarningRes(): Int? {
-        return this.warningRes
-    }
+    final override fun getTestEnvironmentRes() = this.testEnvironmentRes
 
-    override fun getTestEnvironmentRes(): Int? {
-        return this.testEnvironmentRes
-    }
+    final override fun getOriginalAuthor() = this.originalAuthor
 
-    override fun getOriginalAuthor(): String? {
-        return this.originalAuthor
-    }
-
-    override fun getOptions(): Iterable<Option> {
-        return emptyList()
-    }
+    override fun getOptions(): Iterable<Option> = emptyList()
 
     protected fun <T : Any, R> helper(clazz: Class<T>, operate: ReflectOperator<T>.() -> R): R {
         return ReflectOperator(clazz).run(operate)
@@ -170,25 +152,15 @@ class XposedOption<T : Any>(
     private val defaultValue: T,
     val onValueInit: (T) -> Unit
 ) : Option {
-    override fun getPreferenceKey(): String {
-        return this.key
-    }
+    override fun getPreferenceKey() = this.key
 
-    override fun getNameRes(): Int {
-        return this.nameRes
-    }
+    override fun getNameRes() = this.nameRes
 
-    override fun getSummaryRes(): Int {
-        return this.summaryRes
-    }
+    override fun getSummaryRes() = this.summaryRes
 
-    override fun getType(): Option.Type<T> {
-        return this.type
-    }
+    override fun getType(): Option.Type<T> = this.type
 
-    override fun getDefaultValue(): T {
-        return this.defaultValue
-    }
+    override fun getDefaultValue(): T = this.defaultValue
 }
 
 @Suppress("UNCHECKED_CAST")

@@ -16,19 +16,15 @@ interface Option {
         val serializer: (T) -> String,
         val deserializer: (String) -> T?
     ) {
-        object STRING : Type<String>(
-            { it },
-            { it }
+
+        object BOOLEAN : Type<Boolean>(
+            { it.toString() },
+            { it.toBooleanStrictOrNull() }
         )
 
-        object INT : Type<Int>(
-            { it.toString() },
-            { it.toIntOrNull() }
-        )
-
-        object FLOAT : Type<Float>(
-            { it.toString() },
-            { it.toFloatOrNull() }
+        object BOOLEAN_LIST : Type<List<Boolean>>(
+            { it.serializeToString(BOOLEAN) },
+            { it.deserializeToList(BOOLEAN) }
         )
 
         object DOUBLE : Type<Double>(
@@ -36,19 +32,14 @@ interface Option {
             { it.toDoubleOrNull() }
         )
 
-        object BOOLEAN : Type<Boolean>(
+        object DOUBLE_LIST : Type<List<Double>>(
+            { it.serializeToString(DOUBLE) },
+            { it.deserializeToList(DOUBLE) }
+        )
+
+        object FLOAT : Type<Float>(
             { it.toString() },
-            { it.toBooleanStrictOrNull() }
-        )
-
-        object STRING_LIST : Type<List<String>>(
-            { it.serializeToString(STRING) },
-            { it.deserializeToList(STRING) }
-        )
-
-        object INT_LIST : Type<List<Int>>(
-            { it.serializeToString(INT) },
-            { it.deserializeToList(INT) }
+            { it.toFloatOrNull() }
         )
 
         object FLOAT_LIST : Type<List<Float>>(
@@ -56,14 +47,24 @@ interface Option {
             { it.deserializeToList(FLOAT) }
         )
 
-        object DOUBLE_LIST : Type<List<Double>>(
-            { it.serializeToString(DOUBLE) },
-            { it.deserializeToList(DOUBLE) }
+        object INT : Type<Int>(
+            { it.toString() },
+            { it.toIntOrNull() }
         )
 
-        object BOOLEAN_LIST : Type<List<Boolean>>(
-            { it.serializeToString(BOOLEAN) },
-            { it.deserializeToList(BOOLEAN) }
+        object INT_LIST : Type<List<Int>>(
+            { it.serializeToString(INT) },
+            { it.deserializeToList(INT) }
+        )
+
+        object STRING : Type<String>(
+            { it },
+            { it }
+        )
+
+        object STRING_LIST : Type<List<String>>(
+            { it.serializeToString(STRING) },
+            { it.deserializeToList(STRING) }
         )
 
         companion object {
