@@ -2,10 +2,12 @@
 
 package cc.meteormc.yourmiui.xposed
 
+import android.content.SharedPreferences
 import android.util.Log
-import cc.meteormc.yourmiui.core.Bridge
 import cc.meteormc.yourmiui.core.Feature
+import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.core.Scope
+import cc.meteormc.yourmiui.core.bridge.Bridge
 import cc.meteormc.yourmiui.core.util.compareParameterTypes
 import cc.meteormc.yourmiui.core.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
@@ -15,10 +17,7 @@ import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
 import cc.meteormc.yourmiui.xposed.securitycenter.SecurityCenter
 import cc.meteormc.yourmiui.xposed.settings.Settings
 import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
-import de.robv.android.xposed.IXposedHookLoadPackage
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
@@ -143,6 +142,10 @@ abstract class XposedFeature(
         return this.originalAuthor
     }
 
+    override fun getOptions(): Iterable<Option> {
+        return emptyList()
+    }
+
     protected fun <T : Any, R> helper(clazz: Class<T>, operate: ReflectOperator<T>.() -> R): R {
         return ReflectOperator(clazz).run(operate)
     }
@@ -156,6 +159,35 @@ abstract class XposedFeature(
             XposedEntry.log("Class not found: $className!")
             null
         }
+    }
+}
+
+class XposedOption<T : Any>(
+    private val key: String,
+    private val nameRes: Int,
+    private val summaryRes: Int,
+    private val type: Option.Type<T>,
+    private val defaultValue: T,
+    val onValueInit: (T) -> Unit
+) : Option {
+    override fun getPreferenceKey(): String {
+        return this.key
+    }
+
+    override fun getNameRes(): Int {
+        return this.nameRes
+    }
+
+    override fun getSummaryRes(): Int {
+        return this.summaryRes
+    }
+
+    override fun getType(): Option.Type<T> {
+        return this.type
+    }
+
+    override fun getDefaultValue(): T {
+        return this.defaultValue
     }
 }
 

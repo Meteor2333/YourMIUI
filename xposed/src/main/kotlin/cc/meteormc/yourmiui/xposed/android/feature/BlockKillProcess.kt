@@ -3,8 +3,10 @@ package cc.meteormc.yourmiui.xposed.android.feature
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Handler
+import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.XposedOption
 
 object BlockKillProcess : XposedFeature(
     key = "android_block_kill_process",
@@ -13,9 +15,7 @@ object BlockKillProcess : XposedFeature(
     testEnvironmentRes = R.string.feature_android_block_kill_process_test_environment,
     originalAuthor = "dantmnf"
 ) {
-    private val blockedPackages = setOf(
-        "com.github.metacubex.clash.meta"
-    )
+    private lateinit var blockedPackages: List<String>
 
     override fun init() {
         // 这个类在系统框架中 是 MIUI 独有的
@@ -44,5 +44,17 @@ object BlockKillProcess : XposedFeature(
                 }
             }
         }
+    }
+
+    override fun getOptions(): Iterable<Option> {
+        return listOf(
+            XposedOption(
+                "blocked_packages",
+                R.string.option_android_block_kill_process_blocked_packages_name,
+                R.string.option_android_block_kill_process_blocked_packages_summary,
+                Option.Type.STRING_LIST,
+                emptyList()
+            ) { blockedPackages = it }
+        )
     }
 }

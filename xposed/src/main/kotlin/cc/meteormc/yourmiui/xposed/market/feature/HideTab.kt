@@ -1,7 +1,9 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
+import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.XposedOption
 import org.json.JSONObject
 
 object HideTab : XposedFeature(
@@ -20,7 +22,7 @@ object HideTab : XposedFeature(
      * native_market_game    游戏
      * native_market_rank    榜单
      */
-    private val keptTags = setOf("native_market_home", "native_market_mine")
+    private lateinit var keptTags: List<String>
 
     override fun init() {
         helper("com.xiaomi.market.model.PageConfig") {
@@ -35,5 +37,20 @@ object HideTab : XposedFeature(
                 }
             }
         }
+    }
+
+    override fun getOptions(): Iterable<Option> {
+        return listOf(
+            XposedOption(
+                "tab_kept",
+                R.string.option_market_hide_tab_kept_tags_name,
+                R.string.option_market_hide_tab_kept_tags_summary,
+                Option.Type.STRING_LIST,
+                listOf(
+                    "native_market_home",
+                    "native_market_mine"
+                )
+            ) { keptTags = it }
+        )
     }
 }

@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.core;
+package cc.meteormc.yourmiui.core.bridge;
 
 import java.util.Collections;
 import java.util.List;

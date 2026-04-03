@@ -12,4 +12,6 @@ interface Feature {
     fun getTestEnvironmentRes(): Int?
 
     fun getOriginalAuthor(): String?
+
+    fun getOptions(): Iterable<Any>
 }
