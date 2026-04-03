@@ -2,7 +2,6 @@
 
 package cc.meteormc.yourmiui.xposed
 
-import android.content.SharedPreferences
 import android.util.Log
 import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.Option
@@ -19,6 +18,7 @@ import cc.meteormc.yourmiui.xposed.settings.Settings
 import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
 import de.robv.android.xposed.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import org.jetbrains.annotations.ApiStatus
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Member
@@ -109,7 +109,8 @@ abstract class XposedFeature(
 
     protected abstract fun init()
 
-    fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam) {
+    @ApiStatus.Internal
+    internal fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam) {
         this.classLoader = lpparam.classLoader
         init()
     }

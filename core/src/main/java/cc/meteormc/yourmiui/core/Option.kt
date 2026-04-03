@@ -7,16 +7,15 @@ interface Option {
 
     fun getSummaryRes(): Int
 
-    fun getType(): Type<*>
+    fun getType(): Any
 
     fun getDefaultValue(): Any
 
-    @Suppress("ClassName", "unused")
+    @Suppress("ClassName")
     sealed class Type<T>(
         val serializer: (T) -> String,
         val deserializer: (String) -> T?
     ) {
-
         object BOOLEAN : Type<Boolean>(
             { it.toString() },
             { it.toBooleanStrictOrNull() }
@@ -68,6 +67,19 @@ interface Option {
         )
 
         companion object {
+            val types = mapOf(
+                "BOOLEAN" to BOOLEAN,
+                "BOOLEAN_LIST" to BOOLEAN_LIST,
+                "DOUBLE" to DOUBLE,
+                "DOUBLE_LIST" to DOUBLE_LIST,
+                "FLOAT" to FLOAT,
+                "FLOAT_LIST" to FLOAT_LIST,
+                "INT" to INT,
+                "INT_LIST" to INT_LIST,
+                "STRING" to STRING,
+                "STRING_LIST" to STRING_LIST
+            )
+
             fun <T> List<T>.serializeToString(parentType: Type<T>): String {
                 return this.joinToString(";") {
                     parentType.serializer(it)
