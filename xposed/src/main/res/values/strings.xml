@@ -20,6 +20,10 @@
     <string name="option_market_hide_tab_kept_tags_name">保留的底栏项列表</string>
     <string name="option_market_hide_tab_kept_tags_summary">选择要保留的底栏项</string>
 
+    <string name="feature_mms_remove_ad_name">去广告</string>
+    <string name="feature_mms_remove_ad_description">去除短信消息下方的各种广告按钮</string>
+    <string name="feature_mms_remove_ad_test_environment">14.2.5.14版本</string>
+
     <string name="feature_packageinstaller_disable_safe_check_name">禁用应用安全检测</string>
     <string name="feature_packageinstaller_disable_safe_check_description">禁止安装应用时对应用进行安全检测</string>
     <string name="feature_packageinstaller_disable_safe_check_warning">开启此功能可能导致安装无法察觉的恶意软件</string>
