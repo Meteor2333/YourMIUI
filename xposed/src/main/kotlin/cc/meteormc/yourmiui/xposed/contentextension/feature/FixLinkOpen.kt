@@ -13,6 +13,7 @@ object FixLinkOpen : XposedFeature(
 ) {
     override fun init() {
         helper("com.miui.contentextension.utils.AppsUtils") {
+            // modifier: private static | signature: getIntentWithBrowser(Ljava/lang/String;)Landroid/content/Intent;
             method("getIntentWithBrowser")?.hookAfter {
                 val url = it.args[0] as String
                 val result = it.result as Intent

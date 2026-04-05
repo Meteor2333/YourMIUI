@@ -37,7 +37,8 @@ class XposedEntry : IXposedHookLoadPackage {
             Settings,
             SuperWallpaper
         )
-        private val packageToScope = scopes.flatMap { scope ->
+
+        private val scopeByPackage = scopes.flatMap { scope ->
             scope.getPackages().map { it to scope }
         }.toMap()
 
@@ -61,7 +62,7 @@ class XposedEntry : IXposedHookLoadPackage {
                 method("getScopes")?.hookResult(scopes)
             }
         } else {
-            packageToScope[packageName]?.init(lpparam)
+            scopeByPackage[packageName]?.init(lpparam)
         }
     }
 }
