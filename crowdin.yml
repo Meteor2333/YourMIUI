@@ -1,3 +1,5 @@
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%two_letters_code%/srtings.xml
+  - source: /xposed/src/main/res/values/strings.xml
+    translation: /xposed/src/main/res/values-%two_letters_code%/srtings.xml
