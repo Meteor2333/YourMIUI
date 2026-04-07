@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:ignore="MissingTranslation">
+<resources>
     <string name="feature_android_block_process_kill_name">阻止结束进程</string>
     <string name="feature_android_block_process_kill_description">阻止系统或第三方应用结束指定软件的进程</string>
     <string name="feature_android_block_process_kill_test_environment">Android13的MIUI14版本</string>

@@ -48,6 +48,11 @@ android {
         buildConfig = true
         viewBinding = true
     }
+
+    lint {
+        disable.add("ExtraTranslation")
+        disable.add("MissingTranslation")
+    }
 }
 
 kotlin {
