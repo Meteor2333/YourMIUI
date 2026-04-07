@@ -47,7 +47,7 @@ jobs:
       run: |
         outputs_dir="outputs"
         sudo mkdir -p "$outputs_dir"
-        find app/build/outputs/apk -type f -name "*.apk" -exec cp {} "$outputs_dir" \;
+        find app/build/outputs/apk -type f -name "*.apk" -exec sudo cp {} "$outputs_dir" \;
         echo "apk_outputs=$outputs_dir" >> $GITHUB_OUTPUT
         
     - name: Use short hash
