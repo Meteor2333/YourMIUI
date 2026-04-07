@@ -3,11 +3,11 @@ package cc.meteormc.yourmiui.xposed.mms.feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
-object RemoveAd : XposedFeature(
-    key = "mms_remove_ad",
-    nameRes = R.string.feature_mms_remove_ad_name,
-    descriptionRes = R.string.feature_mms_remove_ad_description,
-    testEnvironmentRes = R.string.feature_mms_remove_ad_test_environment
+object RemoveAds : XposedFeature(
+    key = "mms_remove_ads",
+    nameRes = R.string.feature_mms_remove_ads_name,
+    descriptionRes = R.string.feature_mms_remove_ads_description,
+    testEnvironmentRes = R.string.feature_mms_remove_ads_test_environment
 ) {
     override fun init() {
         helper("com.miui.smsextra.ui.UnderstandButton") {

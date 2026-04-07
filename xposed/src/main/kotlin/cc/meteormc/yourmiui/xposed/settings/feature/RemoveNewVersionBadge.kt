@@ -7,11 +7,11 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
 
-object RemoveNewVersionTag : XposedFeature(
-    key = "settings_remove_new_version_tag",
-    nameRes = R.string.feature_settings_remove_new_version_tag_name,
-    descriptionRes = R.string.feature_settings_remove_new_version_tag_description,
-    testEnvironmentRes = R.string.feature_settings_remove_new_version_tag_test_environment
+object RemoveNewVersionBadge : XposedFeature(
+    key = "settings_remove_new_version_badge",
+    nameRes = R.string.feature_settings_remove_new_version_badge_name,
+    descriptionRes = R.string.feature_settings_remove_new_version_badge_description,
+    testEnvironmentRes = R.string.feature_settings_remove_new_version_badge_test_environment
 ) {
     private const val PROPERTY_MIUI_NEW_VERSION = "miui_new_version"
 
@@ -39,8 +39,8 @@ object RemoveNewVersionTag : XposedFeature(
         return listOf(
             XposedOption(
                 "property_modification",
-                R.string.option_settings_remove_new_version_tag_property_modification_name,
-                R.string.option_settings_remove_new_version_tag_property_modification_summary,
+                R.string.option_settings_remove_new_version_badge_property_modification_name,
+                R.string.option_settings_remove_new_version_badge_property_modification_summary,
                 Option.Type.BOOLEAN,
                 false
             ) { propertyModification = it }

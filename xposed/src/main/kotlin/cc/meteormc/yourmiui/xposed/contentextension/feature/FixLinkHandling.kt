@@ -5,11 +5,11 @@ import androidx.core.net.toUri
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
-object FixLinkOpen : XposedFeature(
-    key = "contentextension_fix_link_open",
-    nameRes = R.string.feature_contentextension_fix_link_open_name,
-    descriptionRes = R.string.feature_contentextension_fix_link_open_description,
-    testEnvironmentRes = R.string.feature_contentextension_fix_link_open_test_environment
+object FixLinkHandling : XposedFeature(
+    key = "contentextension_fix_link_handling",
+    nameRes = R.string.feature_contentextension_fix_link_handling_name,
+    descriptionRes = R.string.feature_contentextension_fix_link_handling_description,
+    testEnvironmentRes = R.string.feature_contentextension_fix_link_handling_test_environment
 ) {
     override fun init() {
         helper("com.miui.contentextension.utils.AppsUtils") {

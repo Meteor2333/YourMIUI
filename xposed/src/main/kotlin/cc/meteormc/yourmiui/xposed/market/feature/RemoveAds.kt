@@ -3,11 +3,11 @@ package cc.meteormc.yourmiui.xposed.market.feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
-object RemoveAd : XposedFeature(
-    key = "market_remove_ad",
-    nameRes = R.string.feature_market_remove_ad_name,
-    descriptionRes = R.string.feature_market_remove_ad_description,
-    testEnvironmentRes = R.string.feature_market_remove_ad_test_environment,
+object RemoveAds : XposedFeature(
+    key = "market_remove_ads",
+    nameRes = R.string.feature_market_remove_ads_name,
+    descriptionRes = R.string.feature_market_remove_ads_description,
+    testEnvironmentRes = R.string.feature_market_remove_ads_test_environment,
     originalAuthor = "owo233"
 ) {
     override fun init() {

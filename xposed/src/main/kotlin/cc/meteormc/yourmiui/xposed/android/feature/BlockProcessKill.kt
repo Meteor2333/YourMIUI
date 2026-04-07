@@ -8,11 +8,11 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
 
-object BlockKillProcess : XposedFeature(
-    key = "android_block_kill_process",
-    nameRes = R.string.feature_android_block_kill_process_name,
-    descriptionRes = R.string.feature_android_block_kill_process_description,
-    testEnvironmentRes = R.string.feature_android_block_kill_process_test_environment,
+object BlockProcessKill : XposedFeature(
+    key = "android_block_process_kill",
+    nameRes = R.string.feature_android_block_process_kill_name,
+    descriptionRes = R.string.feature_android_block_process_kill_description,
+    testEnvironmentRes = R.string.feature_android_block_process_kill_test_environment,
     originalAuthor = "dantmnf"
 ) {
     private lateinit var blockedPackages: List<String>
@@ -50,8 +50,8 @@ object BlockKillProcess : XposedFeature(
         return listOf(
             XposedOption(
                 "blocked_packages",
-                R.string.option_android_block_kill_process_blocked_packages_name,
-                R.string.option_android_block_kill_process_blocked_packages_summary,
+                R.string.option_android_block_process_kill_blocked_packages_name,
+                R.string.option_android_block_process_kill_blocked_packages_summary,
                 Option.Type.STRING_LIST,
                 emptyList()
             ) { blockedPackages = it }

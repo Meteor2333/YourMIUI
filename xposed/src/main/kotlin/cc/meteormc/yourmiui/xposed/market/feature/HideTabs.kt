@@ -6,11 +6,11 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
 import org.json.JSONObject
 
-object HideTab : XposedFeature(
-    key = "market_hide_tab",
-    nameRes = R.string.feature_market_hide_tab_name,
-    descriptionRes = R.string.feature_market_hide_tab_description,
-    testEnvironmentRes = R.string.feature_market_hide_tab_test_environment,
+object HideTabs : XposedFeature(
+    key = "market_hide_tabs",
+    nameRes = R.string.feature_market_hide_tabs_name,
+    descriptionRes = R.string.feature_market_hide_tabs_description,
+    testEnvironmentRes = R.string.feature_market_hide_tabs_test_environment,
     originalAuthor = "owo233"
 ) {
     /**
@@ -43,8 +43,8 @@ object HideTab : XposedFeature(
         return listOf(
             XposedOption(
                 "tab_kept",
-                R.string.option_market_hide_tab_kept_tags_name,
-                R.string.option_market_hide_tab_kept_tags_summary,
+                R.string.option_market_hide_tabs_kept_tags_name,
+                R.string.option_market_hide_tabs_kept_tags_summary,
                 Option.Type.STRING_LIST,
                 listOf(
                     "native_market_home",

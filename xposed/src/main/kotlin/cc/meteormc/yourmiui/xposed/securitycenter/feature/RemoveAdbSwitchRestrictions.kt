@@ -8,11 +8,11 @@ import cc.meteormc.yourmiui.xposed.MethodOps
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
-object RemoveAdbSwitchRestriction : XposedFeature(
-    key = "securitycenter_remove_adb_switch_restriction",
-    nameRes = R.string.feature_securitycenter_remove_adb_switch_restriction_name,
-    descriptionRes = R.string.feature_securitycenter_remove_adb_switch_restriction_description,
-    testEnvironmentRes = R.string.feature_securitycenter_remove_adb_switch_restriction_test_environment
+object RemoveAdbSwitchRestrictions : XposedFeature(
+    key = "securitycenter_remove_adb_switch_restrictions",
+    nameRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_name,
+    descriptionRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_description,
+    testEnvironmentRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_test_environment
 ) {
     override fun init() {
         // 由于这个类被严重混淆 所以在保证兼容性的情况下只能使用一种比较monkey的方法

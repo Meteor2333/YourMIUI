@@ -3,13 +3,13 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
-object DisableMinorScan : XposedFeature(
-    key = "securitycenter_disable_minor_scan",
-    nameRes = R.string.feature_securitycenter_disable_minor_scan_name,
-    descriptionRes = R.string.feature_securitycenter_disable_minor_scan_description,
-    testEnvironmentRes = R.string.feature_securitycenter_disable_minor_scan_test_environment
+object DisableUnnecessaryScans : XposedFeature(
+    key = "securitycenter_disable_unnecessary_scans",
+    nameRes = R.string.feature_securitycenter_disable_unnecessary_scans_name,
+    descriptionRes = R.string.feature_securitycenter_disable_unnecessary_scans_description,
+    testEnvironmentRes = R.string.feature_securitycenter_disable_unnecessary_scans_test_environment
 ) {
-    private val minorScan = setOf(
+    private val unnecessaryScans = setOf(
         "com.miui.securityscan.model.manualitem.PermissionRootModel",
         "com.miui.securityscan.model.system.AutoDownloadModel",
         "com.miui.securityscan.model.system.DevModeModel",
@@ -17,7 +17,7 @@ object DisableMinorScan : XposedFeature(
     )
 
     override fun init() {
-        for (scan in minorScan) {
+        for (scan in unnecessaryScans) {
             helper(scan) {
                 // modifier: public | signature: scan()V
                 method("scan")?.hookDoNothing()
