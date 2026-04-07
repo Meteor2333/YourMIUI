@@ -1,6 +1,14 @@
 package cc.meteormc.yourmiui.core
 
 interface Feature {
+    companion object {
+        const val PREFERENCE_TAG = "features"
+
+        fun enabledKeyOf(featureKey: String) = "pref_${featureKey}_enabled"
+
+        fun optionKeyOf(featureKey: String, optionKey: String) = "pref_${featureKey}_option_${optionKey}"
+    }
+
     fun getPreferenceKey(): String
 
     fun getNameRes(): Int

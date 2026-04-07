@@ -2,6 +2,7 @@
 
 package cc.meteormc.yourmiui.xposed
 
+import android.content.SharedPreferences
 import android.util.Log
 import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.Option
@@ -87,10 +88,14 @@ abstract class XposedScope : Scope {
             return
         }
 
+        val prefs = XSharedPreferences(BuildConfig.APPLICATION_ID, Feature.PREFERENCE_TAG)
+        prefs.makeWorldReadable()
+        prefs.reload()
+
         this.getFeatures()
             .filterIsInstance<XposedFeature>()
             .forEach {
-                runCatching { it.initInternal(lpparam) }.onFailure { ex ->
+                runCatching { it.initInternal(lpparam, prefs) }.onFailure { ex ->
                     val scopeName = this.javaClass.simpleName
                     val featureName = it.javaClass.simpleName
                     val stackTrace = Log.getStackTraceString(ex)
@@ -113,9 +118,19 @@ abstract class XposedFeature(
     protected abstract fun init()
 
     @ApiStatus.Internal
-    internal fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam) {
+    internal fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam, prefs: SharedPreferences) {
         this.classLoader = lpparam.classLoader
-        init()
+        if (!prefs.getBoolean(Feature.enabledKeyOf(key), false)) return
+
+        getOptions().filterIsInstance<XposedOption<Any>>().forEach {
+            val key = Feature.optionKeyOf(this.getPreferenceKey(), it.getPreferenceKey())
+            val value = prefs.getString(key, null)?.let { preference ->
+                it.getType().deserializer(preference)
+            } ?: it.getDefaultValue()
+            it.onValueInit(value)
+        }
+
+        this.init()
     }
 
     final override fun getPreferenceKey() = this.key
