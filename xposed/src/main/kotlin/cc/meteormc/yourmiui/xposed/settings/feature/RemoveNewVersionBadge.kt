@@ -41,7 +41,7 @@ object RemoveNewVersionBadge : XposedFeature(
                 "property_modification",
                 R.string.option_settings_remove_new_version_badge_property_modification_name,
                 R.string.option_settings_remove_new_version_badge_property_modification_summary,
-                Option.Type.BOOLEAN,
+                Option.Type.SWITCH(),
                 false
             ) { propertyModification = it }
         )

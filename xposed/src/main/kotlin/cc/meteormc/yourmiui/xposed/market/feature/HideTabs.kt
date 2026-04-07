@@ -13,15 +13,6 @@ object HideTabs : XposedFeature(
     testEnvironmentRes = R.string.feature_market_hide_tabs_test_environment,
     originalAuthor = "owo233"
 ) {
-    /**
-     * native_market_mine    我的
-     * native_market_home    主页
-     * native_market_video   视频号
-     * native_market_agent   智能体
-     * native_app_assemble   应用号
-     * native_market_game    游戏
-     * native_market_rank    榜单
-     */
     private lateinit var keptTags: List<String>
 
     override fun init() {
@@ -45,7 +36,15 @@ object HideTabs : XposedFeature(
                 "tab_kept",
                 R.string.option_market_hide_tabs_kept_tags_name,
                 R.string.option_market_hide_tabs_kept_tags_summary,
-                Option.Type.STRING_LIST,
+                Option.Type.MULTI_LIST(
+                    "native_market_home" to R.string.option_market_hide_tabs_kept_tags_home,
+                    "native_market_video" to R.string.option_market_hide_tabs_kept_tags_video,
+                    "native_market_agent" to R.string.option_market_hide_tabs_kept_tags_agent,
+                    "native_app_assemble" to R.string.option_market_hide_tabs_kept_tags_assemble,
+                    "native_market_game" to R.string.option_market_hide_tabs_kept_tags_game,
+                    "native_market_rank" to R.string.option_market_hide_tabs_kept_tags_rank,
+                    "native_market_mine" to R.string.option_market_hide_tabs_kept_tags_mine
+                ),
                 listOf(
                     "native_market_home",
                     "native_market_mine"
