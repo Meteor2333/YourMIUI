@@ -24,57 +24,32 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Setup Android SDK tools
-      uses: android-actions/setup-android@v3
-      
-    - name: Install build tools
-      run: |
-        sdkmanager "build-tools;34.0.0"
-        echo "$ANDROID_HOME/build-tools/34.0.0" >> $GITHUB_PATH
-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-
-    - name: Build with Gradle
-      run: ./gradlew build
 
     - name: Decode keystore
       run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/keystore.jks
 
-    - name: Sign Android release
-      id: sign_apk
+    - name: Generate keystore properties
       run: |
-        outputs_dir="/apk_outputs"
+        cat <<EOF > keystore.properties
+        storeFile=${{ runner.temp }}/keystore.jks
+        storePassword=${{ secrets.KEY_STORE_PASSWORD }}
+        keyAlias=${{ secrets.ALIAS }}
+        keyPassword=${{ secrets.KEY_PASSWORD }}
+        EOF
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Collect artifact
+      id: artifact
+      run: |
+        outputs_dir="outputs\"
         sudo mkdir -p "$outputs_dir"
-        for file in $(find 'app/build/outputs/apk/release' -type f \( -name "*.apk" \)); do
-          echo "Processing $file..."
-
-          aligned_file="${file%.apk}-aligned.apk"
-          signed_file="${file%.apk}-signed.apk"
-
-          # Zipalign
-          zipalign -v -p 4 "$file" "$aligned_file"
-
-          # Sign
-          apksigner sign \
-            --ks ${{ runner.temp }}/keystore.jks \
-            --ks-key-alias "${{ secrets.ALIAS }}" \
-            --ks-pass pass:"${{ secrets.KEY_STORE_PASSWORD }}" \
-            --key-pass pass:"${{ secrets.KEY_PASSWORD }}" \
-            --out "$signed_file" \
-            "$aligned_file"
-
-          # Verify
-          apksigner verify "$signed_file"
-
-          filename=$(basename "$file")
-          outputs="$outputs_dir/${filename%-unsigned.apk}.apk"
-          sudo mv "$signed_file" "$outputs"
-          
-          echo "Done: $outputs"
-        done
+        find app/build/outputs/apk -type f -name "*.apk" -exec cp {} "$outputs_dir" \;
         echo "apk_outputs=$outputs_dir" >> $GITHUB_OUTPUT
-
+        
     - name: Use short hash
       id: hash
       run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
@@ -83,12 +58,25 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: ${{ github.event.repository.name }}-${{ steps.hash.outputs.short_sha }}
-        path: ${{ steps.sign_apk.outputs.apk_outputs }}
+        path: ${{ steps.artifact.outputs.apk_outputs }}
+
+    - name: Rename APKs
+      if: github.ref_type == 'tag'
+      run: |
+        project_name="${{ github.event.repository.name }}"
+        tag="${{ github.ref_name }}"
+
+        for file in ${{ steps.artifact.outputs.apk_outputs }}/*.apk; do
+          filename=$(basename "$file")
+          suffix=${filename#app-}
+          suffix=${suffix%.apk}
+          new_name="${project_name}-${tag}-${suffix}.apk"
+          mv "$file" "${{ steps.artifact.outputs.apk_outputs }}/${new_name}"
 
     - name: Github release
       uses: softprops/action-gh-release@v2
       if: github.ref_type == 'tag'
       with:
-        files: ${{ steps.sign_apk.outputs.apk_outputs }}/*.apk
+        files: ${{ steps.artifact.outputs.apk_outputs }}/*.apk
         generate_release_notes: true
         
