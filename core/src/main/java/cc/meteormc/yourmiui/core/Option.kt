@@ -71,16 +71,20 @@ interface Option {
             )
 
             @Suppress("UNCHECKED_CAST")
-            fun <T> getTypeByObject(obj: Any): Type<T>? {
-                if (obj is Type<*>) return obj as Type<T>
-                if (obj !is Serializable) return null
-                val bytes = ByteArrayOutputStream().use { output ->
-                    ObjectOutputStream(output).use { it.writeObject(obj) }
-                    output.toByteArray()
-                }
+            fun <T> getTypeByObject(obj: Any?): Type<T>? {
+                val type = when (obj) {
+                    is Type<*> -> obj
+                    is Serializable -> {
+                        val bytes = ByteArrayOutputStream().use { output ->
+                            ObjectOutputStream(output).use { it.writeObject(obj) }
+                            output.toByteArray()
+                        }
 
-                val type = ByteArrayInputStream(bytes).use { input ->
-                    ObjectInputStream(input).use { it.readObject() }
+                        ByteArrayInputStream(bytes).use { input ->
+                            ObjectInputStream(input).use { it.readObject() }
+                        }
+                    }
+                    else -> null
                 } as? Type<T> ?: return null
                 val lookupType = lookupTypes[type.javaClass.simpleName] ?: return null
                 type.serializer = lookupType.serializer as (T) -> String

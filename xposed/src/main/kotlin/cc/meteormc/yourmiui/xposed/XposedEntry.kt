@@ -27,43 +27,37 @@ import java.lang.reflect.Member
 import java.lang.reflect.Method
 
 class XposedEntry : IXposedHookLoadPackage {
-    companion object {
-        private val scopes = listOf(
-            Android,
-            ContentExtension,
-            Market,
-            MMS,
-            PackageInstaller,
-            SecurityCenter,
-            Settings,
-            SuperWallpaper
-        )
-
-        private val scopeByPackage = scopes.flatMap { scope ->
-            scope.getPackages().map { it to scope }
-        }.toMap()
-
-        fun log(message: String) {
-            XposedBridge.log("[YourMIUI] $message")
-        }
-    }
+    private val scopes = listOf(
+        Android,
+        ContentExtension,
+        Market,
+        MMS,
+        PackageInstaller,
+        SecurityCenter,
+        Settings,
+        SuperWallpaper
+    )
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
         if (packageName == BuildConfig.APPLICATION_ID) {
-            val bridgeClass = getClass(lpparam.classLoader, Bridge::class.java.name, true) ?: return
-            ReflectOperator(bridgeClass).run {
-                method("getApiName")?.hookResult(
-                    ReflectOperator(XposedBridge::class.java).run {
-                        field("TAG")?.get(null, String::class.java) ?: "Unknown"
-                    }
-                )
-                method("getApiVersion")?.hookResult(XposedBridge.getXposedVersion())
-                method("isModuleActivated")?.hookResult(true)
-                method("getScopes")?.hookResult(scopes)
-            }
+            this.initBridge(lpparam.classLoader, Bridge::class.java.name)
         } else {
-            scopeByPackage[packageName]?.init(lpparam)
+            this.scopes.firstOrNull { it.getPackages().contains(packageName) }?.init(lpparam)
+        }
+    }
+
+    private fun initBridge(classLoader: ClassLoader, className: String) {
+        val bridgeClass = getClass(classLoader, className, true) ?: return
+        ReflectOperator(bridgeClass).run {
+            method("getApiName")?.hookResult(
+                ReflectOperator(XposedBridge::class.java).run {
+                    field("TAG")?.get(null, String::class.java) ?: "Unknown"
+                }
+            )
+            method("getApiVersion")?.hookResult(XposedBridge.getXposedVersion())
+            method("isModuleActivated")?.hookResult(true)
+            method("getScopes")?.hookResult(scopes)
         }
     }
 }
@@ -99,7 +93,7 @@ abstract class XposedScope : Scope {
                     val scopeName = this.javaClass.simpleName
                     val featureName = it.javaClass.simpleName
                     val stackTrace = Log.getStackTraceString(ex)
-                    XposedEntry.log("Failed to initialize hook feature '$featureName' in scope '$scopeName':\n$stackTrace")
+                    XposedBridge.log("[YourMIUI] Failed to initialize hook feature '$featureName' in scope '$scopeName':\n$stackTrace")
                 }
             }
     }
@@ -157,7 +151,7 @@ abstract class XposedFeature(
             @Suppress("UNCHECKED_CAST")
             ReflectOperator(clazz as Class<Any>).run(operate)
         } else {
-            XposedEntry.log("Class not found: $className!")
+            XposedBridge.log("[YourMIUI] Class not found: $className!")
             null
         }
     }
@@ -184,24 +178,11 @@ class XposedOption<T : Any>(
 
 @Suppress("UNCHECKED_CAST")
 class ReflectOperator<T : Any>(val delegate: Class<T>) {
-    companion object {
-        private val constructorCache = mutableMapOf<String, ConstructorOps<*>>()
-        private val fieldCache = mutableMapOf<String, FieldOps<*>>()
-        private val methodCache = mutableMapOf<String, MethodOps<*>>()
-    }
-
     fun constructor(vararg paramTypes: Class<*>): ConstructorOps<T>? {
-        val fullName = "${delegate.getName()}${getParametersString(*paramTypes)}"
-        if (constructorCache.containsKey(fullName)) {
-            return constructorCache[fullName] as ConstructorOps<T>
-        }
-
         return runCatching {
-            val constructor = ConstructorOps(delegate.getDeclaredConstructor(*paramTypes))
-            constructorCache[fullName] = constructor
-            constructor
+            ConstructorOps(delegate.getDeclaredConstructor(*paramTypes))
         }.onFailure {
-            XposedEntry.log("Constructor not found: $fullName!")
+            XposedBridge.log("[YourMIUI] Constructor not found: ${delegate.getName()}(${getParametersString(*paramTypes)})!")
         }.getOrNull()
     }
 
@@ -214,21 +195,16 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     fun field(name: String): FieldOps<T>? {
-        val fullName = "${delegate.getName()}#$name"
-        if (fieldCache.containsKey(fullName)) {
-            return fieldCache[fullName] as FieldOps<T>
-        }
-
         val field = findRecursive {
             runCatching { it.getDeclaredField(name) }.getOrNull()
-        }?.let { FieldOps<T>(it) }
-        if (field == null) {
-            XposedEntry.log("Field not found: $fullName!")
-            return null
         }
 
-        fieldCache[fullName] = field
-        return field
+        return if (field != null) {
+            FieldOps(field)
+        } else {
+            XposedBridge.log("[YourMIUI] Field not found: ${delegate.getName()}#$name!")
+            null
+        }
     }
 
     fun fields(type: Class<*>): List<FieldOps<T>> {
@@ -252,11 +228,6 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
-        val fullName = "${delegate.getName()}#$name${getParametersString(*paramTypes)}"
-        if (methodCache.containsKey(fullName)) {
-            return methodCache[fullName] as MethodOps<T>
-        }
-
         var result: Method? = null
         findRecursive {
             runCatching { it.getDeclaredMethod(name) }.getOrNull()?.let { dm -> return@findRecursive dm }
@@ -275,11 +246,9 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         }?.let { result = it }
 
         return if (result != null) {
-            val method = MethodOps<T>(result)
-            methodCache[fullName] = method
-            method
+            MethodOps(result)
         } else {
-            XposedEntry.log("Method not found: $fullName!")
+            XposedBridge.log("[YourMIUI] Method not found: ${delegate.getName()}#$name(${getParametersString(*paramTypes)})!")
             null
         }
     }
@@ -293,7 +262,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     private fun getParametersString(vararg clazzes: Class<*>): String {
-        return "(${clazzes.joinToString(",") { it.getName() }})"
+        return clazzes.joinToString(",") { it.getName() }
     }
 
     private fun <R> findRecursive(func: (Class<*>) -> R?): R? {
@@ -305,7 +274,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 }
 
-abstract class Hookable(private val member: Member) {
+abstract class HookableOps(private val member: Member) {
     fun hookResult(result: Any?) {
         XposedBridge.hookMethod(member, XC_MethodReplacement.returnConstant(result))
     }
@@ -337,7 +306,7 @@ abstract class Hookable(private val member: Member) {
     }
 }
 
-class ConstructorOps<T : Any>(private val delegate: Constructor<T>) : Hookable(delegate) {
+class ConstructorOps<T : Any>(private val delegate: Constructor<T>) : HookableOps(delegate) {
     fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
 
     fun new(vararg args: Any?): T {
@@ -359,7 +328,7 @@ class FieldOps<T : Any>(private val delegate: Field) {
     }
 }
 
-class MethodOps<T : Any>(private val delegate: Method) : Hookable(delegate) {
+class MethodOps<T : Any>(private val delegate: Method) : HookableOps(delegate) {
     fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
 
     fun returnType(): Class<*> = delegate.returnType
