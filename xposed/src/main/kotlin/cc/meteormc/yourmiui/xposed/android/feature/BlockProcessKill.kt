@@ -23,24 +23,24 @@ object BlockProcessKill : XposedFeature(
         helper("com.android.server.am.ProcessCleanerBase") {
             // 这个类在系统框架中
             // 从 /system/framework/services.jar 提取而来
-            helper("com.android.server.am.ProcessRecord") inner@{
+            val infoField = helper("com.android.server.am.ProcessRecord") {
                 // name: info | type: android.content.pm.ApplicationInfo
-                val processRecordInfoField = field("info") ?: return@inner
+                field("info")
+            } ?: return@helper
 
-                // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
-                this@helper.method(
-                    "killOnce",
-                    this@helper.delegate,
-                    String::class.java,
-                    Integer.TYPE,
-                    Handler::class.java,
-                    Context::class.java
-                )?.hookBefore {
-                    val process = it.args[0]
-                    val info = processRecordInfoField[process, ApplicationInfo::class.java] ?: return@hookBefore
-                    if (blockedPackages.contains(info.packageName)) {
-                        it.result = null
-                    }
+            // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
+            method(
+                "killOnce",
+                this@helper.delegate,
+                String::class.java,
+                Integer.TYPE,
+                Handler::class.java,
+                Context::class.java
+            )?.hookBefore {
+                val process = it.args[0]
+                val info = infoField[process, ApplicationInfo::class.java] ?: return@hookBefore
+                if (blockedPackages.contains(info.packageName)) {
+                    it.result = null
                 }
             }
         }
@@ -54,7 +54,7 @@ object BlockProcessKill : XposedFeature(
                 R.string.option_android_block_process_kill_blocked_packages_summary,
                 Option.Type.APP_LIST(),
                 emptyList()
-            ) { blockedPackages = it }
+            ) { blockedPackages = listOf("com.github.metacubex.clash.meta") }
         )
     }
 }

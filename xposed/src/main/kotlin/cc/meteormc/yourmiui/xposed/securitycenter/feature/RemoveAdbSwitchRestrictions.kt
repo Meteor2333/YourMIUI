@@ -33,7 +33,7 @@ object RemoveAdbSwitchRestrictions : XposedFeature(
                 @Suppress("UNCHECKED_CAST")
                 // name: (obfuscated) | type: (obfuscated)
                 fields(AsyncTask::class.java).firstOrNull()?.let { field ->
-                    helper(field.type()) suboperate@ {
+                    helper(field.type()) suboperate@{
                         // 由于当前hook的位置还没有初始化各种字段 所以手动创建一个$AsyncTask实例
                         // modifier: (default) | signature: <init>(Lcom/miui/permcenter/install/AdbInstallVerifyActivity;)V
                         val task = constructor(delegate)?.new(activity) ?: return@suboperate

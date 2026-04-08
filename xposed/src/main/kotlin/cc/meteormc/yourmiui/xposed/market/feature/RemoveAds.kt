@@ -133,27 +133,31 @@ object RemoveAds : XposedFeature(
 
         // 搜索结果页面
         helper("com.xiaomi.market.business_ui.search.NativeSearchResultFragment") {
-            helper("com.xiaomi.market.common.component.componentbeans.ListAppComponent") inner@{
-                // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-                this@helper.method("parseResponseData")?.hookAfter {
-                    @Suppress("UNCHECKED_CAST")
-                    val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
-                    parsedComponents.retainAll { component -> delegate.isInstance(component) }
-                    it.result = parsedComponents
-                }
+            val componentClass = helper("com.xiaomi.market.common.component.componentbeans.ListAppComponent") {
+                delegate
+            } ?: return@helper
+
+            // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
+            method("parseResponseData")?.hookAfter {
+                @Suppress("UNCHECKED_CAST")
+                val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
+                parsedComponents.retainAll { component -> componentClass.isInstance(component) }
+                it.result = parsedComponents
             }
         }
 
         // 搜索页面
         helper("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment") {
-            helper("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") inner@{
-                // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-                this@helper.method("parseResponseData")?.hookAfter {
-                    @Suppress("UNCHECKED_CAST")
-                    val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
-                    parsedComponents.retainAll { component -> delegate.isInstance(component) }
-                    it.result = parsedComponents
-                }
+            val componentClass = helper("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") {
+                delegate
+            } ?: return@helper
+
+            // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
+            method("parseResponseData")?.hookAfter {
+                @Suppress("UNCHECKED_CAST")
+                val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
+                parsedComponents.retainAll { component -> componentClass.isInstance(component) }
+                it.result = parsedComponents
             }
 
             // modifier: public | signature: isLoadMoreEndGone()Z
@@ -162,7 +166,7 @@ object RemoveAds : XposedFeature(
 
         // 更新页面
         helper("com.xiaomi.market.ui.UpdateListRvAdapter") {
-            val enum = helper($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
+            val stateEnum = helper($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
                 // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
                 field("Expand")?.get(null, delegate)
             }
@@ -170,15 +174,11 @@ object RemoveAds : XposedFeature(
             declaredConstructors().forEach {
                 it.hookAfter { param ->
                     val thisObj = param.thisObject
-                    thisObj.javaClass.getDeclaredField("forceExpanded").apply {
-                        isAccessible = true
-                    }[thisObj] = true
-                    thisObj.javaClass.getDeclaredField("foldButtonVisible").apply {
-                        isAccessible = true
-                    }[thisObj] = false
-                    thisObj.javaClass.getDeclaredField("pageCollapseState").apply {
-                        isAccessible = true
-                    }[thisObj] = enum
+                    helper(thisObj.javaClass) {
+                        field("forceExpanded")?.set(thisObj, true)
+                        field("foldButtonVisible")?.set(thisObj, false)
+                        field("pageCollapseState")?.set(thisObj, stateEnum)
+                    }
                 }
             }
 
@@ -194,14 +194,15 @@ object RemoveAds : XposedFeature(
 
         // 应用详情页面
         helper("com.xiaomi.market.ui.detail.BaseDetailActivity") {
-            val enum = helper("com.xiaomi.market.business_ui.detail.DetailType") {
+            val typeEnum = helper("com.xiaomi.market.business_ui.detail.DetailType") {
                 // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
                 field("UNKNOWN")?.get(null, delegate)
             }
+
             // modifier: public | signature: initParams()Landroid/os/Bundle;
             method("initParams")?.hookAfter {
                 // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType
-                field("detailType")?.set(it.thisObject, enum)
+                field("detailType")?.set(it.thisObject, typeEnum)
             }
         }
     }

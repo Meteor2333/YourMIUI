@@ -21,7 +21,7 @@ object FixTrafficCorrection : XposedFeature(
                     // 导致运营商的响应短信被过滤掉 (打印日志为`onProcessSms 解析失败 need block sms`)
                     // 所以我们来帮他手动校正
                     @Suppress("unused")
-                    for (i in 0 until 5) {
+                    for (i in 0 until 3) {
                         val result = refreshMethod.call(it.thisObject, it.args[1]) as List<*>
                         if (result.isNotEmpty()) break
                         if (Looper.myLooper() != Looper.getMainLooper()) {
