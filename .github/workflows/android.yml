@@ -73,6 +73,7 @@ jobs:
           suffix=${suffix%.apk}
           new_name="${project_name}-${tag}-${suffix}.apk"
           mv "$file" "${outputs_dir}/${new_name}"
+        done
         
     - name: Release Changelog Builder
       id: release_chanagelog
