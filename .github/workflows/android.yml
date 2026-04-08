@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
   
 jobs:
   build:
@@ -75,14 +76,16 @@ jobs:
           sudo mv "$file" "${outputs_dir}/${new_name}"
         done
         
-    - name: Release Changelog Builder
-      id: release_chanagelog
+    - name: Build changelog
+      id: build_chanagelog
       if: github.ref_type == 'tag'
-      uses: mikepenz/release-changelog-builder-action@v6.1.1
+      uses: mikepenz/release-changelog-builder-action@v6
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Github release
       uses: softprops/action-gh-release@v2
       if: github.ref_type == 'tag'
       with:
         files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
-        body: ${{ steps.release_chanagelog.outputs.changelog }}
+        body: ${{ steps.build_chanagelog.outputs.changelog }}
