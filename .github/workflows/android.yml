@@ -43,7 +43,7 @@ jobs:
       run: ./gradlew build
 
     - name: Collect artifact
-      id: artifact
+      id: collect_artifact
       run: |
         outputs_dir="outputs"
         sudo mkdir -p "$outputs_dir"
@@ -51,32 +51,37 @@ jobs:
         echo "apk_outputs=$outputs_dir" >> $GITHUB_OUTPUT
         
     - name: Use short hash
-      id: hash
+      id: use_hash
       run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
       with:
-        name: ${{ github.event.repository.name }}-${{ steps.hash.outputs.short_sha }}
-        path: ${{ steps.artifact.outputs.apk_outputs }}
+        name: ${{ github.event.repository.name }}-${{ steps.use_hash.outputs.short_sha }}
+        path: ${{ steps.collect_artifact.outputs.apk_outputs }}
 
     - name: Rename APKs
       if: github.ref_type == 'tag'
       run: |
+        outputs_dir="${{ steps.collect_artifact.outputs.apk_outputs }}"
         project_name="${{ github.event.repository.name }}"
         tag="${{ github.ref_name }}"
 
-        for file in ${{ steps.artifact.outputs.apk_outputs }}/*.apk; do
+        for file in ${outputs_dir}/*.apk; do
           filename=$(basename "$file")
           suffix=${filename#app-}
           suffix=${suffix%.apk}
           new_name="${project_name}-${tag}-${suffix}.apk"
-          mv "$file" "${{ steps.artifact.outputs.apk_outputs }}/${new_name}"
+          mv "$file" "${outputs_dir}/${new_name}"
+        
+    - name: Release Changelog Builder
+      id: release_chanagelog
+      if: github.ref_type == 'tag'
+      uses: mikepenz/release-changelog-builder-action@v6.1.1
 
     - name: Github release
       uses: softprops/action-gh-release@v2
       if: github.ref_type == 'tag'
       with:
-        files: ${{ steps.artifact.outputs.apk_outputs }}/*.apk
-        generate_release_notes: true
-        
+        files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
+        body: ${{ steps.release_chanagelog.outputs.changelog }}
