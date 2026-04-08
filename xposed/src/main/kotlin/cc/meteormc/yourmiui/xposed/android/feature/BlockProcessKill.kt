@@ -54,7 +54,7 @@ object BlockProcessKill : XposedFeature(
                 R.string.option_android_block_process_kill_blocked_packages_summary,
                 Option.Type.APP_LIST(),
                 emptyList()
-            ) { blockedPackages = listOf("com.github.metacubex.clash.meta") }
+            ) { blockedPackages = it }
         )
     }
 }
