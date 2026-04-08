@@ -81,6 +81,7 @@ jobs:
       if: github.ref_type == 'tag'
       uses: mikepenz/release-changelog-builder-action@v6
       with:
+        mode: "COMMIT"
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Github release
