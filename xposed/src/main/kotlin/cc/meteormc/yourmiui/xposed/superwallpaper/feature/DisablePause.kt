@@ -18,10 +18,6 @@ object DisablePause : XposedFeature(
             method("getWallPaperAod2LockPauseDelay")?.hookResult(Int.MAX_VALUE)
             // modifier: protected | signature: getWallPaperOffsetDelay()I
             method("getWallPaperOffsetDelay")?.hookResult(Int.MAX_VALUE)
-
-            // 不知道是干嘛的 不hook没有影响 hook了也没什么用
-//            // modifier: public | signature: sendInitBlockPause()V
-//            method("sendInitBlockPause")?.hook(XC_MethodReplacement.DO_NOTHING)
         }
     }
 }

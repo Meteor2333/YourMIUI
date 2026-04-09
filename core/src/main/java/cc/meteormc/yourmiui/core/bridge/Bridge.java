@@ -17,7 +17,7 @@ public interface Bridge {
         return false;
     }
 
-    static List<?> getScopes() {
+    static <T> List<T> getScopes() {
         return Collections.emptyList();
     }
 }
