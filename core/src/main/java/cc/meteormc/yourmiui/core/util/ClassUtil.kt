@@ -2,6 +2,8 @@
 
 package cc.meteormc.yourmiui.core.util
 
+import kotlin.math.abs
+
 // From commons-lang
 
 /**
@@ -191,8 +193,11 @@ fun compareParameterTypes(left: Array<Class<*>>, right: Array<Class<*>>, actual:
  * @return The total transformation cost
  */
 private fun getTotalTransformationCost(srcArgs: Array<out Class<*>>, destArgs: Array<out Class<*>>): Float {
-    var totalCost = 0.0f
-    for (i in srcArgs.indices) {
+    val size = minOf(srcArgs.size, destArgs.size)
+    val extra = abs(srcArgs.size - destArgs.size)
+
+    var totalCost = extra * 5.0f
+    for (i in 0 until size) {
         val srcClass: Class<*> = srcArgs[i]
         val destClass: Class<*> = destArgs[i]
         totalCost += getObjectTransformationCost(srcClass, destClass)

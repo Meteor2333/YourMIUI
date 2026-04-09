@@ -163,7 +163,7 @@ class XposedOption<T : Any>(
     private val summaryRes: Int,
     private val type: Option.Type<T>,
     private val defaultValue: T,
-    val onValueInit: (T) -> Unit
+    val onValueInit: (value: T) -> Unit
 ) : Option {
     override fun getPreferenceKey() = this.key
 
@@ -230,7 +230,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
         var result: Method? = null
         findRecursive {
-            runCatching { it.getDeclaredMethod(name) }.getOrNull()?.let { dm -> return@findRecursive dm }
+            runCatching { it.getDeclaredMethod(name, *paramTypes) }.getOrNull()?.let { dm -> return@findRecursive dm }
             for (method in it.getDeclaredMethods()) {
                 // compare name and parameters
                 if (method.name == name && (result == null || compareParameterTypes(
@@ -238,7 +238,6 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
                         result!!.parameterTypes,
                         paramTypes
                     ) < 0)) {
-                    // get accessible version of method
                     result = method
                 }
             }
@@ -283,7 +282,7 @@ abstract class HookableOps(private val member: Member) {
         XposedBridge.hookMethod(member, XC_MethodReplacement.DO_NOTHING)
     }
 
-    fun hookBefore(callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    fun hookBefore(callback: (param: XC_MethodHook.MethodHookParam) -> Unit) {
         XposedBridge.hookMethod(
             member,
             object : XC_MethodHook() {
@@ -294,7 +293,7 @@ abstract class HookableOps(private val member: Member) {
         )
     }
 
-    fun hookAfter(callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    fun hookAfter(callback: (param: XC_MethodHook.MethodHookParam) -> Unit) {
         XposedBridge.hookMethod(
             member,
             object : XC_MethodHook() {

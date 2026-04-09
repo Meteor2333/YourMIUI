@@ -29,7 +29,7 @@ object DisableCountdownDialog : XposedFeature(
             }
         }
 
-        fun hookGetter(operator: ReflectOperator<Any>): (XC_MethodHook.MethodHookParam) -> Unit {
+        fun hookGetter(operator: ReflectOperator<Any>): (param: XC_MethodHook.MethodHookParam) -> Unit {
             return {
                 val thisObject = it.thisObject
                 // name: (obfuscated) | type: int
