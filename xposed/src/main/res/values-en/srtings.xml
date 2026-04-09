@@ -52,8 +52,8 @@
     <string name="feature_superwallpaper_disable_pause_description">Prevent Super Wallpaper from pausing on the lock screen (Note: you need to enable the wallpaper in the scope)</string>
     <string name="feature_superwallpaper_disable_pause_warning">Enabling this may cause unnecessary performance usage</string>
     <string name="feature_superwallpaper_disable_pause_test_environment">Version ALPHA–2.6.555–03232016-ogl-64 (all variants)</string>
-    <string name="scope_systemadsolution">Advertising services</string>
-    <string name="feature_systemadsolution_remove_splash_ads_name">Get out of your fucking open-screen ad</string>
-    <string name="feature_systemadsolution_remove_splash_ads_description">Remove open-screen ads from most system apps</string>
-    <string name="feature_systemadsolution_remove_splash_ads_test_environment">2022.11.29.02-release</string>
+    <string name="scope_systemadsolution">AD Solution</string>
+    <string name="feature_systemadsolution_remove_splash_ads_name">Remove Splash Ads</string>
+    <string name="feature_systemadsolution_remove_splash_ads_description">Remove splash ads from most apps</string>
+    <string name="feature_systemadsolution_remove_splash_ads_test_environment">Version 2022.11.29.02-release</string>
 </resources>
