@@ -1,5 +1,9 @@
 # YourMIUI
 
+[![Github Release](https://img.shields.io/github/v/release/Meteor2333/YourMIUI)](https://github.com/Meteor2333/YourMIUI/releases)
+[![Release Downloads](https://img.shields.io/github/downloads/Meteor2333/YourMIUI/total)](https://github.com/Meteor2333/YourMIUI/releases)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Meteor2333_YourMIUI&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Meteor2333_YourMIUI)
+
 ## 介绍 
 一款优化 `MIUI` 系统中各种不友好功能的模块，基于 [LSPosed](https://github.com/LSPosed/LSPosed)
 
