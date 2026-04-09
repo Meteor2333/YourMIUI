@@ -55,5 +55,5 @@
     <string name="scope_systemadsolution">AD Solution</string>
     <string name="feature_systemadsolution_remove_splash_ads_name">Remove Splash Ads</string>
     <string name="feature_systemadsolution_remove_splash_ads_description">Remove splash ads from most apps</string>
-    <string name="feature_systemadsolution_remove_splash_ads_test_environment">Version 2022.11.29.02-release</string>
+    <string name="feature_systemadsolution_remove_splash_ads_test_environment">2022.11.29.02-release版本</string>
 </resources>
