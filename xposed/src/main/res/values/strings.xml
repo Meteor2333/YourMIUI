@@ -63,4 +63,9 @@
     <string name="feature_superwallpaper_disable_pause_description">阻止超级壁纸在锁屏时暂停（注意: 请在作用域中勾选你所使用的超级壁纸）</string>
     <string name="feature_superwallpaper_disable_pause_warning">开启此功能可能导致不必要的性能占用</string>
     <string name="feature_superwallpaper_disable_pause_test_environment">所有变种的ALPHA–2.6.555–03232016-ogl-64版本</string>
+
+    <string name="scope_systemadsolution">广告服务</string>
+    <string name="feature_systemadsolution_remove_splash_ads_name">滚你妈的开屏广告</string>
+    <string name="feature_systemadsolution_remove_splash_ads_description">去除大多数系统应用的开屏广告</string>
+    <string name="feature_systemadsolution_remove_splash_ads_test_environment">2022.11.29.02-release</string>
 </resources>

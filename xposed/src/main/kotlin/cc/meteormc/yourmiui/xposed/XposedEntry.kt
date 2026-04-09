@@ -18,6 +18,7 @@ import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
 import cc.meteormc.yourmiui.xposed.securitycenter.SecurityCenter
 import cc.meteormc.yourmiui.xposed.settings.Settings
 import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
+import cc.meteormc.yourmiui.xposed.systemadsolution.SystemAdSolution
 import de.robv.android.xposed.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import org.jetbrains.annotations.ApiStatus
@@ -35,7 +36,8 @@ class XposedEntry : IXposedHookLoadPackage {
         PackageInstaller,
         SecurityCenter,
         Settings,
-        SuperWallpaper
+        SuperWallpaper,
+        SystemAdSolution
     )
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {

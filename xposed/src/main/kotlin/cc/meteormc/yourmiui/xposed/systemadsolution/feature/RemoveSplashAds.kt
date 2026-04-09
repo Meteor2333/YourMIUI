@@ -1,0 +1,25 @@
+package cc.meteormc.yourmiui.xposed.systemadsolution.feature
+
+import android.os.Binder
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.XposedFeature
+
+object RemoveSplashAds : XposedFeature(
+    key = "systemadsolution_remove_splash_ads",
+    nameRes = R.string.feature_systemadsolution_remove_splash_ads_name,
+    descriptionRes = R.string.feature_systemadsolution_remove_splash_ads_description,
+    testEnvironmentRes = R.string.feature_systemadsolution_remove_splash_ads_test_environment
+) {
+    override fun init() {
+        val emptyBinder = Binder()
+        setOf(
+            "com.miui.systemAdSolution.splashAd.SystemSplashAdService",
+            "com.miui.systemAdSolution.splashscreen.SplashScreenService",
+            "com.miui.systemAdSolution.splashscreen.SplashScreenServiceV2"
+        ).forEach {
+            helper(it) {
+                method("onBind")?.hookResult(emptyBinder)
+            }
+        }
+    }
+}

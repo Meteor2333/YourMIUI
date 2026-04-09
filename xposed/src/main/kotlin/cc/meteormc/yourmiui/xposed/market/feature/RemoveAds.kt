@@ -65,46 +65,7 @@ object RemoveAds : XposedFeature(
             }
         }
 
-        helper("com.xiaomi.market.ui.splash.DetailSplashAdManager") {
-            setOf(
-                // modifier: public,static,final | signature: canRequestSplashAd(Lcom/xiaomi/market/ui/splash/DetailSplashAdManager$Env;)Z
-                "canRequestSplashAd",
-                // modifier: public,static,final | signature: isRequesting()Z
-                "isRequesting",
-                // modifier: private,final | signature: isOpenFromMsa(Lcom/xiaomi/market/ui/splash/DetailSplashAdManager$Env;)Z
-                "isOpenFromMsa"
-            ).forEach {
-                method(it)?.hookResult(false)
-            }
-
-            // modifier: public,static,final | signature: isOpenFromMsa(Lcom/xiaomi/market/ui/BaseActivity;Ljava/lang/Runnable;Ljava/lang/Runnable;)V
-            method("tryToRequestSplashAd")?.hookResult(null)
-        }
-
-        helper("com.xiaomi.market.ui.splash.SplashManager") {
-            setOf(
-                // modifier: public,static | signature: canShowSplash(Landroid/app/Activity;)Z
-                "canShowSplash",
-                // modifier: public | signature: canShowSplash(Landroid/app/Activity;)Z
-                "needShowSplash",
-                // modifier: public,static | signature: needRequestFocusVideo(Ljava/lang/String;Landroid/app/Activity;)Z
-                "needRequestFocusVideo",
-                // modifier: public,static | signature: isPassiveSplashAd(Landroid/app/Activity;)Z
-                "isPassiveSplashAd"
-            ).forEach {
-                method(it)?.hookResult(false)
-            }
-
-            setOf(
-                // modifier: public | signature: tryAdSplash(Landroid/app/Activity;Ljava/lang/String;)V
-                "tryAdSplash",
-                // modifier: public | signature: trySplashWhenApplicationForeground(Landroid/app/Activity;)V
-                "trySplashWhenApplicationForeground"
-            ).forEach {
-                method(it)?.hookResult(null)
-            }
-        }
-
+        // 主页
         helper("com.xiaomi.market.business_ui.main.MarketTabActivity") {
             setOf(
                 // modifier: public | signature: tryShowRecommend()V
