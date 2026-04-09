@@ -67,5 +67,5 @@
     <string name="scope_systemadsolution">广告服务</string>
     <string name="feature_systemadsolution_remove_splash_ads_name">滚你妈的开屏广告</string>
     <string name="feature_systemadsolution_remove_splash_ads_description">去除大多数系统应用的开屏广告</string>
-    <string name="feature_systemadsolution_remove_splash_ads_test_environment">2022.11.29.02-release</string>
+    <string name="feature_systemadsolution_remove_splash_ads_test_environment">2022.11.29.02-release版本</string>
 </resources>
