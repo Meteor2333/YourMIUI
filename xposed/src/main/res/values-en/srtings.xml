@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources>
     <string name="feature_android_block_process_kill_name">Block Process Kill</string>
     <string name="feature_android_block_process_kill_description">Prevent the system or third-party apps from terminating specified app processes</string>
     <string name="feature_android_block_process_kill_test_environment">Android 13 (MIUI 14)</string>
@@ -52,4 +52,8 @@
     <string name="feature_superwallpaper_disable_pause_description">Prevent Super Wallpaper from pausing on the lock screen (Note: you need to enable the wallpaper in the scope)</string>
     <string name="feature_superwallpaper_disable_pause_warning">Enabling this may cause unnecessary performance usage</string>
     <string name="feature_superwallpaper_disable_pause_test_environment">Version ALPHA–2.6.555–03232016-ogl-64 (all variants)</string>
+    <string name="scope_systemadsolution">AD Solution</string>
+    <string name="feature_systemadsolution_remove_splash_ads_name">Remove Splash Ads</string>
+    <string name="feature_systemadsolution_remove_splash_ads_description">Remove splash ads from most apps</string>
+    <string name="feature_systemadsolution_remove_splash_ads_test_environment">Version 2022.11.29.02-release</string>
 </resources>
