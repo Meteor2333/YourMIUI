@@ -31,9 +31,9 @@ interface Option {
             { it }
         )
 
-        class APP_LIST : Type<List<String>>(
+        class APP_LIST : Type<Set<String>>(
             { it.serializeToString() },
-            { it.deserializeToList() }
+            { it.deserializeToCollection().toSet() }
         )
 
         class SINGLE_LIST(vararg options: Pair<String, Int>) : Type<String>(
@@ -43,9 +43,9 @@ interface Option {
             val options: List<Pair<String, Int>> = options.toList()
         }
 
-        class MULTI_LIST(vararg options: Pair<String, Int>) : Type<List<String>>(
+        class MULTI_LIST(vararg options: Pair<String, Int>) : Type<Set<String>>(
             { it.serializeToString() },
-            { it.deserializeToList() }
+            { it.deserializeToCollection().toSet() }
         ) {
             val options: List<Pair<String, Int>> = options.toList()
         }
@@ -92,12 +92,12 @@ interface Option {
                 return type
             }
 
-            private fun List<String>.serializeToString(): String {
+            private fun Collection<String>.serializeToString(): String {
                 return this.joinToString(";") { it.escape() }
             }
 
-            private fun String.deserializeToList(): List<String> {
-                if (this.isBlank()) return emptyList()
+            private fun String.deserializeToCollection(): Collection<String> {
+                if (this.isBlank()) return emptySet()
                 return this.split(';').map { it.unescape() }
             }
 

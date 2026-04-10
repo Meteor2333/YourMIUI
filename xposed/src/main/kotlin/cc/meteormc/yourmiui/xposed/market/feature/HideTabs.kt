@@ -13,7 +13,7 @@ object HideTabs : XposedFeature(
     testEnvironmentRes = R.string.feature_market_hide_tabs_test_environment,
     originalAuthor = "owo233"
 ) {
-    private lateinit var keptTags: List<String>
+    private lateinit var keptTags: Set<String>
 
     override fun init() {
         helper("com.xiaomi.market.model.PageConfig") {
@@ -45,7 +45,7 @@ object HideTabs : XposedFeature(
                     "native_market_rank" to R.string.option_market_hide_tabs_kept_tags_rank,
                     "native_market_mine" to R.string.option_market_hide_tabs_kept_tags_mine
                 ),
-                listOf(
+                setOf(
                     "native_market_home",
                     "native_market_mine"
                 )

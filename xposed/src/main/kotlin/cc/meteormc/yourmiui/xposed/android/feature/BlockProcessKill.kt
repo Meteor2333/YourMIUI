@@ -15,7 +15,7 @@ object BlockProcessKill : XposedFeature(
     testEnvironmentRes = R.string.feature_android_block_process_kill_test_environment,
     originalAuthor = "dantmnf"
 ) {
-    private lateinit var blockedPackages: List<String>
+    private lateinit var blockedPackages: Set<String>
 
     override fun init() {
         // 这个类在系统框架中 是 MIUI 独有的
@@ -53,7 +53,7 @@ object BlockProcessKill : XposedFeature(
                 R.string.option_android_block_process_kill_blocked_packages_name,
                 R.string.option_android_block_process_kill_blocked_packages_summary,
                 Option.Type.APP_LIST(),
-                emptyList()
+                emptySet()
             ) { blockedPackages = it }
         )
     }
