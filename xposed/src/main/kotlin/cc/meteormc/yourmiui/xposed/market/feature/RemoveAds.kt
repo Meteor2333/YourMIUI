@@ -97,7 +97,6 @@ object RemoveAds : XposedFeature(
             val componentClass = helper("com.xiaomi.market.common.component.componentbeans.ListAppComponent") {
                 delegate
             } ?: return@helper
-
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
             method("parseResponseData")?.hookAfter {
                 @Suppress("UNCHECKED_CAST")
@@ -112,7 +111,6 @@ object RemoveAds : XposedFeature(
             val componentClass = helper("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") {
                 delegate
             } ?: return@helper
-
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
             method("parseResponseData")?.hookAfter {
                 @Suppress("UNCHECKED_CAST")
@@ -159,7 +157,6 @@ object RemoveAds : XposedFeature(
                 // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
                 field("UNKNOWN")?.get(null, delegate)
             }
-
             // modifier: public | signature: initParams()Landroid/os/Bundle;
             method("initParams")?.hookAfter {
                 // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType

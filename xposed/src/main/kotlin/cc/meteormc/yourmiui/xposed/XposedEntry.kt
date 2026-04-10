@@ -143,19 +143,27 @@ abstract class XposedFeature(
 
     override fun getOptions(): Iterable<Option> = emptyList()
 
-    protected fun <T : Any, R> helper(clazz: Class<T>, operate: ReflectOperator<T>.() -> R): R {
-        return ReflectOperator(clazz).run(operate)
+    protected fun <T : Any> helper(clazz: Class<T>): ReflectOperator<T> {
+        return ReflectOperator(clazz)
     }
 
-    protected fun <R> helper(className: String, operate: ReflectOperator<Any>.() -> R): R? {
+    protected fun helper(className: String): ReflectOperator<Any>? {
         val clazz = getClass(classLoader, className, false)
         return if (clazz != null) {
             @Suppress("UNCHECKED_CAST")
-            ReflectOperator(clazz as Class<Any>).run(operate)
+            ReflectOperator(clazz as Class<Any>)
         } else {
             XposedBridge.log("[YourMIUI] Class not found: $className!")
             null
         }
+    }
+
+    protected fun <T : Any, R> helper(clazz: Class<T>, operator: ReflectOperator<T>.() -> R): R {
+        return this.helper(clazz).run(operator)
+    }
+
+    protected fun <R> helper(className: String, operator: ReflectOperator<Any>.() -> R): R? {
+        return this.helper(className)?.run(operator)
     }
 }
 

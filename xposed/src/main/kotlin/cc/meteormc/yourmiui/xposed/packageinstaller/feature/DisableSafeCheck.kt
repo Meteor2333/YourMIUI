@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.xposed.packageinstaller.feature
 
-import cc.meteormc.yourmiui.xposed.FieldOps
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
@@ -12,21 +11,16 @@ object DisableSafeCheck : XposedFeature(
     testEnvironmentRes = R.string.feature_packageinstaller_disable_safe_check_test_environment
 ) {
     override fun init() {
-        var storeListedField: FieldOps<Any>? = null
-        var secureTipField: FieldOps<Any>? = null
-        helper("com.miui.packageInstaller.model.CloudParams") {
-            // name: storeListed | type: boolean
-            storeListedField = field("storeListed")
-            // name: secureTipField | type: com.miui.packageInstaller.model.WarningCardInfo
-            secureTipField = field("secureWarningTip")
-        }
-
         helper("com.miui.packageInstaller.model.ApkInfo") {
+            val operator = helper("com.miui.packageInstaller.model.CloudParams") ?: return@helper
+            val storeListedField = operator.field("storeListed") ?: return@helper
+            val secureWarningTipField = operator.field("secureWarningTip") ?: return@helper
+
             // modifier: public final | signature: getCloudParams()Lcom/miui/packageInstaller/model/CloudParams;
             method("getCloudParams")?.hookAfter {
                 val result = it.result
-                storeListedField?.set(result, true)
-                secureTipField?.set(result, null)
+                storeListedField[result] = true
+                secureWarningTipField[result] = null
                 it.result = result
             }
         }

@@ -18,6 +18,7 @@ object RemoveSplashAds : XposedFeature(
             "com.miui.systemAdSolution.splashscreen.SplashScreenServiceV2"
         ).forEach {
             helper(it) {
+                // modifier: onBind | signature: onBind(Landroid/content/Intent;)Landroid/os/IBinder;
                 method("onBind")?.hookResult(emptyBinder)
             }
         }
