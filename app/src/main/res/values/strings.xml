@@ -2,4 +2,62 @@
 <resources>
     <string name="app_name">YourMIUI</string>
     <string name="module_description">一款优化 MIUI 系统中各种不友好功能的模块</string>
+
+    <string name="check_title">不支持的环境</string>
+    <string name="check_unknown">本模块仅支持 MIUI 系统！</string>
+    <string name="check_unsupported">本模块仅支持 MIUI11 及以上的系统！</string>
+    <string name="check_exit">退出</string>
+
+    <string name="title_home">主页</string>
+    <string name="title_manager">管理</string>
+    <string name="title_settings">设置</string>
+
+    <string name="status_active">模块已激活</string>
+    <string name="status_inactive">模块未激活</string>
+    <string name="status_version">版本: %s</string>
+
+    <string name="update_title">有新版本可用</string>
+    <string name="update_summary">更新到最新版本以获得更好的体验</string>
+
+    <string name="info_device_brand">设备品牌</string>
+    <string name="info_device_model">设备型号</string>
+    <string name="info_system_code">系统代号</string>
+    <string name="info_android_version">Android版本</string>
+    <string name="info_miui_version">MIUI版本</string>
+    <string name="info_cpu_abi">CPU架构</string>
+
+    <string name="manager_hint">请在你的Xposed管理器中勾选以下软件的作用域\n未安装的应用将不会显示在这里</string>
+    <string name="manager_empty">空列表</string>
+
+    <string name="feature_warning">警告: %s</string>
+    <string name="feature_test_environment">测试环境: %s</string>
+    <string name="feature_original_author">原作者: %s</string>
+
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_save">保存</string>
+    <string name="dialog_app_picker_title">App选择器</string>
+    <string name="dialog_app_picker_hint">搜索应用名称或包名</string>
+    <string name="popup_enable">开启</string>
+    <string name="popup_disable">关闭</string>
+
+    <string name="settings_language">语言</string>
+    <string name="settings_language_language_title">语言</string>
+    <string name="settings_language_language_followsystem">跟随系统</string>
+    <string name="settings_language_language_english">English</string>
+    <string name="settings_language_language_simplifiedchinese">简体中文</string>
+    <string name="settings_language_translate_title">贡献翻译</string>
+    <string name="settings_language_translate_summary">帮助作者让本软件拥有你的语言</string>
+
+    <string name="settings_theme">主题</string>
+    <string name="settings_theme_colormode_title">颜色模式</string>
+    <string name="settings_theme_colormode_followsystem">跟随系统</string>
+    <string name="settings_theme_colormode_light">浅色模式</string>
+    <string name="settings_theme_colormode_dark">深色模式</string>
+
+    <string name="settings_basic">基础</string>
+    <string name="settings_basic_hideicon_title">隐藏桌面图标</string>
+    <string name="settings_basic_hideicon_summary">从系统桌面中隐藏本软件的图标</string>
+    <string name="settings_basic_hideicon_notice">如需恢复 请在你所使用的Xposed管理器中进入本软件</string>
+    <string name="settings_basic_checkupdate_title">检查更新</string>
+    <string name="settings_basic_checkupdate_summary">在第一时间获取到最新版本</string>
 </resources>
