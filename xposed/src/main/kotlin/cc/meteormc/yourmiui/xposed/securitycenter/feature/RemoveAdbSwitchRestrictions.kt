@@ -30,7 +30,6 @@ object RemoveAdbSwitchRestrictions : XposedFeature(
                 // 调用super.onCreate以防止SuperNotCalledException报错
                 onCreateMethod.callSuper(it.thisObject, it.args)
 
-                @Suppress("UNCHECKED_CAST")
                 // name: (obfuscated) | type: (obfuscated)
                 val taskField = fields(AsyncTask::class.java).firstOrNull() ?: return@hookBefore
                 helper(taskField.type()) suboperate@{
@@ -40,6 +39,7 @@ object RemoveAdbSwitchRestrictions : XposedFeature(
                     // 在onPostExecute中有操作adb开关的逻辑 并且这个方法没有混淆 所以直接找到并调用它
                     // 并且里面已经finish掉这个Activity了 无需重复操作
                     // modifier: public | signature: onPostExecute(Ljava/lang/String;)V
+                    @Suppress("UNCHECKED_CAST")
                     (method("onPostExecute") as MethodOps<Any>?)?.call(task, null)
                 }
 
