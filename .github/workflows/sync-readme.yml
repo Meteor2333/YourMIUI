@@ -21,8 +21,7 @@ jobs:
         run: |
           README_FILE="README.md"
           cp "$README_FILE" ModuleRepo/$README_FILE
-          cd README_FILE
-          sed -i '1i xxx' "$README_FILE"
+          cd ModuleRepo
 
           SOURCE_LINK="[👉 源码仓库](https://github.com/Meteor2333/YourMIUI)"
           # 找到最后一个 badge 的位置
