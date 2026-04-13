@@ -1,0 +1,45 @@
+name: Sync README.md to Module repo
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Clone Module repo
+        run: |
+          git clone https://x-access-token:${{ secrets.MODULE_REPO_TOKEN }}@github.com/Xposed-Modules-Repo/cc.meteormc.yourmiui.git ModuleRepo
+
+      - name: Copy & Modify file
+        run: |
+          README_FILE="README.md"
+          cp "$TARGET_FILE" ModuleRepo/$TARGET_FILE
+          cd TARGET_FILE
+          sed -i '1i xxx' "$TARGET_FILE"
+
+          SOURCE_LINK="[👉 源码仓库](https://github.com/Meteor2333/YourMIUI)"
+          # 找到最后一个 badge 的位置
+          LINE=$(grep -nE '!\[.*\]\(.*\)' "$README_FILE" | tail -n1 | cut -d: -f1)
+          if [ -z "$LINE" ]; then
+            # 没有徽标就插入到标题下面
+            LINE=$(grep -n "^# " "$README_FILE" | head -n1 | cut -d: -f1)
+          fi
+
+          TARGET_LINE=$((LINE + 1))
+          sed -i "${TARGET_LINE}i $SOURCE_LINK" "$README_FILE"
+
+      - name: Commit & Push to Module repo
+        run: |
+          cd TARGET_FILE
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "sync README.md file" || echo "No changes"
+          git push
