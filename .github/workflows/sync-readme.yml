@@ -23,7 +23,13 @@ jobs:
           cp "$README_FILE" ModuleRepo/$README_FILE
           cd ModuleRepo
 
-          SOURCE_LINK="[👉 源码仓库](https://github.com/Meteor2333/YourMIUI)"
+          SOURCE_LINK=$(cat <<'EOF'
+          
+            <a href="https://github.com/Meteor2333/YourMIUI" style="text-decoration:none;">
+              <b style="font-size:16px;">🔗 源码仓库</b>
+            </a>
+            EOF
+          )
           # 找到最后一个 badge 的位置
           LINE=$(grep -nE '!\[.*\]\(.*\)' "$README_FILE" | tail -n1 | cut -d: -f1)
           if [ -z "$LINE" ]; then
