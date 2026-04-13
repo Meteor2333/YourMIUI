@@ -24,17 +24,7 @@ jobs:
           cd ModuleRepo
 
           SOURCE_LINK="## [🔗 源码仓库](https://github.com/Meteor2333/YourMIUI)"
-          # 找到最后一个 badge 的位置
-          LINE=$(grep -nE '!\[.*\]\(.*\)' "$README_FILE" | tail -n1 | cut -d: -f1)
-          if [ -z "$LINE" ]; then
-            # 没有徽标就插入到标题下面
-            LINE=$(grep -n "^# " "$README_FILE" | head -n1 | cut -d: -f1)
-          fi
-
-          TARGET_LINE=$((LINE + 1))
-          sed -i "${TARGET_LINE}i\\
-          \\
-          $SOURCE_LINK" "$README_FILE"
+          sed -i "s|<!-- Source Link -->|$SOURCE_LINK|" "$README_FILE"
 
       - name: Commit & Push to Module repo
         run: |
