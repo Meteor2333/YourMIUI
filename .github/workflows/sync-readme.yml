@@ -20,9 +20,9 @@ jobs:
       - name: Copy & Modify file
         run: |
           README_FILE="README.md"
-          cp "$TARGET_FILE" ModuleRepo/$TARGET_FILE
-          cd TARGET_FILE
-          sed -i '1i xxx' "$TARGET_FILE"
+          cp "$README_FILE" ModuleRepo/$README_FILE
+          cd README_FILE
+          sed -i '1i xxx' "$README_FILE"
 
           SOURCE_LINK="[👉 源码仓库](https://github.com/Meteor2333/YourMIUI)"
           # 找到最后一个 badge 的位置
