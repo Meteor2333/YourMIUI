@@ -3,9 +3,12 @@ name: Sync to Module repo
 on:
   push:
     branches: [ "master" ]
+  release:
+    types: [ "published" ]
 
 jobs:
-  sync:
+  sync-readme:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
@@ -13,7 +16,7 @@ jobs:
 
       - name: Clone Module repo
         run: |
-          git clone https://x-access-token:${{ secrets.MODULE_REPO_TOKEN }}@github.com/Xposed-Modules-Repo/cc.meteormc.yourmiui.git ModuleRepo
+          git clone https://x-access-token:${{ secrets.MODULE_REPO_TOKEN }}@github.com/${{ vars.MODULE_REPO }}.git ModuleRepo
 
       - name: Copy & Modify file
         run: |
@@ -32,3 +35,27 @@ jobs:
           git add .
           git commit -m "sync README.md file" || echo "No changes"
           git push
+  sync-release:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download assets
+        run: |
+          mkdir assets
+          echo '${{ toJson(github.event.release.assets) }}' | jq -c '.[]' | while read asset; do
+            url=$(echo $asset | jq -r '.browser_download_url')
+            name=$(echo $asset | jq -r '.name')
+            curl -L -o "assets/$name" "$url"
+          done
+
+      - name: Publish to Module repo
+        uses: softprops/action-gh-release@v3
+        with:
+          repository: ${{ vars.MODULE_REPO }}
+          tag_name: ${{ github.event.release.tag_name }}
+          name: ${{ github.event.release.name }}
+          body: ${{ github.event.release.body }}
+          files: assets/*
+          prerelease: ${{ github.event.release.prerelease }}
+          token: ${{ secrets.MODULE_REPO_TOKEN }}
