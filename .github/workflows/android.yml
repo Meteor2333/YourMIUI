@@ -85,9 +85,17 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Github release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       if: github.ref_type == 'tag'
       with:
         files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
         body: ${{ steps.build_chanagelog.outputs.changelog }}
-        token: ${{ secrets.REPO_PA_TOKEN }}
+
+    - name: Publish to Module repo
+      uses: softprops/action-gh-release@v3
+      if: github.ref_type == 'tag'
+      with:
+        repository: ${{ vars.MODULE_REPO }}
+        files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
+        body: ${{ steps.build_chanagelog.outputs.changelog }}
+        token: ${{ secrets.MODULE_REPO_TOKEN }}
