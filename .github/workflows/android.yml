@@ -90,3 +90,4 @@ jobs:
       with:
         files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
         body: ${{ steps.build_chanagelog.outputs.changelog }}
+        token: ${{ secrets.REPO_PA_TOKEN }}
