@@ -19,7 +19,7 @@ enum class MIUIVersion(val code: Int) {
                 Class.forName("android.os.SystemProperties").getDeclaredMethod(
                     "getInt",
                     String::class.java,
-                    Integer.TYPE
+                    Int::class.javaPrimitiveType
                 ).also { it.isAccessible = true }.invoke(null, VERSION_PROPERTY_KEY, -1) as Int
             }.getOrDefault(0)
             if (versionCode <= 0) UNKNOWN

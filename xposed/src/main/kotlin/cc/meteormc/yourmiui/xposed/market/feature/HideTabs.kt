@@ -33,7 +33,7 @@ object HideTabs : XposedFeature(
     override fun getOptions(): Iterable<Option> {
         return listOf(
             XposedOption(
-                "tab_kept",
+                "kept_tags",
                 R.string.option_market_hide_tabs_kept_tags_name,
                 R.string.option_market_hide_tabs_kept_tags_summary,
                 Option.Type.MULTI_LIST(

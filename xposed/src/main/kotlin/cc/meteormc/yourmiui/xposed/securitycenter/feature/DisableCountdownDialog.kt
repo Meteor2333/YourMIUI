@@ -33,8 +33,8 @@ object DisableCountdownDialog : XposedFeature(
             return {
                 val thisObject = it.thisObject
                 // name: (obfuscated) | type: int
-                operator.fields(Int::class.java).firstOrNull { field ->
-                    field[thisObject, Integer.TYPE] == 5
+                operator.fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
+                    field[thisObject, Int::class.javaPrimitiveType] == 5
                 }?.set(thisObject, 1)
                 // name: (obfuscated) | type: android.os.Handler
                 val handler = operator.fields(Handler::class.java)

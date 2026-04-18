@@ -33,7 +33,7 @@ object BlockProcessKill : XposedFeature(
                 "killOnce",
                 recordClass,
                 String::class.java,
-                Integer.TYPE,
+                Int::class.javaPrimitiveType!!,
                 Handler::class.java,
                 Context::class.java
             )?.hookBefore {
