@@ -11,7 +11,7 @@ object FixLinkHandling : XposedFeature(
     descriptionRes = R.string.feature_contentextension_fix_link_handling_description,
     testEnvironmentRes = R.string.feature_contentextension_fix_link_handling_test_environment
 ) {
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.miui.contentextension.utils.AppsUtils") {
             // modifier: private static | signature: getIntentWithBrowser(Ljava/lang/String;)Landroid/content/Intent;
             method("getIntentWithBrowser")?.hookAfter {

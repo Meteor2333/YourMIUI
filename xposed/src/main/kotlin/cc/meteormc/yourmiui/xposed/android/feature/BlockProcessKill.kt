@@ -17,7 +17,7 @@ object BlockProcessKill : XposedFeature(
 ) {
     private lateinit var blockedPackages: Set<String>
 
-    override fun init() {
+    override fun onLoadPackage() {
         // 这个类在系统框架中 是 MIUI 独有的
         // 从 /system_ext/framework/miui-services.jar 提取而来
         helper("com.android.server.am.ProcessCleanerBase") {
@@ -46,7 +46,7 @@ object BlockProcessKill : XposedFeature(
         }
     }
 
-    override fun getOptions(): Iterable<Option> {
+    override fun getOptions(): Iterable<XposedOption<Set<String>>> {
         return listOf(
             XposedOption(
                 "blocked_packages",

@@ -10,7 +10,7 @@ object DisableSafeCheck : XposedFeature(
     warningRes = R.string.feature_packageinstaller_disable_safe_check_warning,
     testEnvironmentRes = R.string.feature_packageinstaller_disable_safe_check_test_environment
 ) {
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.miui.packageInstaller.model.ApkInfo") {
             val operator = helper("com.miui.packageInstaller.model.CloudParams") ?: return@helper
             val storeListedField = operator.field("storeListed") ?: return@helper

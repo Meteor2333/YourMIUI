@@ -12,7 +12,7 @@ object DisableCountdownDialog : XposedFeature(
     descriptionRes = R.string.feature_securitycenter_disable_countdown_dialog_description,
     testEnvironmentRes = R.string.feature_securitycenter_disable_countdown_dialog_test_environment
 ) {
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {

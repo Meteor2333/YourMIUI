@@ -16,7 +16,7 @@ object DisableUnnecessaryScans : XposedFeature(
         "com.miui.securityscan.model.system.UsbModel"
     )
 
-    override fun init() {
+    override fun onLoadPackage() {
         for (scan in unnecessaryScans) {
             helper(scan) {
                 // modifier: public | signature: scan()V

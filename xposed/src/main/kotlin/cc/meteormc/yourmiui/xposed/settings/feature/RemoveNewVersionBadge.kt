@@ -17,7 +17,7 @@ object RemoveNewVersionBadge : XposedFeature(
 
     private var propertyModification = true
 
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.android.settings.device.MiuiAboutPhoneUtils") {
             // modifier: public static | signature: getUpdateInfo(Landroid/content/Context;)Ljava/lang/String;
             method("getUpdateInfo")?.hookBefore {
@@ -35,7 +35,7 @@ object RemoveNewVersionBadge : XposedFeature(
         }
     }
 
-    override fun getOptions(): Iterable<Option> {
+    override fun getOptions(): Iterable<XposedOption<Boolean>> {
         return listOf(
             XposedOption(
                 "property_modification",

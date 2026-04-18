@@ -10,7 +10,7 @@ object FixTrafficCorrection : XposedFeature(
     descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,
     testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment
 ) {
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.miui.sdk.tc.TcManager") {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;
             val refreshMethod = method("getAllInstructions") ?: return@helper

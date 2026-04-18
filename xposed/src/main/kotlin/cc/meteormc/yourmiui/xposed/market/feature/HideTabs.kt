@@ -15,7 +15,7 @@ object HideTabs : XposedFeature(
 ) {
     private lateinit var keptTags: Set<String>
 
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.xiaomi.market.model.PageConfig") {
             // modifier: private | signature: initTabs(Lorg/json/JSONObject;)V
             method("initTabs")?.hookBefore {
@@ -30,7 +30,7 @@ object HideTabs : XposedFeature(
         }
     }
 
-    override fun getOptions(): Iterable<Option> {
+    override fun getOptions(): Iterable<XposedOption<Set<String>>> {
         return listOf(
             XposedOption(
                 "kept_tags",

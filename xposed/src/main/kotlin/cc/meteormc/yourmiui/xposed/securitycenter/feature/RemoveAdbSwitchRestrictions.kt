@@ -14,7 +14,7 @@ object RemoveAdbSwitchRestrictions : XposedFeature(
     descriptionRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_description,
     testEnvironmentRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_test_environment
 ) {
-    override fun init() {
+    override fun onLoadPackage() {
         // 由于这个类被严重混淆 所以在保证兼容性的情况下只能使用一种比较monkey的方法
         // 效果不太好而且毫无可读性 无奈之举
         helper("com.miui.permcenter.install.AdbInstallVerifyActivity") {

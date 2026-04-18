@@ -2,7 +2,7 @@
 
 package cc.meteormc.yourmiui.xposed
 
-import android.content.SharedPreferences
+import android.content.res.XResources
 import android.util.Log
 import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.Option
@@ -20,33 +20,75 @@ import cc.meteormc.yourmiui.xposed.settings.Settings
 import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
 import cc.meteormc.yourmiui.xposed.systemadsolution.SystemAdSolution
 import de.robv.android.xposed.*
+import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import org.jetbrains.annotations.ApiStatus
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 
-class XposedEntry : IXposedHookLoadPackage {
-    private val scopes = listOf(
-        Android,
-        ContentExtension,
-        Market,
-        MMS,
-        PackageInstaller,
-        SecurityCenter,
-        Settings,
-        SuperWallpaper,
-        SystemAdSolution
-    )
+class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
+    private val scopes by lazy {
+        listOf(
+            Android,
+            ContentExtension,
+            Market,
+            MMS,
+            PackageInstaller,
+            SecurityCenter,
+            Settings,
+            SuperWallpaper,
+            SystemAdSolution
+        )
+    }
+    private val prefs by lazy {
+        XSharedPreferences(BuildConfig.APPLICATION_ID, Feature.PREFERENCE_TAG).apply {
+            makeWorldReadable()
+            reload()
+        }
+    }
 
+    override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam) {
+        val scope = this.findScope(resparam.packageName) ?: return
+        scope.getFeatures().forEach {
+            if (!prefs.getBoolean(Feature.enabledKeyOf(it.getPreferenceKey()), false)) return@forEach
+            it.onInitResources(resparam.res)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
         if (packageName == BuildConfig.APPLICATION_ID) {
             this.initBridge(lpparam.classLoader, Bridge::class.java.name)
-        } else {
-            this.scopes.firstOrNull { it.getPackages().contains(packageName) }?.init(lpparam)
+            return
         }
+
+        val scope = this.findScope(packageName) ?: return
+        scope.getFeatures().forEach {
+            if (!prefs.getBoolean(Feature.enabledKeyOf(it.getPreferenceKey()), false)) return@forEach
+            runCatching {
+                it.classLoader = lpparam.classLoader
+                it.getOptions().forEach { option ->
+                    val key = Feature.optionKeyOf(it.getPreferenceKey(), option.getPreferenceKey())
+                    val value = prefs.getString(key, null)?.let { preference ->
+                        option.getType().deserializer(preference)
+                    } ?: option.getDefaultValue()
+                    (option as XposedOption<Any>).onValueInit(value)
+                }
+            }.onFailure { exception ->
+                val scopeName = this.javaClass.simpleName
+                val featureName = it.javaClass.simpleName
+                val stackTrace = Log.getStackTraceString(exception)
+                XposedBridge.log("[YourMIUI] Failed to initialize feature '$featureName' in scope '$scopeName':\n$stackTrace")
+            }
+
+            it.onLoadPackage()
+        }
+    }
+
+    private fun findScope(packageName: String): XposedScope? {
+        return this.scopes.firstOrNull { it.getPackages().contains(packageName) }
     }
 
     private fun initBridge(classLoader: ClassLoader, className: String) {
@@ -77,28 +119,7 @@ abstract class XposedScope : Scope {
 
     final override fun getPackages() = this.packages
 
-    abstract override fun getFeatures(): Iterable<Feature>
-
-    open fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        if (!packages.contains(lpparam.packageName)) {
-            return
-        }
-
-        val prefs = XSharedPreferences(BuildConfig.APPLICATION_ID, Feature.PREFERENCE_TAG)
-        prefs.makeWorldReadable()
-        prefs.reload()
-
-        this.getFeatures()
-            .filterIsInstance<XposedFeature>()
-            .forEach {
-                runCatching { it.initInternal(lpparam, prefs) }.onFailure { ex ->
-                    val scopeName = this.javaClass.simpleName
-                    val featureName = it.javaClass.simpleName
-                    val stackTrace = Log.getStackTraceString(ex)
-                    XposedBridge.log("[YourMIUI] Failed to initialize hook feature '$featureName' in scope '$scopeName':\n$stackTrace")
-                }
-            }
-    }
+    abstract override fun getFeatures(): Iterable<XposedFeature>
 }
 
 abstract class XposedFeature(
@@ -109,24 +130,14 @@ abstract class XposedFeature(
     private val testEnvironmentRes: Int? = null,
     private val originalAuthor: String? = null
 ) : Feature {
-    private lateinit var classLoader: ClassLoader
+    internal lateinit var classLoader: ClassLoader
 
-    protected abstract fun init()
+    open fun onInitResources(resources: XResources) {
 
-    @ApiStatus.Internal
-    internal fun initInternal(lpparam: XC_LoadPackage.LoadPackageParam, prefs: SharedPreferences) {
-        this.classLoader = lpparam.classLoader
-        if (!prefs.getBoolean(Feature.enabledKeyOf(key), false)) return
+    }
 
-        getOptions().filterIsInstance<XposedOption<Any>>().forEach {
-            val key = Feature.optionKeyOf(this.getPreferenceKey(), it.getPreferenceKey())
-            val value = prefs.getString(key, null)?.let { preference ->
-                it.getType().deserializer(preference)
-            } ?: it.getDefaultValue()
-            it.onValueInit(value)
-        }
+    open fun onLoadPackage() {
 
-        this.init()
     }
 
     final override fun getPreferenceKey() = this.key
@@ -141,7 +152,7 @@ abstract class XposedFeature(
 
     final override fun getOriginalAuthor() = this.originalAuthor
 
-    override fun getOptions(): Iterable<Option> = emptyList()
+    override fun getOptions(): Iterable<XposedOption<*>> = emptyList()
 
     protected fun <T : Any> helper(clazz: Class<T>): ReflectOperator<T> {
         return ReflectOperator(clazz)
@@ -284,15 +295,17 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
 }
 
 abstract class HookableOps(private val member: Member) {
-    fun hookResult(result: Any?) {
+    fun hookResult(result: Any?): HookableOps {
         XposedBridge.hookMethod(member, XC_MethodReplacement.returnConstant(result))
+        return this
     }
 
-    fun hookDoNothing() {
+    fun hookDoNothing(): HookableOps {
         XposedBridge.hookMethod(member, XC_MethodReplacement.DO_NOTHING)
+        return this
     }
 
-    fun hookBefore(callback: (param: XC_MethodHook.MethodHookParam) -> Unit) {
+    fun hookBefore(callback: (param: XC_MethodHook.MethodHookParam) -> Unit): HookableOps {
         XposedBridge.hookMethod(
             member,
             object : XC_MethodHook() {
@@ -301,9 +314,10 @@ abstract class HookableOps(private val member: Member) {
                 }
             }
         )
+        return this
     }
 
-    fun hookAfter(callback: (param: XC_MethodHook.MethodHookParam) -> Unit) {
+    fun hookAfter(callback: (param: XC_MethodHook.MethodHookParam) -> Unit): HookableOps {
         XposedBridge.hookMethod(
             member,
             object : XC_MethodHook() {
@@ -312,6 +326,7 @@ abstract class HookableOps(private val member: Member) {
                 }
             }
         )
+        return this
     }
 }
 

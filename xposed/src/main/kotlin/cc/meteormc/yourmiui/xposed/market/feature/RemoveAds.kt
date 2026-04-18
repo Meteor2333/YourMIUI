@@ -10,7 +10,7 @@ object RemoveAds : XposedFeature(
     testEnvironmentRes = R.string.feature_market_remove_ads_test_environment,
     originalAuthor = "owo233"
 ) {
-    override fun init() {
+    override fun onLoadPackage() {
         helper("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
             setOf(
                 // modifier: public,final | signature: isBrowserMarketAdOff()Z
