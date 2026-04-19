@@ -110,6 +110,8 @@ private val orderedPrimitiveTypes = listOf(
     Double::class.javaPrimitiveType
 )
 
+private val cache = mutableMapOf<String, Class<*>>()
+
 /**
  * Returns the class represented by `className` using the
  * `classLoader`.  This implementation supports the syntaxes
@@ -128,7 +130,7 @@ fun getClass(classLoader: ClassLoader, className: String, initialize: Boolean): 
         } ?: Class.forName(toCanonicalName(name), initialize, classLoader)
     }
 
-    return runCatching {
+    return cache[className] ?: runCatching {
         tryLoad(className)
     }.recoverCatching { ex ->
         if (ex !is ClassNotFoundException) throw ex
@@ -143,6 +145,8 @@ fun getClass(classLoader: ClassLoader, className: String, initialize: Boolean): 
         )
 
         tryLoad(innerName)
+    }.onSuccess {
+        cache[className] = it
     }.getOrNull()
 }
 

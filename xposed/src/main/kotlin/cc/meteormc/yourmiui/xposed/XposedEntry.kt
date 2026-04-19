@@ -201,11 +201,22 @@ class XposedOption<T : Any>(
 
 @Suppress("UNCHECKED_CAST")
 class ReflectOperator<T : Any>(val delegate: Class<T>) {
+    companion object {
+        private val constructorCache = mutableMapOf<String, ConstructorOps<*>>()
+        private val fieldCache = mutableMapOf<String, FieldOps<*>>()
+        private val methodCache = mutableMapOf<String, MethodOps<*>>()
+    }
+
     fun constructor(vararg paramTypes: Class<*>): ConstructorOps<T>? {
+        val fullName = "${delegate.getName()}(${getParametersString(*paramTypes)})"
+        if (constructorCache.containsKey(fullName)) {
+            return constructorCache[fullName] as ConstructorOps<T>
+        }
+
         return runCatching {
-            ConstructorOps(delegate.getDeclaredConstructor(*paramTypes))
+            ConstructorOps<T>(delegate.getDeclaredConstructor(*paramTypes)).apply { constructorCache[fullName] = this }
         }.onFailure {
-            XposedBridge.log("[YourMIUI] Constructor not found: ${delegate.getName()}(${getParametersString(*paramTypes)})!")
+            XposedBridge.log("[YourMIUI] Constructor not found: $fullName!")
         }.getOrNull()
     }
 
@@ -218,14 +229,18 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     fun field(name: String): FieldOps<T>? {
+        val fullName = "${delegate.getName()}#$name"
+        if (fieldCache.containsKey(fullName)) {
+            return fieldCache[fullName] as FieldOps<T>
+        }
+
         val field = findRecursive {
             runCatching { it.getDeclaredField(name) }.getOrNull()
         }
-
         return if (field != null) {
-            FieldOps(field)
+            FieldOps<T>(field).apply { fieldCache[fullName] = this }
         } else {
-            XposedBridge.log("[YourMIUI] Field not found: ${delegate.getName()}#$name!")
+            XposedBridge.log("[YourMIUI] Field not found: $fullName!")
             null
         }
     }
@@ -251,6 +266,11 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     fun method(name: String, vararg paramTypes: Class<*>): MethodOps<T>? {
+        val fullName = "${delegate.getName()}#$name(${getParametersString(*paramTypes)})"
+        if (methodCache.containsKey(fullName)) {
+            return methodCache[fullName] as MethodOps<T>
+        }
+
         var result: Method? = null
         findRecursive {
             runCatching { it.getDeclaredMethod(name, *paramTypes) }.getOrNull()?.let { dm -> return@findRecursive dm }
@@ -268,9 +288,9 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         }?.let { result = it }
 
         return if (result != null) {
-            MethodOps(result)
+            MethodOps<T>(result).apply { methodCache[fullName] = this }
         } else {
-            XposedBridge.log("[YourMIUI] Method not found: ${delegate.getName()}#$name(${getParametersString(*paramTypes)})!")
+            XposedBridge.log("[YourMIUI] Method not found: $fullName)!")
             null
         }
     }
