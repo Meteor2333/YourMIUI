@@ -1,3 +1,7 @@
 -dontobfuscate
 -dontwarn de.robv.android.xposed.**
+-dontwarn android.app.AndroidAppHelper
+-dontwarn android.content.res.XModuleResources
+-dontwarn android.content.res.XResForwarder
+-dontwarn android.content.res.XResources
 -keep class cc.meteormc.yourmiui.** { *; }
