@@ -26,10 +26,12 @@ object EditGxzwQuickOpen : XposedFeature(
         QuickOpenItem.entries.forEach { it.extra?.init() }
 
         helper("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {
+            // modifier: public static | signature: getValidItemIdList(Landroid/content/Context;)Ljava/util/List<Ljava/lang/Integer;>;
             method("getValidItemIdList")?.hookBefore {
                 it.result = reservedItems.map { item -> item.id }.sorted()
             }
 
+            // modifier: public static | signature: generateQuickOpenItem(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;I)Lcom/android/keyguard/fod/item/IQuickOpenItem;
             method("generateQuickOpenItem")?.hookBefore {
                 val id = it.args.filterIsInstance<Int>().firstOrNull() ?: return@hookBefore
                 val item = QuickOpenItem.entries.firstOrNull { entry -> entry.id == id } ?: return@hookBefore
@@ -96,6 +98,7 @@ object EditGxzwQuickOpen : XposedFeature(
         val constructor: ConstructorOps<*>? by lazy {
             if (clazzName == null) return@lazy null
             helper("com.android.keyguard.fod.item.$clazzName") {
+                // modifier: public | signature: <init>(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;)V
                 constructor(RectF::class.java, Region::class.java, Context::class.java)
             }
         }
@@ -114,8 +117,11 @@ object EditGxzwQuickOpen : XposedFeature(
         fun newInstance(vararg args: Any): Any? {
             // 利用AddEventItem来实现额外功能项
             return helper(EXTRA_ITEM_CLASS) {
+                // name: mView | type: android.widget.ImageView
                 val viewField = field("mView") ?: return@helper null
+                // name: mPackageName | type: java.lang.String
                 val identifierField = field("mPackageName") ?: return@helper null
+                // modifier: public | signature: <init>(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;)V
                 val instance = constructor(RectF::class.java, Region::class.java, Context::class.java)?.new(*args) ?: return@helper null
                 val context = args.filterIsInstance<Context>().firstOrNull() ?: return@helper null
                 @SuppressLint("DiscouragedApi")
@@ -128,6 +134,7 @@ object EditGxzwQuickOpen : XposedFeature(
 
         fun init() {
             val identifierField = helper(EXTRA_ITEM_CLASS) {
+                // name: mPackageName | type: java.lang.String
                 field("mPackageName")
             } ?: return
             fun Any.isExtraClass(): Boolean {
@@ -137,16 +144,19 @@ object EditGxzwQuickOpen : XposedFeature(
             }
 
             helper(EXTRA_ITEM_CLASS) {
+                // modifier: public | signature: getTag()Ljava/lang/String;
                 method("getTag")?.hookBefore {
                     if (!it.thisObject.isExtraClass()) return@hookBefore
                     it.result = tag
                 }
 
+                // modifier: public | signature: getTitle()Ljava/lang/String;
                 method("getTitle")?.hookBefore {
                     if (!it.thisObject.isExtraClass()) return@hookBefore
                     it.result = title
                 }
 
+                // modifier: public | signature: getSubTitle()Ljava/lang/String;
                 method("getSubTitle")?.hookBefore {
                     if (!it.thisObject.isExtraClass()) return@hookBefore
                     it.result = subtitle
@@ -154,6 +164,7 @@ object EditGxzwQuickOpen : XposedFeature(
             }
 
             helper("com.android.keyguard.fod.MiuiGxzwQuickOpenView") {
+                // modifier: public final | signature: handleQuickOpenItemTouchUp(Lcom/android/keyguard/fod/item/IQuickOpenItem;)V
                 (method("handleQucikOpenItemTouchUp") ?: method("handleQuickOpenItemTouchUp"))?.hookBefore {
                     val item = it.args[0]
                     if (!item.isExtraClass()) return@hookBefore
