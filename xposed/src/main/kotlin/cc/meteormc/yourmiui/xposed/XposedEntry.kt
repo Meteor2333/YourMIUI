@@ -14,6 +14,7 @@ import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.market.Market
 import cc.meteormc.yourmiui.xposed.mms.MMS
+import cc.meteormc.yourmiui.xposed.notification.Notification
 import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
 import cc.meteormc.yourmiui.xposed.securitycenter.SecurityCenter
 import cc.meteormc.yourmiui.xposed.settings.Settings
@@ -35,6 +36,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             ContentExtension,
             Market,
             MMS,
+            Notification,
             PackageInstaller,
             SecurityCenter,
             Settings,
