@@ -14,5 +14,6 @@
         <item>com.miui.miwallpaper.saturn</item>
         <item>com.miui.miwallpaper.snowmountain</item>
         <item>com.miui.systemAdSolution</item>
+        <item>com.android.systemui</item>
     </string-array>
 </resources>

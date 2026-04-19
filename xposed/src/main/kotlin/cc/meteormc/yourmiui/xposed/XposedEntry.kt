@@ -19,6 +19,7 @@ import cc.meteormc.yourmiui.xposed.securitycenter.SecurityCenter
 import cc.meteormc.yourmiui.xposed.settings.Settings
 import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
 import cc.meteormc.yourmiui.xposed.systemadsolution.SystemAdSolution
+import cc.meteormc.yourmiui.xposed.systemui.SystemUI
 import de.robv.android.xposed.*
 import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -38,7 +39,8 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             SecurityCenter,
             Settings,
             SuperWallpaper,
-            SystemAdSolution
+            SystemAdSolution,
+            SystemUI
         )
     }
     private val prefs by lazy {
