@@ -28,14 +28,14 @@ object RemoveAdbSwitchRestrictions : XposedFeature(
                 if (!delegate.isInstance(activity)) return@hookBefore
 
                 // 调用super.onCreate以防止SuperNotCalledException报错
-                onCreateMethod.callSuper(it.thisObject, it.args)
+                onCreateMethod.callSuper(it.thisObject, *it.args)
 
                 // name: (obfuscated) | type: (obfuscated)
                 val taskField = fields(AsyncTask::class.java).firstOrNull() ?: return@hookBefore
                 helper(taskField.type()) suboperate@{
                     // 由于当前hook的位置还没有初始化各种字段 所以手动创建一个$AsyncTask实例
                     // modifier: (default) | signature: <init>(Lcom/miui/permcenter/install/AdbInstallVerifyActivity;)V
-                    val task = constructor(delegate)?.new(activity) ?: return@suboperate
+                    val task = constructor(this@helper.delegate)?.new(activity) ?: return@suboperate
                     // 在onPostExecute中有操作adb开关的逻辑 并且这个方法没有混淆 所以直接找到并调用它
                     // 并且里面已经finish掉这个Activity了 无需重复操作
                     // modifier: public | signature: onPostExecute(Ljava/lang/String;)V
