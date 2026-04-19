@@ -10,14 +10,15 @@ object RemoveSplashAds : XposedFeature(
     descriptionRes = R.string.feature_systemadsolution_remove_splash_ads_description,
     testEnvironmentRes = R.string.feature_systemadsolution_remove_splash_ads_test_environment
 ) {
+    private val emptyBinder = Binder()
+
     override fun onLoadPackage() {
-        val emptyBinder = Binder()
         setOf(
             "com.miui.systemAdSolution.splashAd.SystemSplashAdService",
             "com.miui.systemAdSolution.splashscreen.SplashScreenService",
             "com.miui.systemAdSolution.splashscreen.SplashScreenServiceV2"
         ).forEach {
-            helper(it) {
+            operator(it) {
                 // modifier: onBind | signature: onBind(Landroid/content/Intent;)Landroid/os/IBinder;
                 method("onBind")?.hookResult(emptyBinder)
             }

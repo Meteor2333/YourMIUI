@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.xposed.android.feature
 import android.content.pm.PermissionInfo
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.getIntResult
 
 object DisableForceNotification : XposedFeature(
     key = "disable_force_notification",
@@ -26,28 +27,20 @@ object DisableForceNotification : XposedFeature(
         // (services) -> com.android.server.notification.NotificationManagerService$10.setNotificationsEnabledForPackage(java.lang.String, int, boolean)
         // (services) -> com.android.server.notification.PermissionHelper.setNotificationPermission(java.lang.String, int, boolean, boolean)
 
-        val permInfoField = helper("com.android.server.pm.permission.Permission") {
+        val permInfoField = operator("com.android.server.pm.permission.Permission") {
             // name: mPermissionInfo | type: android.content.pm.PermissionInfo
             field("mPermissionInfo")
         } ?: return
 
-        helper("com.android.server.pm.permission.PermissionState") {
+        operator("com.android.server.pm.permission.PermissionState") {
             // name: mPermission | type: com.android.server.pm.permission
-            val permField = field("mPermission") ?: return@helper
+            val permField = field("mPermission") ?: return@operator
             // modifier: public | signature: getFlags()I
-            method("getFlags")?.hookAfter {
-                // 原理解释:
-                // 系统底层在判断某个软件的通知是否允许被关闭时
-                // 会使用从android.permission.POST_NOTIFICATIONS获取的掩码对以下的4个flag进行运算
-                // 只要有任何一个符合条件 就强制它不能被关闭
-                // 所以只需要拦截并修改这个值即可
-                val permission = permField[it.thisObject, Any::class.java] ?: return@hookAfter
-                val permissionInfo = permInfoField[permission, PermissionInfo::class.java] ?: return@hookAfter
-                if (permissionInfo.name != NOTIFICATION_PERMISSION) return@hookAfter
-
-                var flags = it.result as Int
-                flags = flags and (FLAG_PERMISSION_POLICY_FIXED or FLAG_PERMISSION_SYSTEM_FIXED or FLAG_PERMISSION_GRANTED_BY_DEFAULT or FLAG_PERMISSION_GRANTED_BY_ROLE).inv()
-                it.result = flags
+            method("getFlags")?.replaceResult {
+                val permission = permField[it.thisObject] ?: return@replaceResult Unit
+                val permissionInfo = permInfoField[permission, PermissionInfo::class.java] ?: return@replaceResult Unit
+                if (permissionInfo.name != NOTIFICATION_PERMISSION) return@replaceResult Unit
+                it.getIntResult() and (FLAG_PERMISSION_POLICY_FIXED or FLAG_PERMISSION_SYSTEM_FIXED or FLAG_PERMISSION_GRANTED_BY_DEFAULT or FLAG_PERMISSION_GRANTED_BY_ROLE).inv()
             }
         }
     }

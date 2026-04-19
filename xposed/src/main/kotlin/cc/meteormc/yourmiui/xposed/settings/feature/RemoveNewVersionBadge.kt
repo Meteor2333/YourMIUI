@@ -6,6 +6,7 @@ import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
+import cc.meteormc.yourmiui.xposed.findArg
 
 object RemoveNewVersionBadge : XposedFeature(
     key = "remove_new_version_badge",
@@ -18,20 +19,18 @@ object RemoveNewVersionBadge : XposedFeature(
     private var propertyModification = true
 
     override fun onLoadPackage() {
-        helper("com.android.settings.device.MiuiAboutPhoneUtils") {
+        operator("com.android.settings.device.MiuiAboutPhoneUtils") {
             // modifier: public static | signature: getUpdateInfo(Landroid/content/Context;)Ljava/lang/String;
             method("getUpdateInfo")?.hookBefore {
                 if (propertyModification) {
-                    val context = it.args[0] as Context
+                    val context = it.findArg(Context::class.java) ?: return@hookBefore
                     Settings.Global.putString(
                         context.contentResolver,
                         PROPERTY_MIUI_NEW_VERSION,
                         null
                     )
                 }
-
-                it.result = null
-            }
+            }?.hookDoNothing()
         }
     }
 

@@ -2,6 +2,7 @@ package cc.meteormc.yourmiui.xposed.market.feature
 
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.getResult
 
 object RemoveAds : XposedFeature(
     key = "remove_market_ads",
@@ -11,7 +12,7 @@ object RemoveAds : XposedFeature(
     originalAuthor = "owo233"
 ) {
     override fun onLoadPackage() {
-        helper("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
+        operator("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
             setOf(
                 // modifier: public,final | signature: isBrowserMarketAdOff()Z
                 "isBrowserMarketAdOff",
@@ -66,7 +67,7 @@ object RemoveAds : XposedFeature(
         }
 
         // 主页
-        helper("com.xiaomi.market.business_ui.main.MarketTabActivity") {
+        operator("com.xiaomi.market.business_ui.main.MarketTabActivity") {
             setOf(
                 // modifier: public | signature: tryShowRecommend()V
                 "tryShowRecommend",
@@ -82,41 +83,38 @@ object RemoveAds : XposedFeature(
         }
 
         // 搜索建议页面
-        helper("com.xiaomi.market.business_ui.search.NativeSearchSugFragment") {
+        operator("com.xiaomi.market.business_ui.search.NativeSearchSugFragment") {
             // modifier: public | signature: getRequestParams()Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;
-            method("getRequestParams")?.hookAfter {
-                @Suppress("UNCHECKED_CAST")
-                val baseParametersForH5ToNative = (it.result as? Map<String, Any?>)?.toMutableMap() ?: return@hookAfter
-                baseParametersForH5ToNative["adFlag"] = 0
-                it.result = baseParametersForH5ToNative
+            method("getRequestParams")?.replaceResult {
+                it.getResult(Map::class.java)?.toMutableMap()?.apply {
+                    this["adFlag"] = 0
+                }
             }
         }
 
         // 搜索结果页面
-        helper("com.xiaomi.market.business_ui.search.NativeSearchResultFragment") {
-            val componentClass = helper("com.xiaomi.market.common.component.componentbeans.ListAppComponent") {
+        operator("com.xiaomi.market.business_ui.search.NativeSearchResultFragment") {
+            val componentClass = operator("com.xiaomi.market.common.component.componentbeans.ListAppComponent") {
                 delegate
-            } ?: return@helper
+            } ?: return@operator
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-            method("parseResponseData")?.hookAfter {
-                @Suppress("UNCHECKED_CAST")
-                val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
-                parsedComponents.retainAll { component -> componentClass.isInstance(component) }
-                it.result = parsedComponents
+            method("parseResponseData")?.replaceResult {
+                it.getResult(List::class.java)?.toMutableList()?.apply {
+                    retainAll { component -> componentClass.isInstance(component) }
+                }
             }
         }
 
         // 搜索页面
-        helper("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment") {
-            val componentClass = helper("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") {
+        operator("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment") {
+            val componentClass = operator("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") {
                 delegate
-            } ?: return@helper
+            } ?: return@operator
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-            method("parseResponseData")?.hookAfter {
-                @Suppress("UNCHECKED_CAST")
-                val parsedComponents = (it.result as? List<Any>)?.toMutableList() ?: return@hookAfter
-                parsedComponents.retainAll { component -> componentClass.isInstance(component) }
-                it.result = parsedComponents
+            method("parseResponseData")?.replaceResult {
+                it.getResult(List::class.java)?.toMutableList()?.apply {
+                    retainAll { component -> componentClass.isInstance(component) }
+                }
             }
 
             // modifier: public | signature: isLoadMoreEndGone()Z
@@ -124,8 +122,8 @@ object RemoveAds : XposedFeature(
         }
 
         // 更新页面
-        helper("com.xiaomi.market.ui.UpdateListRvAdapter") {
-            val stateEnum = helper($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
+        operator("com.xiaomi.market.ui.UpdateListRvAdapter") {
+            val stateEnum = operator($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
                 // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
                 field("Expand")?.get(null, delegate)
             }
@@ -133,7 +131,7 @@ object RemoveAds : XposedFeature(
             declaredConstructors().forEach {
                 it.hookAfter { param ->
                     val thisObj = param.thisObject
-                    helper(thisObj.javaClass) {
+                    operator(thisObj.javaClass) {
                         field("forceExpanded")?.set(thisObj, true)
                         field("foldButtonVisible")?.set(thisObj, false)
                         field("pageCollapseState")?.set(thisObj, stateEnum)
@@ -146,14 +144,14 @@ object RemoveAds : XposedFeature(
         }
 
         // 下载页面
-        helper("com.xiaomi.market.ui.DownloadListFragment") {
+        operator("com.xiaomi.market.ui.DownloadListFragment") {
             // modifier: private,final | signature: parseRecommendGroupResult(Lorg/json/JSONObject;)Lcom/xiaomi/market/viewmodels/RecommendGroupResult;
             method("parseRecommendGroupResult")?.hookResult(null)
         }
 
         // 应用详情页面
-        helper("com.xiaomi.market.ui.detail.BaseDetailActivity") {
-            val typeEnum = helper("com.xiaomi.market.business_ui.detail.DetailType") {
+        operator("com.xiaomi.market.ui.detail.BaseDetailActivity") {
+            val typeEnum = operator("com.xiaomi.market.business_ui.detail.DetailType") {
                 // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
                 field("UNKNOWN")?.get(null, delegate)
             }

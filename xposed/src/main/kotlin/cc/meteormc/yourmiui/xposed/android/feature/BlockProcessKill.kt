@@ -7,6 +7,7 @@ import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
+import cc.meteormc.yourmiui.xposed.findArg
 
 object BlockProcessKill : XposedFeature(
     key = "block_process_kill",
@@ -18,14 +19,12 @@ object BlockProcessKill : XposedFeature(
     private lateinit var blockedPackages: Set<String>
 
     override fun onLoadPackage() {
-        // 这个类在系统框架中 是 MIUI 独有的
-        // 从 /system_ext/framework/miui-services.jar 提取而来
-        helper("com.android.server.am.ProcessCleanerBase") {
-            // 这个类在系统框架中
-            // 从 /system/framework/services.jar 提取而来
-            val operator = helper("com.android.server.am.ProcessRecord") ?: return@helper
+        // 从 /system_ext/framework/miui-services.jar 提取
+        operator("com.android.server.am.ProcessCleanerBase") {
+            // 从 /system/framework/services.jar 提取
+            val operator = operator("com.android.server.am.ProcessRecord") ?: return@operator
             // name: info | type: android.content.pm.ApplicationInfo
-            val infoField = operator.field("info") ?: return@helper
+            val infoField = operator.field("info") ?: return@operator
             val recordClass = operator.delegate
 
             // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V
@@ -36,12 +35,10 @@ object BlockProcessKill : XposedFeature(
                 Int::class.javaPrimitiveType!!,
                 Handler::class.java,
                 Context::class.java
-            )?.hookBefore {
-                val process = it.args[0]
-                val info = infoField[process, ApplicationInfo::class.java] ?: return@hookBefore
-                if (blockedPackages.contains(info.packageName)) {
-                    it.result = null
-                }
+            )?.hookDoNothing {
+                val process = it.findArg(recordClass) ?: return@hookDoNothing false
+                val info = infoField[process, ApplicationInfo::class.java] ?: return@hookDoNothing false
+                blockedPackages.contains(info.packageName)
             }
         }
     }

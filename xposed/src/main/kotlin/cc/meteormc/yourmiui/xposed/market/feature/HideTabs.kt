@@ -4,6 +4,7 @@ import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
+import cc.meteormc.yourmiui.xposed.findArg
 import org.json.JSONObject
 
 object HideTabs : XposedFeature(
@@ -16,10 +17,10 @@ object HideTabs : XposedFeature(
     private lateinit var reservedTags: Set<String>
 
     override fun onLoadPackage() {
-        helper("com.xiaomi.market.model.PageConfig") {
+        operator("com.xiaomi.market.model.PageConfig") {
             // modifier: private | signature: initTabs(Lorg/json/JSONObject;)V
             method("initTabs")?.hookBefore {
-                val json = (it.args[0] as JSONObject).getJSONArray("tabs")
+                val json = it.findArg(JSONObject::class.java)?.getJSONArray("tabs") ?: return@hookBefore
                 var i = 0
                 while (i < json.length()) {
                     val tag = json.getJSONObject(i).getString("tag")

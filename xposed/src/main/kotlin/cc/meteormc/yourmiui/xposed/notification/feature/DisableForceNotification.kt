@@ -10,12 +10,12 @@ object DisableForceNotification : XposedFeature(
     testEnvironmentRes = R.string.feature_notification_disable_force_notification_test_environment
 ) {
     override fun onLoadPackage() {
-        helper("miui.util.NotificationFilterHelper") {
+        operator("miui.util.NotificationFilterHelper") {
             // modifier: public static | signature: isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z
             method("isNotificationForcedFor")?.hookResult(false)
         }
 
-        helper("miui.notification.management.model.AppItem") {
+        operator("miui.notification.management.model.AppItem") {
             // modifier: public | signature: isSystemApp()Z
             method("isSystemApp")?.hookResult(false)
         }

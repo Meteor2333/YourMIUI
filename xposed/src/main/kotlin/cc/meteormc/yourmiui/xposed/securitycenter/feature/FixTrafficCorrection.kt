@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 import android.os.Looper
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.findArg
 
 object FixTrafficCorrection : XposedFeature(
     key = "fix_traffic_correction",
@@ -11,9 +12,9 @@ object FixTrafficCorrection : XposedFeature(
     testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment
 ) {
     override fun onLoadPackage() {
-        helper("com.miui.sdk.tc.TcManager") {
+        operator("com.miui.sdk.tc.TcManager") {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;
-            val refreshMethod = method("getAllInstructions") ?: return@helper
+            val refreshMethod = method("getAllInstructions") ?: return@operator
 
             // modifier: private synchronized | signature: isInBlockNumberList(Ljava/lang/String;I)Z
             method("isInBlockNumberList")?.hookBefore {
@@ -21,8 +22,8 @@ object FixTrafficCorrection : XposedFeature(
                 // 导致运营商的响应短信被过滤掉 (打印日志为`onProcessSms 解析失败 need block sms`)
                 // 所以我们来帮他手动校正
                 for (i in 0 until 3) {
-                    val result = refreshMethod.call(it.thisObject, it.args[1]) as List<*>
-                    if (result.isNotEmpty()) break
+                    val result = refreshMethod.call(it.thisObject, it.findArg(Int::class.java)) as? List<*>
+                    if (!result.isNullOrEmpty()) break
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         // 刷新有时会失败 多尝试几次
                         Thread.sleep(3000)

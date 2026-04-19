@@ -10,12 +10,12 @@ object RemoveAds : XposedFeature(
     testEnvironmentRes = R.string.feature_mms_remove_ads_test_environment
 ) {
     override fun onLoadPackage() {
-        helper("com.miui.smsextra.ui.UnderstandButton") {
+        operator("com.miui.smsextra.ui.UnderstandButton") {
             // modifier: private | signature: needRequestAD(Ljava/lang/Object;Lcom/miui/smsextra/sdk/ItemExtra;Lcom/miui/smsextra/ui/UnderstandButton$ADCallback;)Z
             method("needRequestAD")?.hookResult(false)
         }
 
-        helper("com.miui.smsextra.ui.BottomMenu") {
+        operator("com.miui.smsextra.ui.BottomMenu") {
             // modifier: public | signature: requestMenu(Lcom/miui/smsextra/ui/BottomMenuOnLoadDataTaskCallBack;)V
             method("requestMenu")?.hookDoNothing()
 

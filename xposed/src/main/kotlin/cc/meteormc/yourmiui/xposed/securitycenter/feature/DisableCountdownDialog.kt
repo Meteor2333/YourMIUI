@@ -13,14 +13,14 @@ object DisableCountdownDialog : XposedFeature(
     testEnvironmentRes = R.string.feature_securitycenter_disable_countdown_dialog_test_environment
 ) {
     override fun onLoadPackage() {
-        helper("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
+        operator("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {
                 // name: (obfuscated) | type: (obfuscated)
                 val handler = fields(Handler::class.java)
                     .firstOrNull()
                     ?.get(it.thisObject, Handler::class.java) ?: return@hookAfter
-                helper(handler.javaClass) {
+                operator(handler.javaClass) {
                     // name: (obfuscated) | type: int
                     fields(Int::class.java).firstOrNull()?.set(handler, -1)
                 }
@@ -30,29 +30,29 @@ object DisableCountdownDialog : XposedFeature(
         }
 
         fun hookGetter(operator: ReflectOperator<Any>): (param: XC_MethodHook.MethodHookParam) -> Unit {
-            return {
+            return tag@{
                 val thisObject = it.thisObject
                 // name: (obfuscated) | type: int
                 operator.fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                    field[thisObject, Int::class.javaPrimitiveType] == 5
+                    field[thisObject, Int::class.javaPrimitiveType!!] == 5
                 }?.set(thisObject, 1)
                 // name: (obfuscated) | type: android.os.Handler
                 val handler = operator.fields(Handler::class.java)
                     .firstOrNull()
-                    ?.get(thisObject, Handler::class.java)
-                handler?.removeMessages(100)
-                handler?.sendEmptyMessage(100)
+                    ?.get(thisObject, Handler::class.java) ?: return@tag
+                handler.removeMessages(100)
+                handler.sendEmptyMessage(100)
             }
         }
 
-        helper("com.miui.permcenter.install.AdbInputApplyActivity") {
+        operator("com.miui.permcenter.install.AdbInputApplyActivity") {
             // modifier: public | signature: onClick(Landroid/view/View;)V
             method("onClick")?.hookAfter(hookGetter(this))
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter(hookGetter(this))
         }
         // 根据倒计时特征匹配到的 但从来没有见过这个界面 为什么呢
-        helper("com.miui.permcenter.root.RootApplyActivity") {
+        operator("com.miui.permcenter.root.RootApplyActivity") {
             // modifier: public | signature: onClick(Landroid/view/View;)V
             method("onClick")?.hookAfter(hookGetter(this))
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V

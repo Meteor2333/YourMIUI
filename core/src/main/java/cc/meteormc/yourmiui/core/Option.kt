@@ -85,7 +85,7 @@ interface Option {
                         }
                     }
                     else -> null
-                } as? Type<T> ?: return null
+                } as? Type<T>? ?: return null
                 val lookupType = lookupTypes[type.javaClass.simpleName] ?: return null
                 type.serializer = lookupType.serializer as (T) -> String
                 type.deserializer = lookupType.deserializer as (String) -> T?

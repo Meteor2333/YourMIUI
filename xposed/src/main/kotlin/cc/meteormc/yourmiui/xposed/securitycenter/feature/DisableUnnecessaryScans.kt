@@ -18,7 +18,7 @@ object DisableUnnecessaryScans : XposedFeature(
 
     override fun onLoadPackage() {
         for (scan in unnecessaryScans) {
-            helper(scan) {
+            operator(scan) {
                 // modifier: public | signature: scan()V
                 method("scan")?.hookDoNothing()
             }
