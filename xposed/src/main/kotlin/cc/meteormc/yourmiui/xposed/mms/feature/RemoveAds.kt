@@ -4,7 +4,7 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
 object RemoveAds : XposedFeature(
-    key = "mms_remove_ads",
+    key = "remove_mms_ads",
     nameRes = R.string.feature_mms_remove_ads_name,
     descriptionRes = R.string.feature_mms_remove_ads_description,
     testEnvironmentRes = R.string.feature_mms_remove_ads_test_environment

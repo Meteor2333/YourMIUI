@@ -6,7 +6,7 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
 object FixLinkHandling : XposedFeature(
-    key = "contentextension_fix_link_handling",
+    key = "fix_link_handling",
     nameRes = R.string.feature_contentextension_fix_link_handling_name,
     descriptionRes = R.string.feature_contentextension_fix_link_handling_description,
     testEnvironmentRes = R.string.feature_contentextension_fix_link_handling_test_environment

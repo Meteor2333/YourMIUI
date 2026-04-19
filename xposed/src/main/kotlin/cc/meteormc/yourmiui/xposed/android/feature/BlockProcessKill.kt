@@ -9,7 +9,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
 
 object BlockProcessKill : XposedFeature(
-    key = "android_block_process_kill",
+    key = "block_process_kill",
     nameRes = R.string.feature_android_block_process_kill_name,
     descriptionRes = R.string.feature_android_block_process_kill_description,
     testEnvironmentRes = R.string.feature_android_block_process_kill_test_environment,

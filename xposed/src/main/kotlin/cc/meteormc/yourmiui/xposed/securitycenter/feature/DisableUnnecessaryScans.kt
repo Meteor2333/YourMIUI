@@ -4,7 +4,7 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
 object DisableUnnecessaryScans : XposedFeature(
-    key = "securitycenter_disable_unnecessary_scans",
+    key = "disable_unnecessary_scans",
     nameRes = R.string.feature_securitycenter_disable_unnecessary_scans_name,
     descriptionRes = R.string.feature_securitycenter_disable_unnecessary_scans_description,
     testEnvironmentRes = R.string.feature_securitycenter_disable_unnecessary_scans_test_environment

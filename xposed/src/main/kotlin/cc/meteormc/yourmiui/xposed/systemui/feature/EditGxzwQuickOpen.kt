@@ -12,7 +12,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
 
 object EditGxzwQuickOpen : XposedFeature(
-    key = "systemui_edit_gxzw_quick_open",
+    key = "edit_gxzw_quick_open",
     nameRes = R.string.feature_systemui_edit_gxzw_quick_open_name,
     descriptionRes = R.string.feature_systemui_edit_gxzw_quick_open_description,
     testEnvironmentRes = R.string.feature_systemui_edit_gxzw_quick_open_test_environment

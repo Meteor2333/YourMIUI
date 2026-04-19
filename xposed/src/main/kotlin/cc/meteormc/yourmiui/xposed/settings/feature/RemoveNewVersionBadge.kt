@@ -8,7 +8,7 @@ import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
 
 object RemoveNewVersionBadge : XposedFeature(
-    key = "settings_remove_new_version_badge",
+    key = "remove_new_version_badge",
     nameRes = R.string.feature_settings_remove_new_version_badge_name,
     descriptionRes = R.string.feature_settings_remove_new_version_badge_description,
     testEnvironmentRes = R.string.feature_settings_remove_new_version_badge_test_environment

@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
 object FixTrafficCorrection : XposedFeature(
-    key = "securitycenter_fix_traffic_correction",
+    key = "fix_traffic_correction",
     nameRes = R.string.feature_securitycenter_fix_traffic_correction_name,
     descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,
     testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment

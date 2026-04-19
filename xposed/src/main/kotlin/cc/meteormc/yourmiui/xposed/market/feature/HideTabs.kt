@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.XposedOption
 import org.json.JSONObject
 
 object HideTabs : XposedFeature(
-    key = "market_hide_tabs",
+    key = "hide_market_tabs",
     nameRes = R.string.feature_market_hide_tabs_name,
     descriptionRes = R.string.feature_market_hide_tabs_description,
     testEnvironmentRes = R.string.feature_market_hide_tabs_test_environment,

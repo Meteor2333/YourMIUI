@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 
 object RemoveSplashAds : XposedFeature(
-    key = "systemadsolution_remove_splash_ads",
+    key = "remove_splash_ads",
     nameRes = R.string.feature_systemadsolution_remove_splash_ads_name,
     descriptionRes = R.string.feature_systemadsolution_remove_splash_ads_description,
     testEnvironmentRes = R.string.feature_systemadsolution_remove_splash_ads_test_environment
