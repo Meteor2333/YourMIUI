@@ -23,9 +23,21 @@ jobs:
           README_FILE="README.md"
           cp "$README_FILE" ModuleRepo/$README_FILE
           cd ModuleRepo
-
           SOURCE_LINK="## [🔗 源码仓库](https://github.com/Meteor2333/YourMIUI)"
           sed -i "s|<!-- Source Link -->|$SOURCE_LINK|" "$README_FILE"
+
+          SUMMARY_FILE="SUMMARY"
+          awk '/^- \[x\]/ { sub(/^- \[x\] /, ""); print }' "$README_FILE" > extracted.txt
+          EMPTY_LINE=$(grep -n "^$" $SUMMARY_FILE | head -n 1 | cut -d: -f1)
+          if [ -z "$EMPTY_LINE" ]; then
+            echo "No empty line found, appending at end"
+            cat extracted.txt >> $SUMMARY_FILE
+          else
+            head -n $EMPTY_LINE $SUMMARY_FILE > temp.md
+            echo "" >> temp.md
+            cat extracted.txt >> temp.md
+            mv temp.md $SUMMARY_FILE
+          fi
 
       - name: Commit & Push to Module repo
         run: |
