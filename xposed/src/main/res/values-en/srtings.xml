@@ -56,4 +56,18 @@
     <string name="feature_systemadsolution_remove_splash_ads_name">Remove Splash Ads</string>
     <string name="feature_systemadsolution_remove_splash_ads_description">Remove splash ads from most apps</string>
     <string name="feature_systemadsolution_remove_splash_ads_test_environment">Version 2022.11.29.02-release</string>
+    <string name="feature_systemui_edit_gxzw_quick_open_name">编辑指纹快捷功能</string>
+    <string name="feature_systemui_edit_gxzw_quick_open_description">编辑长按指纹区域时呼出的快捷功能菜单</string>
+    <string name="feature_systemui_edit_gxzw_quick_open_test_environment">20220714.0版本</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_name">保留的功能项列表</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_summary">选择要保留的功能项</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_add_event">新建日程</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_qr_code">扫描二维码</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_search">搜索</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_alipay_pay">支付宝: 付款码</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_alipay_scan">支付宝: 扫一扫</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_wechat_pay">微信: 付款码</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_wechat_scan">微信: 扫一扫</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_xiaoai">小爱同学</string>
+    <string name="option_systemui_edit_gxzw_quick_open_kept_items_torch">手电筒（本模块新增项）</string>
 </resources>
