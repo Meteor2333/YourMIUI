@@ -17,7 +17,7 @@ object EditGxzwQuickOpen : XposedFeature(
     descriptionRes = R.string.feature_systemui_edit_gxzw_quick_open_description,
     testEnvironmentRes = R.string.feature_systemui_edit_gxzw_quick_open_test_environment
 ) {
-    private lateinit var keptItems: Set<QuickOpenItem>
+    private lateinit var reservedItems: Set<QuickOpenItem>
 
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"
     private const val EXTRA_ITEM_IDENTIFIER = "cc.meteormc.yourmiui.xposed.EditGxzwQuickOpen#ExtraQuickOpenItem"
@@ -27,7 +27,7 @@ object EditGxzwQuickOpen : XposedFeature(
 
         helper("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {
             method("getValidItemIdList")?.hookBefore {
-                it.result = keptItems.map { item -> item.id }.sorted()
+                it.result = reservedItems.map { item -> item.id }.sorted()
             }
 
             method("generateQuickOpenItem")?.hookBefore {
@@ -46,19 +46,19 @@ object EditGxzwQuickOpen : XposedFeature(
     override fun getOptions(): Iterable<XposedOption<Set<String>>> {
         return listOf(
             XposedOption(
-                "kept_items",
-                R.string.option_systemui_edit_gxzw_quick_open_kept_items_name,
-                R.string.option_systemui_edit_gxzw_quick_open_kept_items_summary,
+                "reserved_items",
+                R.string.option_systemui_edit_gxzw_quick_open_reserved_items_name,
+                R.string.option_systemui_edit_gxzw_quick_open_reserved_items_summary,
                 Option.Type.MULTI_LIST(
-                    QuickOpenItem.ADD_EVENT.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_add_event,
-                    QuickOpenItem.QR_CODE.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_qr_code,
-                    QuickOpenItem.SEARCH.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_search,
-                    QuickOpenItem.ALIPAY_PAY.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_alipay_pay,
-                    QuickOpenItem.ALIPAY_SCAN.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_alipay_scan,
-                    QuickOpenItem.WECHAT_PAY.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_wechat_pay,
-                    QuickOpenItem.WECHAT_SCAN.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_wechat_scan,
-                    QuickOpenItem.XIAOAI.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_xiaoai,
-                    QuickOpenItem.TORCH.key to R.string.option_systemui_edit_gxzw_quick_open_kept_items_torch
+                    QuickOpenItem.ADD_EVENT.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_add_event,
+                    QuickOpenItem.QR_CODE.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_qr_code,
+                    QuickOpenItem.SEARCH.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_search,
+                    QuickOpenItem.ALIPAY_PAY.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_alipay_pay,
+                    QuickOpenItem.ALIPAY_SCAN.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_alipay_scan,
+                    QuickOpenItem.WECHAT_PAY.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_wechat_pay,
+                    QuickOpenItem.WECHAT_SCAN.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_wechat_scan,
+                    QuickOpenItem.XIAOAI.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_xiaoai,
+                    QuickOpenItem.TORCH.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_torch
                 ),
                 setOf(
                     QuickOpenItem.ALIPAY_PAY.key,
@@ -67,7 +67,7 @@ object EditGxzwQuickOpen : XposedFeature(
                     QuickOpenItem.WECHAT_PAY.key,
                     QuickOpenItem.WECHAT_SCAN.key
                 )
-            ) { keptItems = it.mapNotNull { key ->
+            ) { reservedItems = it.mapNotNull { key ->
                 QuickOpenItem.entries.firstOrNull { entry -> entry.key == key}
             }.toSet() }
         )

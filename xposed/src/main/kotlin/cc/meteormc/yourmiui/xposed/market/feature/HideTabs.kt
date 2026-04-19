@@ -13,7 +13,7 @@ object HideTabs : XposedFeature(
     testEnvironmentRes = R.string.feature_market_hide_tabs_test_environment,
     originalAuthor = "owo233"
 ) {
-    private lateinit var keptTags: Set<String>
+    private lateinit var reservedTags: Set<String>
 
     override fun onLoadPackage() {
         helper("com.xiaomi.market.model.PageConfig") {
@@ -23,7 +23,7 @@ object HideTabs : XposedFeature(
                 var i = 0
                 while (i < json.length()) {
                     val tag = json.getJSONObject(i).getString("tag")
-                    if (keptTags.contains(tag)) i++
+                    if (reservedTags.contains(tag)) i++
                     else json.remove(i)
                 }
             }
@@ -33,23 +33,23 @@ object HideTabs : XposedFeature(
     override fun getOptions(): Iterable<XposedOption<Set<String>>> {
         return listOf(
             XposedOption(
-                "kept_tags",
-                R.string.option_market_hide_tabs_kept_tags_name,
-                R.string.option_market_hide_tabs_kept_tags_summary,
+                "reserved_tags",
+                R.string.option_market_hide_tabs_reserved_tags_name,
+                R.string.option_market_hide_tabs_reserved_tags_summary,
                 Option.Type.MULTI_LIST(
-                    "native_market_home" to R.string.option_market_hide_tabs_kept_tags_home,
-                    "native_market_video" to R.string.option_market_hide_tabs_kept_tags_video,
-                    "native_market_agent" to R.string.option_market_hide_tabs_kept_tags_agent,
-                    "native_app_assemble" to R.string.option_market_hide_tabs_kept_tags_assemble,
-                    "native_market_game" to R.string.option_market_hide_tabs_kept_tags_game,
-                    "native_market_rank" to R.string.option_market_hide_tabs_kept_tags_rank,
-                    "native_market_mine" to R.string.option_market_hide_tabs_kept_tags_mine
+                    "native_market_home" to R.string.option_market_hide_tabs_reserved_tags_home,
+                    "native_market_video" to R.string.option_market_hide_tabs_reserved_tags_video,
+                    "native_market_agent" to R.string.option_market_hide_tabs_reserved_tags_agent,
+                    "native_app_assemble" to R.string.option_market_hide_tabs_reserved_tags_assemble,
+                    "native_market_game" to R.string.option_market_hide_tabs_reserved_tags_game,
+                    "native_market_rank" to R.string.option_market_hide_tabs_reserved_tags_rank,
+                    "native_market_mine" to R.string.option_market_hide_tabs_reserved_tags_mine
                 ),
                 setOf(
                     "native_market_home",
                     "native_market_mine"
                 )
-            ) { keptTags = it }
+            ) { reservedTags = it }
         )
     }
 }
