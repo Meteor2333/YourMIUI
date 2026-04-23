@@ -79,4 +79,9 @@
     <string name="option_systemui_edit_gxzw_quick_open_reserved_items_wechat_scan">WeChat: Scan</string>
     <string name="option_systemui_edit_gxzw_quick_open_reserved_items_xiaoai">XiaoAi</string>
     <string name="option_systemui_edit_gxzw_quick_open_reserved_items_torch">Torch (exclusive feature)</string>
+    <string name="feature_systemui_fix_splash_screen_name">Fix Splash Screen</string>
+    <string name="feature_systemui_fix_splash_screen_description">Fix apps without splash screen adaptation not showing the startup animation</string>
+    <string name="feature_systemui_fix_splash_screen_test_environment">Version 20220714.0</string>
+    <string name="option_systemui_fix_splash_screen_replace_background_color_name">Replace Background Color</string>
+    <string name="option_systemui_fix_splash_screen_replace_background_color_summary">Use the icon’s theme color as the splash background</string>
 </resources>
