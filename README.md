@@ -10,7 +10,7 @@
 </div>
 
 ## 介绍 
-一款优化 `MIUI` 系统中各种不友好功能的模块，基于 [LSPosed](https://github.com/LSPosed/LSPosed)
+一款优化 `MIUI` 系统中各种不友好功能的模块
 
 ## 功能列表
 - [x] 阻止结束特定软件的进程
