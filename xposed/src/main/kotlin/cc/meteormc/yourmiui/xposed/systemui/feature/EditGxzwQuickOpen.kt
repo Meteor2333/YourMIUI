@@ -138,9 +138,8 @@ object EditGxzwQuickOpen : XposedFeature(
                 field("mPackageName")
             } ?: return
             fun Any.isExtraClass(): Boolean {
-                val clazz = this.javaClass.name
-                val identifier = identifierField[this, String::class.java] ?: return false
-                return clazz == EXTRA_ITEM_CLASS && identifier == identifierOf()
+                if (this.javaClass.name != EXTRA_ITEM_CLASS) return false
+                return identifierField[this, String::class.java] == identifierOf()
             }
 
             operator(EXTRA_ITEM_CLASS) {
