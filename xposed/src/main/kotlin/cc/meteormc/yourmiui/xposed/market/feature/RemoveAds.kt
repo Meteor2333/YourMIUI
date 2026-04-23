@@ -125,7 +125,7 @@ object RemoveAds : XposedFeature(
         operator("com.xiaomi.market.ui.UpdateListRvAdapter") {
             val stateEnum = operator($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
                 // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
-                field("Expand")?.get(null, delegate)
+                field("Expand")?.get(null)
             }
             // modifier: public | signature: <init>(Lcom/xiaomi/market/common/component/base/INativeFragmentContext<Lcom/xiaomi/market/ui/BaseFragment;>;)V
             declaredConstructors().forEach {
@@ -153,7 +153,7 @@ object RemoveAds : XposedFeature(
         operator("com.xiaomi.market.ui.detail.BaseDetailActivity") {
             val typeEnum = operator("com.xiaomi.market.business_ui.detail.DetailType") {
                 // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
-                field("UNKNOWN")?.get(null, delegate)
+                field("UNKNOWN")?.get(null)
             }
             // modifier: public | signature: initParams()Landroid/os/Bundle;
             method("initParams")?.hookAfter {
