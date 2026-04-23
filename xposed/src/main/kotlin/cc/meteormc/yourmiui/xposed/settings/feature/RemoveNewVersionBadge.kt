@@ -16,13 +16,13 @@ object RemoveNewVersionBadge : XposedFeature(
 ) {
     private const val PROPERTY_MIUI_NEW_VERSION = "miui_new_version"
 
-    private var propertyModification = true
+    private var modifyProperty = false
 
     override fun onLoadPackage() {
         operator("com.android.settings.device.MiuiAboutPhoneUtils") {
             // modifier: public static | signature: getUpdateInfo(Landroid/content/Context;)Ljava/lang/String;
             method("getUpdateInfo")?.hookBefore {
-                if (propertyModification) {
+                if (modifyProperty) {
                     val context = it.findArg(Context::class.java) ?: return@hookBefore
                     Settings.Global.putString(
                         context.contentResolver,
@@ -37,12 +37,12 @@ object RemoveNewVersionBadge : XposedFeature(
     override fun getOptions(): Iterable<XposedOption<Boolean>> {
         return listOf(
             XposedOption(
-                "property_modification",
-                R.string.option_settings_remove_new_version_badge_property_modification_name,
-                R.string.option_settings_remove_new_version_badge_property_modification_summary,
+                "modify_property",
+                R.string.option_settings_remove_new_version_badge_modify_property_name,
+                R.string.option_settings_remove_new_version_badge_modify_property_summary,
                 Option.Type.SWITCH(),
-                false
-            ) { propertyModification = it }
+                modifyProperty
+            ) { modifyProperty = it }
         )
     }
 }
