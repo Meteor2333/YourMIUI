@@ -54,8 +54,8 @@
     <string name="feature_settings_remove_new_version_badge_name">Remove New Version Badge</string>
     <string name="feature_settings_remove_new_version_badge_description">Remove the system update badge (does not block updates)</string>
     <string name="feature_settings_remove_new_version_badge_test_environment">Android 13</string>
-    <string name="option_settings_remove_new_version_badge_modify_property_name">系统属性修改</string>
-    <string name="option_settings_remove_new_version_badge_modify_property_summary">修改MIUI添加的一条新系统版本标记，更加激进的清除方式</string>
+    <string name="option_settings_remove_new_version_badge_modify_property_name">Modify Property</string>
+    <string name="option_settings_remove_new_version_badge_modify_property_summary">Modify a system version property added by MIUI (more aggressive removal method)</string>
     <string name="scope_superwallpaper">SuperWallpaper</string>
     <string name="feature_superwallpaper_disable_pause_name">Disable Wallpaper Pause</string>
     <string name="feature_superwallpaper_disable_pause_description">Prevent Super Wallpaper from pausing on the lock screen (Note: you need to enable the wallpaper in the scope)</string>
