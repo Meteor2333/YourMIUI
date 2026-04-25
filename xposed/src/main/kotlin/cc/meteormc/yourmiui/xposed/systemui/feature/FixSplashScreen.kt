@@ -18,6 +18,7 @@ import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
+import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
 object FixSplashScreen : XposedFeature(
@@ -26,7 +27,7 @@ object FixSplashScreen : XposedFeature(
     descriptionRes = R.string.feature_systemui_fix_splash_screen_description,
     testEnvironmentRes = R.string.feature_systemui_fix_splash_screen_test_environment
 ) {
-    private const val DISALLOW_LAUNCH_PACKAGE = "com.android.systemui"
+    private const val ALLOW_LAUNCH_PACKAGE = "com.miui.home"
 
     private var replaceBackgroundColor: Boolean = true
 
@@ -62,10 +63,10 @@ object FixSplashScreen : XposedFeature(
         // name: mWindowBgColor | type: int
         val windowBgColorField = sswaClass.field("mWindowBgColor") ?: return
 
-        var currentIconSize = 0
-        var currentIconDefaultSize = 0
-        var currentActivityInfo: ActivityInfo? = null
-        fun ActivityInfo.loadSplashScreenInfo(context: Context): SplashScreenInfo {
+        val iconSizeChannel = Channel<Int?>(capacity = Channel.BUFFERED)
+        val iconDefaultSizeChannel = Channel<Int?>(capacity = Channel.BUFFERED)
+        val activityInfoChannel = Channel<ActivityInfo?>(capacity = Channel.BUFFERED)
+        fun ActivityInfo.loadSplashScreenInfo(context: Context, iconSize: Int, iconDefaultSize: Int): SplashScreenInfo {
             val configuration = context.resources.configuration
             val isDark = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
@@ -74,14 +75,14 @@ object FixSplashScreen : XposedFeature(
             val info = infoCache.getOrPut(packageName) {
                 SplashScreenInfo(
                     isDark,
-                    icon.normalizeIcon(context, currentIconSize, currentIconDefaultSize),
+                    icon.normalizeIcon(context, iconSize, iconDefaultSize),
                     icon.getThemeColor(isDark)
                 )
             }
 
             if (info.isDark != isDark) {
                 infoCache.remove(packageName)
-                return loadSplashScreenInfo(context)
+                return loadSplashScreenInfo(context, iconSize, iconDefaultSize)
             }
 
             return info
@@ -89,30 +90,30 @@ object FixSplashScreen : XposedFeature(
 
         operator("com.android.wm.shell.startingsurface.SplashscreenContentDrawer") {
             // name: mIconSize | type: int
-            val iconSizeField = field("mIconSize")
+            val iconSizeField = field("mIconSize") ?: return@operator
             // name: mDefaultIconSize | type: int
-            val iconDefaultSizeField = field("mDefaultIconSize")
+            val iconDefaultSizeField = field("mDefaultIconSize") ?: return@operator
             // modifier: public final | signature: updateDensity()V
-            val updateDensityMethod = method("updateDensity")
-            method("makeSplashScreenContentView")?.hookDoNothing {
+            val updateDensityMethod = method("updateDensity") ?: return@operator
+            method("makeSplashScreenContentView")?.hookBefore {
                 val swi = it.args[1]
-                if (launchPackageNameField[swi, String::class.java] == DISALLOW_LAUNCH_PACKAGE) {
-                    return@hookDoNothing true
-                }
+                if (launchPackageNameField[swi, String::class.java] != ALLOW_LAUNCH_PACKAGE) return@hookBefore
 
-                updateDensityMethod?.call(it.thisObject)
-                currentIconSize = iconSizeField?.let { field -> field[it.thisObject, Int::class.javaPrimitiveType!!] } ?: 0
-                currentIconDefaultSize = iconDefaultSizeField?.let { field -> field[it.thisObject, Int::class.javaPrimitiveType!!] } ?: 0
-                currentActivityInfo = targetActivityInfoField[swi, ActivityInfo::class.java] ?: topActivityInfoField[taskInfoField[swi], ActivityInfo::class.java]
-                return@hookDoNothing false
+                updateDensityMethod.call(it.thisObject)
+                iconSizeChannel.trySend(iconSizeField[it.thisObject, Int::class.javaPrimitiveType!!])
+                iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.thisObject, Int::class.javaPrimitiveType!!])
+                activityInfoChannel.trySend(targetActivityInfoField[swi, ActivityInfo::class.java] ?: topActivityInfoField[taskInfoField[swi], ActivityInfo::class.java])
             }
 
             // modifier: public static | signature: getWindowAttrs(Landroid/content/Context;Lcom/android/wm/shell/startingsurface/SplashscreenContentDrawer$SplashScreenWindowAttrs;)V
             method("getWindowAttrs")?.hookAfter {
+                val currentIconSize = iconSizeChannel.tryReceive().getOrNull() ?: return@hookAfter
+                val currentIconDefaultSize = iconDefaultSizeChannel.tryReceive().getOrNull() ?: return@hookAfter
+                val currentActivityInfo = activityInfoChannel.tryReceive().getOrNull() ?: return@hookAfter
                 val context = it.args[0] as Context
                 val attrs = it.args[1]
                 val appData by lazy {
-                    currentActivityInfo?.loadSplashScreenInfo(context)
+                    currentActivityInfo.loadSplashScreenInfo(context, currentIconSize, currentIconDefaultSize)
                 }
 
                 if (iconBgColorField[attrs, Int::class.javaPrimitiveType!!] == 0) {
@@ -120,11 +121,11 @@ object FixSplashScreen : XposedFeature(
                 }
 
                 if (splashScreenIconField[attrs, Drawable::class.java] == null) {
-                    splashScreenIconField[attrs] = appData?.icon
+                    splashScreenIconField[attrs] = appData.icon
                 }
 
                 if (replaceBackgroundColor && windowBgColorField[attrs, Int::class.javaPrimitiveType!!] == 0) {
-                    windowBgColorField[attrs] = appData?.background ?: 0
+                    windowBgColorField[attrs] = appData.background
                 }
             }
         }
