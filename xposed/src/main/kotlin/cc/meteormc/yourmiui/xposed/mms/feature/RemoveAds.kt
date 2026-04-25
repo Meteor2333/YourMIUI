@@ -2,6 +2,7 @@ package cc.meteormc.yourmiui.xposed.mms.feature
 
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.operator
 
 object RemoveAds : XposedFeature(
     key = "remove_mms_ads",

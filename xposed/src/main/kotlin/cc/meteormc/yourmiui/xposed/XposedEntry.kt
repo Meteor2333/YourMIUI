@@ -3,7 +3,6 @@ package cc.meteormc.yourmiui.xposed
 import android.util.Log
 import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.bridge.Bridge
-import cc.meteormc.yourmiui.core.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.market.Market
@@ -59,7 +58,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = lpparam.packageName
         if (packageName == BuildConfig.APPLICATION_ID) {
-            this.initBridge(lpparam.classLoader, Bridge::class.java.name)
+            this.initBridge(lpparam.classLoader)
             return
         }
 
@@ -90,9 +89,8 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
         return this.scopes.firstOrNull { it.getPackages().contains(packageName) }
     }
 
-    private fun initBridge(classLoader: ClassLoader, className: String) {
-        val bridgeClass = getClass(classLoader, className, true) ?: return
-        ReflectOperator(bridgeClass).run {
+    private fun initBridge(classLoader: ClassLoader) {
+        operator(classLoader, Bridge::class.java.name) {
             method("getApiName")?.hookResult(
                 ReflectOperator(XposedBridge::class.java).run {
                     field("TAG")?.get(null, String::class.java) ?: "Unknown"

@@ -2,6 +2,7 @@ package cc.meteormc.yourmiui.xposed.superwallpaper.feature
 
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.operator
 
 object DisablePause : XposedFeature(
     key = "disable_pause",

@@ -4,6 +4,7 @@ import android.os.Message
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.operator
 
 object AllowLockedAccess : XposedFeature(
     key = "nfc_allow_locked_access",

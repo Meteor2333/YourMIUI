@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.operator
 
 object DisableForceNotification : XposedFeature(
     key = "disable_force_notification",

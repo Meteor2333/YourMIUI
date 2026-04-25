@@ -2,10 +2,7 @@ package cc.meteormc.yourmiui.xposed.contentextension.feature
 
 import android.content.Intent
 import androidx.core.net.toUri
-import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.findArg
-import cc.meteormc.yourmiui.xposed.getResult
+import cc.meteormc.yourmiui.xposed.*
 
 object FixLinkHandling : XposedFeature(
     key = "fix_link_handling",

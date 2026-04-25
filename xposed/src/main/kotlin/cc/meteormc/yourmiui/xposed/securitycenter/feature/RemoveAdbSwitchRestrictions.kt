@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import cc.meteormc.yourmiui.xposed.MethodWrapper
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.operator
 
 object RemoveAdbSwitchRestrictions : XposedFeature(
     key = "remove_adb_switch_restrictions",

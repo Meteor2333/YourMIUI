@@ -18,6 +18,7 @@ import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.XposedOption
+import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 

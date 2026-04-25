@@ -4,6 +4,7 @@ import android.os.Handler
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.ReflectOperator
 import cc.meteormc.yourmiui.xposed.XposedFeature
+import cc.meteormc.yourmiui.xposed.operator
 import de.robv.android.xposed.XC_MethodHook
 
 object DisableCountdownDialog : XposedFeature(
