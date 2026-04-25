@@ -16,13 +16,14 @@ object AllowLockedAccess : XposedFeature(
 
     override fun onLoadPackage() {
         operator($$"com.android.nfc.NfcService$NfcServiceHandler") {
-            //
+            // modifier: public | signature: handleMessage(Landroid/os/Message;)V
             method("handleMessage")?.hookDoNothing {
                 it.findArg(Message::class.java)?.what == MSG_APPLY_SCREEN_STATE
             }
         }
 
         operator("com.android.nfc.ScreenStateHelper") {
+            // modifier: (default) | signature: checkScreenState()I
             method("checkScreenState")?.hookResult(SCREEN_STATE_ON_UNLOCKED)
         }
     }
