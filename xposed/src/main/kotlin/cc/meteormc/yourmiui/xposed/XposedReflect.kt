@@ -3,6 +3,7 @@
 package cc.meteormc.yourmiui.xposed
 
 import cc.meteormc.yourmiui.core.util.compareParameterTypes
+import cc.meteormc.yourmiui.core.util.getClass
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
@@ -10,6 +11,37 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Method
+
+fun <T : Any> operator(clazz: Class<T>): ReflectOperator<T> {
+    return ReflectOperator(clazz)
+}
+
+fun operator(classLoader: ClassLoader, className: String): ReflectOperator<Any>? {
+    val clazz = getClass(classLoader, className, false)
+    return if (clazz != null) {
+        @Suppress("UNCHECKED_CAST")
+        ReflectOperator(clazz as Class<Any>)
+    } else {
+        XposedBridge.log("[YourMIUI] Class not found: $className!")
+        null
+    }
+}
+
+fun XposedFeature.operator(className: String): ReflectOperator<Any>? {
+    return operator(classLoader, className)
+}
+
+fun <T : Any, R> operator(clazz: Class<T>, operator: ReflectOperator<T>.() -> R): R {
+    return operator(clazz).run(operator)
+}
+
+fun <R> operator(classLoader: ClassLoader, className: String, operator: ReflectOperator<Any>.() -> R): R? {
+    return operator(classLoader, className)?.run(operator)
+}
+
+fun <R> XposedFeature.operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
+    return operator(className)?.run(operator)
+}
 
 @Suppress("UNCHECKED_CAST")
 class ReflectOperator<T : Any>(val delegate: Class<T>) {

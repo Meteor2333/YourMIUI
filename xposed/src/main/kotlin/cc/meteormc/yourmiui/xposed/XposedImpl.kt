@@ -4,8 +4,6 @@ import android.content.res.XResources
 import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.Option
 import cc.meteormc.yourmiui.core.Scope
-import cc.meteormc.yourmiui.core.util.getClass
-import de.robv.android.xposed.XposedBridge
 
 abstract class XposedScope : Scope {
     private val nameRes: Int?
@@ -54,29 +52,6 @@ abstract class XposedFeature(
     final override fun getOriginalAuthor() = this.originalAuthor
 
     override fun getOptions(): Iterable<XposedOption<*>> = emptyList()
-
-    protected fun <T : Any> operator(clazz: Class<T>): ReflectOperator<T> {
-        return ReflectOperator(clazz)
-    }
-
-    protected fun operator(className: String): ReflectOperator<Any>? {
-        val clazz = getClass(classLoader, className, false)
-        return if (clazz != null) {
-            @Suppress("UNCHECKED_CAST")
-            ReflectOperator(clazz as Class<Any>)
-        } else {
-            XposedBridge.log("[YourMIUI] Class not found: $className!")
-            null
-        }
-    }
-
-    protected fun <T : Any, R> operator(clazz: Class<T>, operator: ReflectOperator<T>.() -> R): R {
-        return this.operator(clazz).run(operator)
-    }
-
-    protected fun <R> operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
-        return this.operator(className)?.run(operator)
-    }
 }
 
 class XposedOption<T : Any>(

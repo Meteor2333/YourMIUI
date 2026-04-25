@@ -4,6 +4,7 @@ import android.content.pm.PermissionInfo
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.getIntResult
+import cc.meteormc.yourmiui.xposed.operator
 
 object DisableForceNotification : XposedFeature(
     key = "disable_force_notification",
@@ -33,8 +34,8 @@ object DisableForceNotification : XposedFeature(
         } ?: return
 
         operator("com.android.server.notification.PermissionHelper") {
-            // modifier: public | signature: hasPermission(I)Z
-            method("hasPermission")?.hookResult(true)
+            // modifier: private | signature: packageRequestsNotificationPermission(Ljava/lang/String;I)Z
+            method("packageRequestsNotificationPermission")?.hookResult(true)
         }
 
         operator("com.android.server.pm.permission.PermissionState") {

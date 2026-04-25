@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.xposed.market.feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.getResult
+import cc.meteormc.yourmiui.xposed.operator
 
 object RemoveAds : XposedFeature(
     key = "remove_market_ads",

@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Handler
 import cc.meteormc.yourmiui.core.Option
-import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.XposedOption
-import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.*
 
 object BlockProcessKill : XposedFeature(
     key = "block_process_kill",

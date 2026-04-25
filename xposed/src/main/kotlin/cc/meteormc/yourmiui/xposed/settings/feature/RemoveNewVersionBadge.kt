@@ -3,10 +3,7 @@ package cc.meteormc.yourmiui.xposed.settings.feature
 import android.content.Context
 import android.provider.Settings
 import cc.meteormc.yourmiui.core.Option
-import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.XposedOption
-import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.*
 
 object RemoveNewVersionBadge : XposedFeature(
     key = "remove_new_version_badge",

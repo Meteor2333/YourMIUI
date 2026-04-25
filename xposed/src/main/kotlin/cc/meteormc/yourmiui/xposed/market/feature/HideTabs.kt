@@ -1,10 +1,7 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
 import cc.meteormc.yourmiui.core.Option
-import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.XposedOption
-import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.*
 import org.json.JSONObject
 
 object HideTabs : XposedFeature(
