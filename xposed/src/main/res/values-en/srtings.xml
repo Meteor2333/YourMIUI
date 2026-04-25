@@ -68,6 +68,9 @@
     <string name="feature_systemadsolution_remove_splash_ads_name">Remove Splash Ads</string>
     <string name="feature_systemadsolution_remove_splash_ads_description">Remove splash ads from most apps</string>
     <string name="feature_systemadsolution_remove_splash_ads_test_environment">Version 2022.11.29.02-release</string>
+    <string name="feature_systemui_disable_force_notification_name">Disable Force Notification</string>
+    <string name="feature_systemui_disable_force_notification_description">Remove the restriction that prevents disabling notifications for system apps</string>
+    <string name="feature_systemui_disable_force_notification_test_environment">Version 1.1.4.79</string>
     <string name="feature_systemui_edit_gxzw_quick_open_name">Edit Quick Open</string>
     <string name="feature_systemui_edit_gxzw_quick_open_description">Edit the quick open menu for long-pressing the fingerprint area</string>
     <string name="feature_systemui_edit_gxzw_quick_open_test_environment">Version 20220714.0</string>
