@@ -32,6 +32,11 @@ object DisableForceNotification : XposedFeature(
             field("mPermissionInfo")
         } ?: return
 
+        operator("com.android.server.notification.PermissionHelper") {
+            // modifier: public | signature: hasPermission(I)Z
+            method("hasPermission")?.hookResult(true)
+        }
+
         operator("com.android.server.pm.permission.PermissionState") {
             // name: mPermission | type: com.android.server.pm.permission
             val permField = field("mPermission") ?: return@operator
