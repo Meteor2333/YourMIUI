@@ -35,6 +35,10 @@
     <string name="feature_mms_remove_ads_description">去除短信消息下方的各种广告按钮</string>
     <string name="feature_mms_remove_ads_test_environment">14.2.5.14版本</string>
 
+    <string name="feature_nfc_allow_locked_access_name">允许锁定时识别卡片</string>
+    <string name="feature_nfc_allow_locked_access_description">使手机在未解锁的状态下依然能够识别卡片</string>
+    <string name="feature_nfc_allow_locked_access_test_environment">Android13版本</string>
+
     <string name="feature_notification_disable_force_notification_name">禁用强制通知</string>
     <string name="feature_notification_disable_force_notification_description">解除系统应用不允许关闭通知的限制</string>
     <string name="feature_notification_disable_force_notification_test_environment">1.1.4.79版本</string>
