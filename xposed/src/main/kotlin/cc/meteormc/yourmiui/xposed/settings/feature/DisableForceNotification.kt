@@ -20,8 +20,16 @@ object DisableForceNotification : XposedFeature(
             method("isNotificationForcedFor")?.hookResult(false)
         }
 
+        operator("com.android.settings.notification.BaseNotificationSettings") {
+            // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
+            method("onCreate")?.hookAfter {
+                // name: mHasNotifPermission | type: boolean
+                field("mHasNotifPermission")?.set(it.thisObject, true)
+            }
+        }
+
         operator("com.android.settings.notification.MiuiNotificationBackend") {
-            // 加载基本数据
+            // 此方法会加载基本数据
             // modifier: public | signature: loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/ApplicationInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;
             val loadMethod = method(
                 "loadAppRow",
@@ -29,7 +37,7 @@ object DisableForceNotification : XposedFeature(
                 PackageManager::class.java,
                 ApplicationInfo::class.java
             ) ?: return@operator
-            // 在前者的基础上额外加载了我们不希望它加载的数据(如是否为系统应用)
+            // 此方法在前者的基础上额外加载了我们不希望它加载的数据(如是否为系统应用)
             // modifier: public | signature: loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/PackageInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;
             method(
                 "loadAppRow",

@@ -85,6 +85,10 @@
     <string name="feature_systemadsolution_remove_splash_ads_description">去除大多数系统应用的开屏广告</string>
     <string name="feature_systemadsolution_remove_splash_ads_test_environment">2022.11.29.02-release版本</string>
 
+    <string name="feature_systemui_disable_force_notification_name">禁用强制通知</string>
+    <string name="feature_systemui_disable_force_notification_description">解除系统应用不允许关闭通知的限制</string>
+    <string name="feature_systemui_disable_force_notification_test_environment">1.1.4.79版本</string>
+
     <string name="feature_systemui_edit_gxzw_quick_open_name">编辑指纹快捷功能</string>
     <string name="feature_systemui_edit_gxzw_quick_open_description">编辑长按指纹区域时呼出的快捷功能菜单</string>
     <string name="feature_systemui_edit_gxzw_quick_open_test_environment">20220714.0版本</string>
