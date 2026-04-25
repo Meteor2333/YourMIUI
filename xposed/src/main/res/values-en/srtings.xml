@@ -29,9 +29,9 @@
     <string name="feature_mms_remove_ads_name">Remove Ads</string>
     <string name="feature_mms_remove_ads_description">Remove various ad buttons below messages</string>
     <string name="feature_mms_remove_ads_test_environment">Version 14.2.5.14</string>
-    <string name="feature_nfc_allow_locked_access_name">允许锁定时识别卡片</string>
-    <string name="feature_nfc_allow_locked_access_description">使手机在未解锁的状态下依然能够识别卡片</string>
-    <string name="feature_nfc_allow_locked_access_test_environment">Android13版本</string>
+    <string name="feature_nfc_allow_locked_access_name">Allow Locked Access</string>
+    <string name="feature_nfc_allow_locked_access_description">Allow the phone to access NFC cards even when locked</string>
+    <string name="feature_nfc_allow_locked_access_test_environment">Android 13</string>
     <string name="feature_notification_disable_force_notification_name">Disable Force Notification</string>
     <string name="feature_notification_disable_force_notification_description">Remove the restriction that prevents disabling notifications for system apps</string>
     <string name="feature_notification_disable_force_notification_test_environment">Version 1.1.4.79</string>
