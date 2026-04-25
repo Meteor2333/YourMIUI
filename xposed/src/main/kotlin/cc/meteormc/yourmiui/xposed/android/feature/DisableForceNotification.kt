@@ -34,8 +34,8 @@ object DisableForceNotification : XposedFeature(
         } ?: return
 
         operator("com.android.server.notification.PermissionHelper") {
-            // modifier: public | signature: hasPermission(I)Z
-            method("hasPermission")?.hookResult(true)
+            // modifier: private | signature: packageRequestsNotificationPermission(Ljava/lang/String;I)Z
+            method("packageRequestsNotificationPermission")?.hookResult(true)
         }
 
         operator("com.android.server.pm.permission.PermissionState") {
