@@ -6,6 +6,7 @@ import cc.meteormc.yourmiui.core.bridge.Bridge
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.market.Market
+import cc.meteormc.yourmiui.xposed.mirror.Mirror
 import cc.meteormc.yourmiui.xposed.mms.MMS
 import cc.meteormc.yourmiui.xposed.nfc.NFC
 import cc.meteormc.yourmiui.xposed.notification.Notification
@@ -28,6 +29,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             Android,
             ContentExtension,
             Market,
+            Mirror,
             MMS,
             NFC,
             Notification,

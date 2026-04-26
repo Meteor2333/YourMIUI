@@ -31,6 +31,10 @@
     <string name="feature_market_remove_ads_description">去除应用商店中的各种广告和赞助商应用推荐</string>
     <string name="feature_market_remove_ads_test_environment">4.112.7版本</string>
 
+    <string name="feature_mirror_disable_clip_tip_name">禁用剪切板提醒</string>
+    <string name="feature_mirror_disable_clip_tip_description">禁用设备互联的信息流转功能同步剪贴板时的提醒</string>
+    <string name="feature_mirror_disable_clip_tip_test_environment">3.7.95.d版本</string>
+
     <string name="feature_mms_remove_ads_name">去广告</string>
     <string name="feature_mms_remove_ads_description">去除短信消息下方的各种广告按钮</string>
     <string name="feature_mms_remove_ads_test_environment">14.2.5.14版本</string>
