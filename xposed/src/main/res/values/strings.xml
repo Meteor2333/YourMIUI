@@ -105,7 +105,7 @@
     <string name="option_systemui_edit_gxzw_quick_open_reserved_items_torch">手电筒（本模块新增项）</string>
 
     <string name="feature_systemui_fix_splash_screen_name">修复启动画面</string>
-    <string name="feature_systemui_fix_splash_screen_description">修复没有主动适配开屏画面的软件不显示启动蒙版动画的问题</string>
+    <string name="feature_systemui_fix_splash_screen_description">修复没有主动适配开屏画面的软件不显示启动遮罩动画的问题</string>
     <string name="feature_systemui_fix_splash_screen_test_environment">20220714.0版本</string>
     <string name="option_systemui_fix_splash_screen_replace_background_color_name">替换背景颜色</string>
     <string name="option_systemui_fix_splash_screen_replace_background_color_summary">将启动画面的背景颜色替换为相应的图标主题色</string>
