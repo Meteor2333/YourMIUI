@@ -26,6 +26,9 @@
     <string name="feature_market_remove_ads_name">Remove Ads</string>
     <string name="feature_market_remove_ads_description">Remove various ads and sponsored app recommendations</string>
     <string name="feature_market_remove_ads_test_environment">Version 4.112.7</string>
+    <string name="feature_mirror_disable_clip_tip_name">禁用剪切板提醒</string>
+    <string name="feature_mirror_disable_clip_tip_description">禁用设备互联的信息流转功能同步剪贴板时的提醒</string>
+    <string name="feature_mirror_disable_clip_tip_test_environment">3.7.95.d版本</string>
     <string name="feature_mms_remove_ads_name">Remove Ads</string>
     <string name="feature_mms_remove_ads_description">Remove various ad buttons below messages</string>
     <string name="feature_mms_remove_ads_test_environment">Version 14.2.5.14</string>
@@ -86,7 +89,7 @@
     <string name="option_systemui_edit_gxzw_quick_open_reserved_items_xiaoai">XiaoAi</string>
     <string name="option_systemui_edit_gxzw_quick_open_reserved_items_torch">Torch (exclusive feature)</string>
     <string name="feature_systemui_fix_splash_screen_name">Fix Splash Screen</string>
-    <string name="feature_systemui_fix_splash_screen_description">Fix apps without splash screen adaptation not showing the startup animation</string>
+    <string name="feature_systemui_fix_splash_screen_description">修复没有主动适配开屏画面的软件不显示启动遮罩动画的问题</string>
     <string name="feature_systemui_fix_splash_screen_test_environment">Version 20220714.0</string>
     <string name="option_systemui_fix_splash_screen_replace_background_color_name">Replace Background Color</string>
     <string name="option_systemui_fix_splash_screen_replace_background_color_summary">Use the icon’s theme color as the splash background</string>
