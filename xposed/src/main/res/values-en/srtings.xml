@@ -26,6 +26,9 @@
     <string name="feature_market_remove_ads_name">Remove Ads</string>
     <string name="feature_market_remove_ads_description">Remove various ads and sponsored app recommendations</string>
     <string name="feature_market_remove_ads_test_environment">Version 4.112.7</string>
+    <string name="feature_mirror_disable_clip_tip_name">Disable Clip Tip</string>
+    <string name="feature_mirror_disable_clip_tip_description">Disable the tip when syncing clipboard between devices</string>
+    <string name="feature_mirror_disable_clip_tip_test_environment">Version 3.7.95.d</string>
     <string name="feature_mms_remove_ads_name">Remove Ads</string>
     <string name="feature_mms_remove_ads_description">Remove various ad buttons below messages</string>
     <string name="feature_mms_remove_ads_test_environment">Version 14.2.5.14</string>
