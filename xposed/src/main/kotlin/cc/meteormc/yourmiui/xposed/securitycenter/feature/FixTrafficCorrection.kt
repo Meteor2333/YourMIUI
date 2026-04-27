@@ -34,9 +34,9 @@ object FixTrafficCorrection : XposedFeature(
         }
 
         // for debug
-//        helper("com.miui.networkassistant.service.tm.TrafficSimManager") {
+//        operator("com.miui.networkassistant.service.tm.TrafficSimManager") {
 //            // modifier: public | signature: checkCorrectTime(IZZII)I
-//            method("checkCorrectTime")?.hook(XC_MethodReplacement.returnConstant(-1))
+//            method("checkCorrectTime")?.hookResult(-1)
 //        }
     }
 }
