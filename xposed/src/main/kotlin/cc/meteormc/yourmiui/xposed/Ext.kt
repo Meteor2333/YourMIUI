@@ -3,16 +3,23 @@
 package cc.meteormc.yourmiui.xposed
 
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
 
-inline fun <reified T> XC_MethodHook.MethodHookParam.findArg(type: Class<T>): T? {
+fun XC_MethodHook.MethodHookParam.invokeSuper(): Any? {
+    return XposedBridge.invokeOriginalMethod(method, thisObject, args)
+}
+
+fun <T> XC_MethodHook.MethodHookParam.findArg(type: Class<T>): T? {
     return this.findArgs(type).firstOrNull()
 }
 
-inline fun <reified T> XC_MethodHook.MethodHookParam.findArgs(type: Class<T>): List<T> {
-    return this.args.filterIsInstance<T>()
+fun <T> XC_MethodHook.MethodHookParam.findArgs(type: Class<T>): List<T> {
+    return this.args.filterIsInstance(type)
 }
 
-fun <T> XC_MethodHook.MethodHookParam.getResult(type: Class<T>): T? = this.result as T
+fun <T> XC_MethodHook.MethodHookParam.getThisObject(type: Class<T>): T = this.thisObject as T
+
+fun <T> XC_MethodHook.MethodHookParam.getResult(type: Class<T>): T? = this.result as T?
 
 fun XC_MethodHook.MethodHookParam.getBooleanResult() = this.result as Boolean
 

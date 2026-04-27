@@ -15,10 +15,7 @@ import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.withScale
 import cc.meteormc.yourmiui.core.Option
-import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.XposedOption
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.*
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
@@ -97,7 +94,7 @@ object FixSplashScreen : XposedFeature(
             // modifier: public final | signature: updateDensity()V
             val updateDensityMethod = method("updateDensity") ?: return@operator
             method("makeSplashScreenContentView")?.hookBefore {
-                val swi = it.args[1]
+                val swi = it.findArg(swiClass.delegate) ?: return@hookBefore
                 if (launchPackageNameField[swi, String::class.java] != ALLOW_LAUNCH_PACKAGE) return@hookBefore
 
                 updateDensityMethod.call(it.thisObject)
@@ -111,8 +108,8 @@ object FixSplashScreen : XposedFeature(
                 val currentIconSize = iconSizeChannel.tryReceive().getOrNull() ?: return@hookAfter
                 val currentIconDefaultSize = iconDefaultSizeChannel.tryReceive().getOrNull() ?: return@hookAfter
                 val currentActivityInfo = activityInfoChannel.tryReceive().getOrNull() ?: return@hookAfter
-                val context = it.args[0] as Context
-                val attrs = it.args[1]
+                val context = it.findArg(Context::class.java) ?: return@hookAfter
+                val attrs = it.findArg(sswaClass.delegate) ?: return@hookAfter
                 val appData by lazy {
                     currentActivityInfo.loadSplashScreenInfo(context, currentIconSize, currentIconDefaultSize)
                 }

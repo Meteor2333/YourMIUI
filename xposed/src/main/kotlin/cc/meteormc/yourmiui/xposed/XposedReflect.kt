@@ -253,8 +253,4 @@ class MethodWrapper<T : Any>(private val delegate: Method) : HookableWrapper(del
     fun call(obj: T?, vararg args: Any?): Any? {
         return delegate.apply { isAccessible = true }.invoke(obj, *args)
     }
-
-    fun callSuper(obj: T?, vararg args: Any?): Any? {
-        return XposedBridge.invokeOriginalMethod(delegate, obj, args)
-    }
 }
