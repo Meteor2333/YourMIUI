@@ -9,7 +9,7 @@ import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.core.bridge.Bridge
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
-import cc.meteormc.yourmiui.helper.MIUIVersion
+import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.UpdateChecker
 import kotlinx.coroutines.launch
 
@@ -60,7 +60,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         binding.infoDeviceModel.text = Build.MODEL
         binding.infoSystemCode.text = Build.DEVICE
         binding.infoAndroidVersion.text = Build.VERSION.RELEASE
-        binding.infoMiuiVersion.text = MIUIVersion.currentVersion.code.toString()
+        binding.infoMiuiVersion.text = SysVersion.getCurrent().code.toString()
         binding.infoCpuAbi.text = Build.SUPPORTED_ABIS.firstOrNull() ?: System.getProperty("os.arch", Build.UNKNOWN)
     }
 }

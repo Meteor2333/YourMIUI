@@ -1,20 +1,19 @@
 package cc.meteormc.yourmiui.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.ActivityMainBinding
-import cc.meteormc.yourmiui.helper.MIUIVersion
-import kotlin.system.exitProcess
+import cc.meteormc.yourmiui.helper.SysVersion
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (!checkSystem()) return
+        checkSystem()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -23,22 +22,20 @@ class MainActivity : AppCompatActivity() {
         binding.nav.setupWithNavController(controller)
     }
 
-    private fun checkSystem(): Boolean {
-        val check = when (MIUIVersion.currentVersion) {
-            MIUIVersion.UNKNOWN -> R.string.check_unknown
-            MIUIVersion.UNSUPPORTED -> R.string.check_unsupported
-            else -> return true
+    private fun checkSystem() {
+        val check = when (val current = SysVersion.getCurrent()) {
+            SysVersion.HYPEROS -> getString(R.string.syscheck_hyperos)
+            SysVersion.OTHER -> getString(R.string.syscheck_unknown_system)
+            SysVersion.UNSUPPORTED -> getString(R.string.syscheck_unsupported_version, current.code)
+            else -> return
         }
 
-        AlertDialog.Builder(this)
-            .setTitle(R.string.check_title)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.syscheck_title)
             .setMessage(check)
             .setCancelable(false)
-            .setPositiveButton(R.string.check_exit) { _, _ ->
-                finishAffinity()
-                exitProcess(0)
-            }
+            .setPositiveButton(R.string.syscheck_exit) { _, _ -> finishAffinity() }
+            .setNegativeButton(R.string.syscheck_ignore, null)
             .show()
-        return false
     }
 }
