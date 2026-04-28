@@ -17,7 +17,6 @@ class AppAdapter(size: Int, val selected: MutableSet<String>) : BaseAdapter<Item
         .thenBy { it.label.lowercase() }
         .thenBy { it.packageName }
 
-
     override fun getItemCount() = index
 
     fun filter(query: String?) {

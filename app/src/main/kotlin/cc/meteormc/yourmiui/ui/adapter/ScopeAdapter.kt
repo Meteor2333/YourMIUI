@@ -39,7 +39,9 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
             val name = scope.getNameRes()?.let { context.getString(it) } ?: first.label
             itemView.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString("title", name)
+                bundle.putString("name", name)
+                bundle.putBoolean("restartable", scope.isRestartable())
+                bundle.putStringArray("packages", scope.getPackages())
                 bundle.putParcelableArrayList(
                     "features",
                     scope.getFeatures()

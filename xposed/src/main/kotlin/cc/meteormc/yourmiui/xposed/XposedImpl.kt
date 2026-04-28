@@ -7,14 +7,18 @@ import cc.meteormc.yourmiui.core.Scope
 
 abstract class XposedScope : Scope {
     private val nameRes: Int?
+    private val restartable: Boolean
     private val packages: Array<String>
 
-    constructor(vararg packages: String, nameRes: Int? = null) {
+    constructor(vararg packages: String, nameRes: Int? = null, restartable: Boolean = true) {
         this.nameRes = nameRes
+        this.restartable = restartable
         this.packages = arrayOf(*packages)
     }
 
     final override fun getNameRes() = this.nameRes
+
+    final override fun isRestartable() = this.restartable
 
     final override fun getPackages() = this.packages
 

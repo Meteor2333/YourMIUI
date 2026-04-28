@@ -1,5 +1,13 @@
 package cc.meteormc.yourmiui.xposed
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
+import android.os.Process
 import android.util.Log
 import cc.meteormc.yourmiui.core.Feature
 import cc.meteormc.yourmiui.core.bridge.Bridge
@@ -84,6 +92,29 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             }
 
             it.onLoadPackage()
+        }
+
+        operator(Application::class.java) {
+            method("attach")?.hookAfter {
+                val application = it.getThisObject(Application::class.java)
+                val receiver = object : BroadcastReceiver() {
+                    override fun onReceive(context: Context, intent: Intent) {
+                        if (context.packageName != intent.getStringExtra("validation")) {
+                            return
+                        }
+
+                        Process.killProcess(Process.myPid())
+                    }
+                }
+                val filter = IntentFilter().apply { addAction("cc.meteormc.yourmiui.ACTION_RESTART_SCOPE") }
+                val permission = "cc.meteormc.yourmiui.permission.RESTART_SCOPE"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    application.registerReceiver(receiver, filter, permission, null, Context.RECEIVER_EXPORTED)
+                } else {
+                    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+                    application.registerReceiver(receiver, filter, permission, null)
+                }
+            }
         }
     }
 

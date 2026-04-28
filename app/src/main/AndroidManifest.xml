@@ -3,6 +3,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
+    <permission android:name="cc.meteormc.yourmiui.permission.RESTART_SCOPE" />
+
+    <uses-permission android:name="cc.meteormc.yourmiui.permission.RESTART_SCOPE"/>
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission

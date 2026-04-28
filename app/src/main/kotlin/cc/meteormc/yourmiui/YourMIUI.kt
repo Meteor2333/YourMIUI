@@ -5,22 +5,43 @@ import android.content.pm.PackageManager
 import cc.meteormc.yourmiui.core.Scope
 import cc.meteormc.yourmiui.core.bridge.Bridge
 import cc.meteormc.yourmiui.core.util.proxyClass
+import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.FeaturePreference
 import cc.meteormc.yourmiui.service.SettingsPreferences
 import cc.meteormc.yourmiui.ui.controller.LanguageController
 import cc.meteormc.yourmiui.ui.controller.ThemeController
 import cc.meteormc.yourmiui.ui.data.AppInfo
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlin.system.exitProcess
 
 class YourMIUI : Application() {
 	lateinit var scopes: Map<Scope, List<AppInfo>>
 
 	override fun onCreate() {
 		super.onCreate()
+		checkSystem()
 		FeaturePreference.init(this)
 		SettingsPreferences.init(this)
 		LanguageController.apply(SettingsPreferences.language)
 		ThemeController.apply(SettingsPreferences.colorMode)
 		this.loadScopes()
+	}
+
+	private fun checkSystem() {
+		val check = when (val current = SysVersion.getCurrent()) {
+			SysVersion.HYPEROS -> getString(R.string.syscheck_hyperos)
+			SysVersion.OTHER -> getString(R.string.syscheck_unknown_system)
+			SysVersion.UNSUPPORTED -> getString(R.string.syscheck_unsupported_version, current.code)
+			else -> return
+		}
+
+		MaterialAlertDialogBuilder(this)
+			.setTitle(R.string.syscheck_title)
+			.setMessage(check)
+			.setCancelable(false)
+			.setPositiveButton(R.string.syscheck_exit) { _, _ -> exitProcess(0) }
+			.setNegativeButton(R.string.syscheck_ignore, null)
+			.show()
 	}
 
 	private fun loadScopes() {
