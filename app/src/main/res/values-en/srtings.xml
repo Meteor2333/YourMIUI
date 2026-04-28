@@ -28,14 +28,14 @@
     <string name="feature_test_environment">Test Environment: %s</string>
     <string name="feature_original_author">Original Author: %s</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_ok">确定</string>
+    <string name="dialog_ok">OK</string>
     <string name="dialog_save">Save</string>
     <string name="dialog_app_picker_title">App Picker</string>
     <string name="dialog_app_picker_hint">App name or package name</string>
     <string name="popup_enable">Enable</string>
     <string name="popup_disable">Disable</string>
-    <string name="restart_scope_title">重启作用域</string>
-    <string name="restart_scope_content">此操作将重启以下软件包以应用更改:\n%s\n\n是否继续？</string>
+    <string name="restart_scope_title">Restart Scope</string>
+    <string name="restart_scope_content">The following packages will be restarted to apply changes:\n%s\n\nContinue?</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_language_title">Language</string>
     <string name="settings_language_language_followsystem">Follow system</string>
