@@ -54,7 +54,7 @@
     <string name="feature_securitycenter_fix_traffic_correction_name">修復流量校正</string>
     <string name="feature_securitycenter_fix_traffic_correction_description">修復網路助手的校正總是失敗的問題</string>
     <string name="feature_securitycenter_fix_traffic_correction_test_environment">7.5.4–230317.0.2版本</string>
-    <string name="feature_securitycenter_remove_adb_switch_restrictions_name">拿掉ADB開關限制</string>
+    <string name="feature_securitycenter_remove_adb_switch_restrictions_name">移除ADB開關限制</string>
     <string name="feature_securitycenter_remove_adb_switch_restrictions_description">移除設定中ADB的開關限制（如要求聯網、插入SIM卡、登錄小米帳號）</string>
     <string name="feature_securitycenter_remove_adb_switch_restrictions_test_environment">7.5.4–230317.0.2版本</string>
     <string name="feature_settings_disable_force_notification_name">禁用強制通知</string>
