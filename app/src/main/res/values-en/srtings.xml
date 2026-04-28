@@ -2,10 +2,12 @@
 <resources>
     <string name="app_name">YourMIUI</string>
     <string name="module_description">A module that improves various pain points in MIUI</string>
-    <string name="check_title">Unsupported system</string>
-    <string name="check_unknown">This module only supports MIUI!</string>
-    <string name="check_unsupported">This module only supports MIUI 11 and above!</string>
-    <string name="check_exit">Exit</string>
+    <string name="syscheck_title">System Check</string>
+    <string name="syscheck_hyperos">This module does not support HyperOS!</string>
+    <string name="syscheck_unknown_system">This module only supports MIUI!</string>
+    <string name="syscheck_unsupported_version">This module only supports MIUI 11 and above!\nCurrent version: %d</string>
+    <string name="syscheck_ignore">Ignore</string>
+    <string name="syscheck_exit">Exit</string>
     <string name="title_home">Home</string>
     <string name="title_manager">Manager</string>
     <string name="title_settings">Settings</string>

@@ -2,10 +2,12 @@
 <resources>
     <string name="app_name">YourMIUI</string>
     <string name="module_description">一款優化 MIUI 系統中各種不友好功能的模組</string>
-    <string name="check_title">不支持的環境</string>
-    <string name="check_unknown">本模組僅支援MIUI系統！</string>
-    <string name="check_unsupported">本模組僅支援MIUI11及以上的系統！</string>
-    <string name="check_exit">退出</string>
+    <string name="syscheck_title">系統檢查</string>
+    <string name="syscheck_hyperos">本模組暫不支援澎湃系統！</string>
+    <string name="syscheck_unknown_system">本模組僅支援MIUI系統！</string>
+    <string name="syscheck_unsupported_version">本模組僅支援MIUI11及以上的系統！\n當前版本：%d</string>
+    <string name="syscheck_ignore">忽略</string>
+    <string name="syscheck_exit">退出</string>
     <string name="title_home">主頁</string>
     <string name="title_manager">管理</string>
     <string name="title_settings">設置</string>
