@@ -1,4 +1,4 @@
-pull_request_title: 'Update translation from Crowdin'
+pull_request_title: Update translation from Crowdin
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/%android_code%/%original_file_name%
@@ -6,5 +6,5 @@ files:
     dest: /app/strings.xml
   - source: /xposed/src/main/res/values/strings.xml
     translation: /xposed/src/main/res/%android_code%/%original_file_name%
-    type: android
     dest: /xposed/strings.xml
+    type: android
