@@ -90,20 +90,20 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
     private fun initHostBridge(context: Context) {
         hostBridge = Host(context)
-        hostBridge.register(Bridge.API_NAME_CHANNEL) {
-            ReflectOperator(XposedBridge::class.java).run {
+        hostBridge.register(Bridge.GET_API_STATUS_CHANNEL) {
+            val apiName = ReflectOperator(XposedBridge::class.java).run {
                 field("TAG")?.get(null) ?: "Unknown"
             }
-        }.register(Bridge.API_VERSION_CHANNEL) {
-            XposedBridge.getXposedVersion()
-        }.register(Bridge.SCOPES_CHANNEL) {
+            val apiVersion = XposedBridge.getXposedVersion()
+            apiName to apiVersion
+        }.register(Bridge.GET_SCOPES_CHANNEL) {
             scopes.toCollection(ArrayList())
         }.register(Bridge.RESTART_SCOPE_CHANNEL) {
             Thread {
                 Thread.sleep(1000)
                 Process.killProcess(Process.myPid())
             }.start()
-            return@register Bridge.EmptyBody
+            Bridge.EmptyBody
         }.attach()
     }
 

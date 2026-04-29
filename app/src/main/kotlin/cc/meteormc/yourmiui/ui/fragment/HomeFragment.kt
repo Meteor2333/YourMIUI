@@ -49,33 +49,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             }
         }
 
-        var apiName: String? = null
-        var apiVersion: Int? = null
         YourMIUI.get().moduleBridge.request(
-            Bridge.API_NAME_CHANNEL,
+            Bridge.GET_API_STATUS_CHANNEL,
             BuildConfig.APPLICATION_ID,
-            object : ResponseCallback<String> {
-                override fun onSuccess(data: String) {
-                    apiName = data
-                    updateApiStatus(apiName, apiVersion)
+            object : ResponseCallback<Pair<String, Int>> {
+                override fun onSuccess(data: Pair<String, Int>) {
+                    updateApiStatus(data.first, data.second)
                 }
 
                 override fun onFailure() {
-                    updateApiStatus(apiName, apiVersion)
-                }
-            }
-        )
-        YourMIUI.get().moduleBridge.request(
-            Bridge.API_VERSION_CHANNEL,
-            BuildConfig.APPLICATION_ID,
-            object : ResponseCallback<Int> {
-                override fun onSuccess(data: Int) {
-                    apiVersion = data
-                    updateApiStatus(apiName, apiVersion)
-                }
-
-                override fun onFailure() {
-                    updateApiStatus(apiName, apiVersion)
+                    updateApiStatus(null, null)
                 }
             }
         )

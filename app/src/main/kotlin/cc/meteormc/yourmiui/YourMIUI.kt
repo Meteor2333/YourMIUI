@@ -63,7 +63,7 @@ class YourMIUI : Application() {
 
 	private fun loadScopes() {
 		moduleBridge.request(
-			Bridge.SCOPES_CHANNEL,
+			Bridge.GET_SCOPES_CHANNEL,
 			BuildConfig.APPLICATION_ID,
 			object : ResponseCallback<ArrayList<Scope>> {
 				override fun onSuccess(data: ArrayList<Scope>) {
