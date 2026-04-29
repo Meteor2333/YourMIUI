@@ -28,6 +28,7 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
+    private lateinit var hostBridge: Host
     private val scopes by lazy {
         listOf(
             Android,
@@ -88,7 +89,8 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
     }
 
     private fun initHostBridge(context: Context) {
-        Host(context).register(Bridge.API_NAME_CHANNEL) {
+        hostBridge = Host(context)
+        hostBridge.register(Bridge.API_NAME_CHANNEL) {
             ReflectOperator(XposedBridge::class.java).run {
                 field("TAG")?.get(null) ?: "Unknown"
             }

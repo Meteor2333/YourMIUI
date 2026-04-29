@@ -8,10 +8,6 @@ val projectNamespace: String by rootProject.extra
 android {
     namespace = "$projectNamespace.xposed"
 
-    buildFeatures {
-        buildConfig = true
-    }
-
     lint {
         disable.add("ExtraTranslation")
         disable.add("MissingTranslation")
