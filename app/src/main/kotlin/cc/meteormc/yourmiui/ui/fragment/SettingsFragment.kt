@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.ui.fragment
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.view.View
 import android.widget.Toast
 import androidx.core.net.toUri
@@ -18,6 +19,7 @@ import cc.meteormc.yourmiui.ui.data.SettingGroup
 import cc.meteormc.yourmiui.ui.data.SettingItem
 import cc.meteormc.yourmiui.ui.data.SwitchableSettingItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.util.*
 
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, container ->
     FragmentSettingsBinding.inflate(inflater, container, false)
@@ -28,18 +30,28 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
             SettingItem(
                 R.drawable.ic_language_24dp,
                 R.string.settings_language_language_title,
-                SettingsPreferences.language.res
+                if (SettingsPreferences.language != SettingsPreferences.LanguageOption.FOLLOW_SYSTEM) R.string.langauge
+                else R.string.settings_language_language_followsystem
             ) {
                 openOptionDialog(
                     R.string.settings_language_language_title,
-                    SettingsPreferences.LanguageOption.entries.map { option -> getString(option.res) },
+                    SettingsPreferences.LanguageOption.entries.map { option ->
+                        if (option == SettingsPreferences.LanguageOption.FOLLOW_SYSTEM) {
+                            getString(R.string.settings_language_language_followsystem)
+                        } else {
+                            requireContext().createConfigurationContext(
+                                Configuration(resources.configuration).apply {
+                                    setLocale(Locale.forLanguageTag(option.value))
+                                }
+                            ).getString(R.string.langauge)
+                        }
+                    },
                     SettingsPreferences.language.ordinal
                 ) { which ->
                     val selected = SettingsPreferences.LanguageOption.entries[which]
                     if (selected != SettingsPreferences.language) {
                         SettingsPreferences.language = selected
                         LanguageController.apply(selected)
-                        it.settingSummary.setText(selected.res)
                         requireActivity().recreate()
                     }
                 }

@@ -35,10 +35,11 @@ object SettingsPreferences {
         get() = prefs.getBoolean(KEY_ENABLE_UPDATE_CHECK, true)
         set(value) = prefs.edit { putBoolean(KEY_ENABLE_UPDATE_CHECK, value) }
 
-    enum class LanguageOption(val value: String, val res: Int) {
-        FOLLOW_SYSTEM("system", R.string.settings_language_language_followsystem),
-        ENGLISH("en", R.string.settings_language_language_english),
-        SIMPLIFIED_CHINESE("zh_cn", R.string.settings_language_language_simplifiedchinese)
+    enum class LanguageOption(val value: String) {
+        FOLLOW_SYSTEM("system"),
+        ENGLISH("en"),
+        SIMPLIFIED_CHINESE("zh-Hans"),
+        TRADITIONAL_CHINESE("zh-Hant")
     }
 
     enum class ColorModeOption(val value: String, val res: Int) {

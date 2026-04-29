@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="langauge">English</string>
     <string name="app_name">YourMIUI</string>
     <string name="module_description">A module that improves various pain points in MIUI</string>
     <string name="syscheck_title">System Check</string>

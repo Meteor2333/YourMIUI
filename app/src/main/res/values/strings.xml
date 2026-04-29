@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="langauge">简体中文</string>
+
     <string name="app_name">YourMIUI</string>
     <string name="module_description">一款优化 MIUI 系统中各种不友好功能的模块</string>
 
@@ -51,8 +53,6 @@
     <string name="settings_language">语言</string>
     <string name="settings_language_language_title">语言</string>
     <string name="settings_language_language_followsystem">跟随系统</string>
-    <string name="settings_language_language_english">English</string>
-    <string name="settings_language_language_simplifiedchinese">简体中文</string>
     <string name="settings_language_translate_title">贡献翻译</string>
     <string name="settings_language_translate_summary">帮助作者让本软件拥有你的语言</string>
 

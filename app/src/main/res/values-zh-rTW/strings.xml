@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="langauge">繁體中文</string>
     <string name="app_name">YourMIUI</string>
     <string name="module_description">一款優化 MIUI 系統中各種不友好功能的模組</string>
     <string name="syscheck_title">系統檢查</string>
