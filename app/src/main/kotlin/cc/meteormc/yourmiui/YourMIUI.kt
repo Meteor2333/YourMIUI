@@ -4,7 +4,8 @@ import android.app.Application
 import android.content.pm.PackageManager
 import cc.meteormc.yourmiui.core.Scope
 import cc.meteormc.yourmiui.core.bridge.Bridge
-import cc.meteormc.yourmiui.core.util.proxyClass
+import cc.meteormc.yourmiui.core.bridge.Module
+import cc.meteormc.yourmiui.core.bridge.ResponseCallback
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.FeaturePreference
 import cc.meteormc.yourmiui.service.SettingsPreferences
@@ -15,7 +16,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.system.exitProcess
 
 class YourMIUI : Application() {
-	lateinit var scopes: Map<Scope, List<AppInfo>>
+	companion object {
+		@JvmStatic
+		lateinit var INSTANCE: YourMIUI
+			private set
+	}
+
+	init {
+	    INSTANCE = this
+	}
+
+	val moduleBridge = Module(this)
+	var scopes: Map<Scope, List<AppInfo>> = emptyMap()
 
 	override fun onCreate() {
 		super.onCreate()
@@ -24,7 +36,12 @@ class YourMIUI : Application() {
 		SettingsPreferences.init(this)
 		LanguageController.apply(SettingsPreferences.language)
 		ThemeController.apply(SettingsPreferences.colorMode)
-		this.loadScopes()
+		initModuleBridge()
+		loadScopes()
+	}
+
+	private fun initModuleBridge() {
+		moduleBridge.attach()
 	}
 
 	private fun checkSystem() {
@@ -45,23 +62,32 @@ class YourMIUI : Application() {
 	}
 
 	private fun loadScopes() {
-		this.scopes = Bridge.getScopes<Any>()
-			.map { proxyClass(Scope::class.java, it!!) }
-			.filterIsInstance<Scope>()
-			// 获取目标应用的名称和图标
-			.associateWith {
-				it.getPackages().mapNotNull { pkg ->
-					val info = runCatching {
-						packageManager.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
-					}.getOrNull() ?: return@mapNotNull null
-					AppInfo(
-						pkg,
-						packageManager.getApplicationLabel(info).toString(),
-						packageManager.getApplicationIcon(info)
-					)
+		moduleBridge.request(
+			Bridge.SCOPES_CHANNEL,
+			BuildConfig.APPLICATION_ID,
+			object : ResponseCallback<ArrayList<Scope>> {
+				override fun onSuccess(data: ArrayList<Scope>) {
+					scopes = data.associateWith {
+						// 获取目标应用的名称和图标
+						it.getPackages().mapNotNull { pkg ->
+							val info = runCatching {
+								packageManager.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
+							}.getOrNull() ?: return@mapNotNull null
+							AppInfo(
+								pkg,
+								packageManager.getApplicationLabel(info).toString(),
+								packageManager.getApplicationIcon(info)
+							)
+						}
+					}.filterValues {
+						// 过滤掉未安装的应用
+						it.isNotEmpty()
+					}
+				}
+
+				override fun onFailure() {
 				}
 			}
-			// 过滤掉未安装的应用
-			.filterValues { it.isNotEmpty() }
+		)
 	}
 }

@@ -8,10 +8,6 @@ val projectNamespace: String by rootProject.extra
 android {
     namespace = "$projectNamespace.xposed"
 
-    defaultConfig {
-        buildConfigField("String", "APPLICATION_ID", "\"$projectNamespace\"")
-    }
-
     buildFeatures {
         buildConfig = true
     }

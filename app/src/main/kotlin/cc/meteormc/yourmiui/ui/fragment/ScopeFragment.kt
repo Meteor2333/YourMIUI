@@ -1,16 +1,19 @@
 package cc.meteormc.yourmiui.ui.fragment
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.InsetDrawable
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.YourMIUI
+import cc.meteormc.yourmiui.core.bridge.Bridge
+import cc.meteormc.yourmiui.core.bridge.ResponseCallback
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import cc.meteormc.yourmiui.ui.data.FeatureNavConfig
@@ -49,7 +52,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             scopeToolbar.inflateMenu(R.menu.menu_scope)
             scopeToolbar.setOnMenuItemClickListener {
                 if (it.itemId == R.id.item_restart) {
-                    restartScope(packages)
+                    onClickRestart()
                     return@setOnMenuItemClickListener true
                 }
 
@@ -66,16 +69,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
 
     private fun Int.dp() = (this * requireContext().resources.displayMetrics.density).toInt()
 
-    private fun restartScope(packages: Array<String>) {
-        fun runRestart() {
-            packages.forEach {
-                val intent = Intent("cc.meteormc.yourmiui.ACTION_RESTART_SCOPE")
-                intent.setPackage(it)
-                intent.putExtra("validation", it)
-                requireContext().applicationContext.sendBroadcast(intent)
-            }
-        }
-
+    private fun onClickRestart() {
         val context = requireContext()
         val dialog = BottomSheetDialog(context)
 
@@ -126,7 +120,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             setText(R.string.dialog_ok)
             setOnClickListener {
                 dialog.dismiss()
-                runRestart()
+                executeRestart()
             }
             layoutParams = LinearLayout.LayoutParams(
                 0,
@@ -180,5 +174,30 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             }
         }
         dialog.show()
+    }
+
+    private fun executeRestart() {
+        var failures = 0
+        var resolved = false
+        packages.forEach {
+            YourMIUI.INSTANCE.moduleBridge.request(
+                Bridge.RESTART_SCOPE_CHANNEL,
+                it,
+                object : ResponseCallback<Bridge.EmptyBody> {
+                    override fun onSuccess(data: Bridge.EmptyBody) {
+                        if (resolved) return
+                        resolved = true
+                        Toast.makeText(context, R.string.restart_scope_success, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure() {
+                        if (resolved) return
+                        if (++failures < packages.size) return
+                        resolved = true
+                        Toast.makeText(context, R.string.restart_scope_failure, Toast.LENGTH_LONG).show()
+                    }
+                }
+            )
+        }
     }
 }

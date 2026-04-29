@@ -2,7 +2,7 @@ package cc.meteormc.yourmiui.core
 
 import java.io.*
 
-interface Option {
+interface Option : Serializable {
     fun getPreferenceKey(): String
 
     fun getNameRes(): Int
@@ -13,6 +13,7 @@ interface Option {
 
     fun getDefaultValue(): Any
 
+    // TODO: 优化此处的逻辑
     // 一种仿enum类的写法
     @Suppress("ClassName")
     sealed class Type<T>(

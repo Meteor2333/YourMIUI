@@ -1,6 +1,8 @@
 package cc.meteormc.yourmiui.core
 
-interface Feature {
+import java.io.Serializable
+
+interface Feature : Serializable {
     companion object {
         const val PREFERENCE_TAG = "features"
 

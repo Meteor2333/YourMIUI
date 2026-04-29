@@ -1,6 +1,8 @@
 package cc.meteormc.yourmiui.core
 
-interface Scope {
+import java.io.Serializable
+
+interface Scope : Serializable {
     fun getNameRes(): Int?
 
     fun isRestartable(): Boolean
