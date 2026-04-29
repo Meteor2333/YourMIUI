@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import cc.meteormc.yourmiui.core.bridge.Bridge.REQUIRED_PERMISSION
-import cc.meteormc.yourmiui.core.bridge.Bridge.RESPONSE_ACTION
 import java.io.Serializable
 
 class Host(private val context: Context) : BroadcastReceiver() {
@@ -16,10 +14,10 @@ class Host(private val context: Context) : BroadcastReceiver() {
 
     fun attach() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(this, filter, REQUIRED_PERMISSION, null, Context.RECEIVER_EXPORTED)
+            context.registerReceiver(this, filter, Bridge.REQUIRED_PERMISSION, null, Context.RECEIVER_EXPORTED)
         } else {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
-            context.registerReceiver(this, filter, REQUIRED_PERMISSION, null)
+            context.registerReceiver(this, filter, Bridge.REQUIRED_PERMISSION, null)
         }
     }
 
@@ -46,9 +44,9 @@ class Host(private val context: Context) : BroadcastReceiver() {
         }
 
         val data = handlers[intent.action]?.handle(body)
-        val response = Intent(RESPONSE_ACTION)
+        val response = Intent(Bridge.RESPONSE_ACTION)
         response.putExtra("id", id)
         response.putExtra("body", data)
-        context.sendBroadcast(response, REQUIRED_PERMISSION)
+        context.sendBroadcast(response, Bridge.REQUIRED_PERMISSION)
     }
 }
