@@ -25,7 +25,7 @@ object FixTrafficCorrection : XposedFeature(
                 for (i in 0 until 3) {
                     val result = refreshMethod.call(it.thisObject, it.findIntArg()) as? List<*>
                     if (!result.isNullOrEmpty()) break
-                    if (Looper.myLooper() != Looper.getMainLooper()) {
+                    if (!Looper.getMainLooper().isCurrentThread) {
                         // 刷新有时会失败 多尝试几次
                         Thread.sleep(3000)
                     }
