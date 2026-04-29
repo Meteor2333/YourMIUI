@@ -20,7 +20,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
 object FixSplashScreen : XposedFeature(
-    key = "systemui_fix_splash_screen",
+    key = "fix_splash_screen",
     nameRes = R.string.feature_systemui_fix_splash_screen_name,
     descriptionRes = R.string.feature_systemui_fix_splash_screen_description,
     testEnvironmentRes = R.string.feature_systemui_fix_splash_screen_test_environment
