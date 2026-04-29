@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.ui.fragment
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.view.View
@@ -9,8 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
-import cc.meteormc.yourmiui.core.bridge.Bridge
-import cc.meteormc.yourmiui.core.bridge.ResponseCallback
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.UpdateChecker
@@ -27,40 +24,47 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
     }
 
     private fun bindModuleStatus() {
-        binding.statusVersion.text = getString(R.string.status_version, "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}")
-
-        @SuppressLint("SetTextI18n")
-        fun updateStatus(status: Pair<String, Int>?) {
-            val isActivated = status != null
-            YourMIUI.get().isActivated = isActivated
-            binding.statusIcon.setImageResource(
-                if (isActivated) R.drawable.ic_check_24dp
-                else R.drawable.ic_cross_24dp
-            )
-            binding.statusText.setText(
-                if (isActivated) R.string.status_active
-                else R.string.status_inactive
-            )
-            binding.statusApi.text = if (isActivated) {
-                val (name, version) = status
-                "Activated by $name (API $version)"
-            } else "Not activated"
+        fun View.createFade(block: () -> Unit) {
+            alpha = 0f
+            block()
+            animate()
+                .alpha(1f)
+                .setDuration(100)
+                .start()
         }
 
-        YourMIUI.get().moduleBridge.request(
-            Bridge.GET_API_STATUS_CHANNEL,
-            BuildConfig.APPLICATION_ID,
-            object : ResponseCallback<Pair<String, Int>> {
-                override fun onSuccess(data: Pair<String, Int>) {
-                    updateStatus(data)
-                }
+        YourMIUI.get().hostDataStore.observe {
+            val icon = binding.statusIcon
+            icon.createFade {
+                icon.setImageResource(
+                    if (isActivated) R.drawable.ic_check_24dp
+                    else R.drawable.ic_cross_24dp
+                )
+            }
 
-                override fun onFailure() {
-                    updateStatus(null)
-                }
-            },
-            300L
-        )
+            val text = binding.statusText
+            text.createFade {
+                text.setText(
+                    if (isActivated) R.string.status_active
+                    else R.string.status_inactive
+                )
+            }
+
+            val version = binding.statusVersion
+            version.createFade {
+                version.text = getString(
+                    R.string.status_version,
+                    "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
+                )
+            }
+
+            val api = binding.statusApi
+            api.createFade {
+                api.text = if (isActivated) {
+                    "Activated by $apiName (API $apiVersion)"
+                } else "Not activated"
+            }
+        }
     }
 
     private fun bindModuleUpdate() {

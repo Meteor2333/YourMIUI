@@ -10,16 +10,16 @@ class ManagerFragment : BaseFragment<FragmentManagerBinding>({ inflater, contain
     FragmentManagerBinding.inflate(inflater, container, false)
 }) {
     override fun onCreate(): View {
-        val scopes = YourMIUI.get().scopes
-        if (scopes.isEmpty()) {
-            binding.emptyView.visibility = View.VISIBLE
-            return binding.root
+        val emptyView = binding.emptyView
+        emptyView.visibility = View.VISIBLE
+        YourMIUI.get().hostDataStore.observe {
+            if (scopes.isEmpty()) return@observe
+            emptyView.visibility = View.GONE
+            val scopeList = binding.scopeList
+            scopeList.visibility = View.VISIBLE
+            scopeList.adapter = ScopeAdapter(scopes)
+            scopeList.layoutManager = LinearLayoutManager(requireContext())
         }
-
-        val scopeList = binding.scopeList
-        scopeList.visibility = View.VISIBLE
-        scopeList.adapter = ScopeAdapter(scopes)
-        scopeList.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
     }

@@ -177,13 +177,14 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
     }
 
     private fun executeRestart() {
-        var failures = 0
-        var resolved = false
         packages.forEach {
             YourMIUI.get().moduleBridge.request(
                 Bridge.RESTART_SCOPE_CHANNEL,
                 it,
                 object : ResponseCallback<Bridge.EmptyBody> {
+                    private var failures = 0
+                    private var resolved = false
+
                     override fun onSuccess(data: Bridge.EmptyBody) {
                         if (resolved) return
                         resolved = true
