@@ -2,8 +2,8 @@ pull_request_title: Update translation from Crowdin
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/%android_code%/%original_file_name%
-    type: android
     dest: /app/strings.xml
+    type: android
   - source: /xposed/src/main/res/values/strings.xml
     translation: /xposed/src/main/res/%android_code%/%original_file_name%
     dest: /xposed/strings.xml
