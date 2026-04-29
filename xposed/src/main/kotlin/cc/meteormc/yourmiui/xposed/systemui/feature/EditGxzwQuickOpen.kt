@@ -30,7 +30,7 @@ object EditGxzwQuickOpen : XposedFeature(
 
             // modifier: public static | signature: generateQuickOpenItem(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;I)Lcom/android/keyguard/fod/item/IQuickOpenItem;
             method("generateQuickOpenItem")?.overrideResult {
-                val id = it.findArg(Int::class.java) ?: return@overrideResult Unit
+                val id = it.findIntArg() ?: return@overrideResult Unit
                 val item = QuickOpenItem.entries.firstOrNull { entry -> entry.id == id } ?: return@overrideResult Unit
                 val newArgs = it.args.copyOfRange(0, 3)
                 if (item.extra != null) {

@@ -3,7 +3,7 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 import android.os.Looper
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.findIntArg
 import cc.meteormc.yourmiui.xposed.operator
 
 object FixTrafficCorrection : XposedFeature(
@@ -23,7 +23,7 @@ object FixTrafficCorrection : XposedFeature(
                 // 导致运营商的响应短信被过滤掉 (打印日志为`onProcessSms 解析失败 need block sms`)
                 // 所以我们来帮他手动校正
                 for (i in 0 until 3) {
-                    val result = refreshMethod.call(it.thisObject, it.findArg(Int::class.java)) as? List<*>
+                    val result = refreshMethod.call(it.thisObject, it.findIntArg()) as? List<*>
                     if (!result.isNullOrEmpty()) break
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         // 刷新有时会失败 多尝试几次

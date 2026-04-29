@@ -9,17 +9,31 @@ fun XC_MethodHook.MethodHookParam.invokeSuper(): Any? {
     return XposedBridge.invokeOriginalMethod(method, thisObject, args)
 }
 
-fun <T> XC_MethodHook.MethodHookParam.findArg(type: Class<T>): T? {
-    return this.findArgs(type).firstOrNull()
-}
+fun <T> XC_MethodHook.MethodHookParam.findArg(type: Class<T>) = findArgsByClass(type).firstOrNull()
 
-fun <T> XC_MethodHook.MethodHookParam.findArgs(type: Class<T>): List<T> {
-    return this.args.filterIsInstance(type)
-}
+fun XC_MethodHook.MethodHookParam.findBooleanArg() = findArgsByGenerics<Boolean>().firstOrNull()
 
-fun <T> XC_MethodHook.MethodHookParam.getThisObject(type: Class<T>): T = this.thisObject as T
+fun XC_MethodHook.MethodHookParam.findByteArg() = findArgsByGenerics<Byte>().firstOrNull()
 
-fun <T> XC_MethodHook.MethodHookParam.getResult(type: Class<T>): T? = this.result as T?
+fun XC_MethodHook.MethodHookParam.findCharArg() = findArgsByGenerics<Char>().firstOrNull()
+
+fun XC_MethodHook.MethodHookParam.findDoubleArg() = findArgsByGenerics<Double>().firstOrNull()
+
+fun XC_MethodHook.MethodHookParam.findFloatArg() = findArgsByGenerics<Float>().firstOrNull()
+
+fun XC_MethodHook.MethodHookParam.findIntArg() = findArgsByGenerics<Int>().firstOrNull()
+
+fun XC_MethodHook.MethodHookParam.findLongArg() = findArgsByGenerics<Long>().firstOrNull()
+
+fun XC_MethodHook.MethodHookParam.findShortArg() = findArgsByGenerics<Short>().firstOrNull()
+
+fun <T> XC_MethodHook.MethodHookParam.findArgsByClass(type: Class<T>) = this.args.filterIsInstance(type)
+
+inline fun <reified T> XC_MethodHook.MethodHookParam.findArgsByGenerics() = this.args.filterIsInstance<T>()
+
+fun <T> XC_MethodHook.MethodHookParam.getThisObject(type: Class<T>) = this.thisObject as T
+
+fun <T> XC_MethodHook.MethodHookParam.getResult(type: Class<T>) = this.result as T?
 
 fun XC_MethodHook.MethodHookParam.getBooleanResult() = this.result as Boolean
 
