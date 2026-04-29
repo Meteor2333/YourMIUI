@@ -36,6 +36,8 @@
     <string name="popup_disable">Disable</string>
     <string name="restart_scope_title">Restart Scope</string>
     <string name="restart_scope_content">The following packages will be restarted to apply changes:\n%s\n\nContinue?</string>
+    <string name="restart_scope_success">重启成功！</string>
+    <string name="restart_scope_failure">重启失败！可能由于目标软件\n未在运行或尚未注入模块</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_language_title">Language</string>
     <string name="settings_language_language_followsystem">Follow system</string>
