@@ -20,7 +20,7 @@ object DisableCountdownDialog : XposedFeature(
                 // name: (obfuscated) | type: (obfuscated)
                 val handler = fields(Handler::class.java)
                     .firstOrNull()
-                    ?.get(it.thisObject, Handler::class.java) ?: return@hookAfter
+                    ?.get<Handler>(it.thisObject) ?: return@hookAfter
                 operator(handler.javaClass) {
                     // name: (obfuscated) | type: int
                     fields(Int::class.java).firstOrNull()?.set(handler, -1)
@@ -35,12 +35,12 @@ object DisableCountdownDialog : XposedFeature(
                 val thisObject = it.thisObject
                 // name: (obfuscated) | type: int
                 operator.fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                    field[thisObject, Int::class.javaPrimitiveType!!] == 5
+                    field.get<Int>(thisObject) == 5
                 }?.set(thisObject, 1)
                 // name: (obfuscated) | type: android.os.Handler
                 val handler = operator.fields(Handler::class.java)
                     .firstOrNull()
-                    ?.get(thisObject, Handler::class.java) ?: return@tag
+                    ?.get<Handler>(thisObject) ?: return@tag
                 handler.removeMessages(100)
                 handler.sendEmptyMessage(100)
             }

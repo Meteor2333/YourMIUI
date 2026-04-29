@@ -90,7 +90,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
     private fun initHostBridge(context: Context) {
         Host(context).register(Bridge.API_NAME_CHANNEL) {
             ReflectOperator(XposedBridge::class.java).run {
-                field("TAG")?.get(null, String::class.java) ?: "Unknown"
+                field("TAG")?.get(null) ?: "Unknown"
             }
         }.register(Bridge.API_VERSION_CHANNEL) {
             XposedBridge.getXposedVersion()

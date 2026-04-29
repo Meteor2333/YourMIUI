@@ -124,7 +124,7 @@ object EditGxzwQuickOpen : XposedFeature(
                 if (context != null) {
                     @SuppressLint("DiscouragedApi")
                     val identifier = context.resources.getIdentifier(iconResName, "drawable", "com.android.systemui")
-                    viewField[instance, ImageView::class.java]?.setImageResource(identifier)
+                    viewField.get<ImageView>(instance)?.setImageResource(identifier)
                     identifierField[instance] = identifierOf()
                 }
 
@@ -139,7 +139,7 @@ object EditGxzwQuickOpen : XposedFeature(
             } ?: return
             fun Any.isExtraClass(): Boolean {
                 if (this.javaClass.name != EXTRA_ITEM_CLASS) return false
-                return identifierField[this, String::class.java] == identifierOf()
+                return identifierField.get<String>(this) == identifierOf()
             }
 
             operator(EXTRA_ITEM_CLASS) {

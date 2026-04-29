@@ -61,9 +61,9 @@ object FixSplashScreen : XposedFeature(
         // name: mWindowBgColor | type: int
         val windowBgColorField = sswaClass.field("mWindowBgColor") ?: return
 
-        val iconSizeChannel = Channel<Int?>(capacity = Channel.BUFFERED)
-        val iconDefaultSizeChannel = Channel<Int?>(capacity = Channel.BUFFERED)
-        val activityInfoChannel = Channel<ActivityInfo?>(capacity = Channel.BUFFERED)
+        val iconSizeChannel = Channel<Int?>(Channel.BUFFERED)
+        val iconDefaultSizeChannel = Channel<Int?>(Channel.BUFFERED)
+        val activityInfoChannel = Channel<ActivityInfo?>(Channel.BUFFERED)
         fun ActivityInfo.loadSplashScreenInfo(context: Context, iconSize: Int, iconDefaultSize: Int): SplashScreenInfo {
             val configuration = context.resources.configuration
             val isDark = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
@@ -95,12 +95,12 @@ object FixSplashScreen : XposedFeature(
             val updateDensityMethod = method("updateDensity") ?: return@operator
             method("makeSplashScreenContentView")?.hookBefore {
                 val swi = it.findArg(swiClass.delegate) ?: return@hookBefore
-                if (launchPackageNameField[swi, String::class.java] != ALLOW_LAUNCH_PACKAGE) return@hookBefore
+                if (launchPackageNameField.get<String>(swi) != ALLOW_LAUNCH_PACKAGE) return@hookBefore
 
                 updateDensityMethod.call(it.thisObject)
-                iconSizeChannel.trySend(iconSizeField[it.thisObject, Int::class.javaPrimitiveType!!])
-                iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.thisObject, Int::class.javaPrimitiveType!!])
-                activityInfoChannel.trySend(targetActivityInfoField[swi, ActivityInfo::class.java] ?: topActivityInfoField[taskInfoField[swi], ActivityInfo::class.java])
+                iconSizeChannel.trySend(iconSizeField[it.thisObject])
+                iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.thisObject])
+                activityInfoChannel.trySend(targetActivityInfoField[swi] ?: topActivityInfoField[taskInfoField[swi]])
             }
 
             // modifier: public static | signature: getWindowAttrs(Landroid/content/Context;Lcom/android/wm/shell/startingsurface/SplashscreenContentDrawer$SplashScreenWindowAttrs;)V
@@ -114,15 +114,15 @@ object FixSplashScreen : XposedFeature(
                     currentActivityInfo.loadSplashScreenInfo(context, currentIconSize, currentIconDefaultSize)
                 }
 
-                if (iconBgColorField[attrs, Int::class.javaPrimitiveType!!] == 0) {
+                if (iconBgColorField.get<Int>(attrs) == 0) {
                     iconBgColorField[attrs] = 0x01000000
                 }
 
-                if (splashScreenIconField[attrs, Drawable::class.java] == null) {
+                if (splashScreenIconField.get<Drawable>(attrs) == null) {
                     splashScreenIconField[attrs] = appData.icon
                 }
 
-                if (replaceBackgroundColor && windowBgColorField[attrs, Int::class.javaPrimitiveType!!] == 0) {
+                if (replaceBackgroundColor && windowBgColorField.get<Int>(attrs) == 0) {
                     windowBgColorField[attrs] = appData.background
                 }
             }

@@ -27,7 +27,7 @@ object DisableAdbInstallAlert : XposedFeature(
             val activity = it.getThisObject(Activity::class.java)
             // name: (obfuscated) | type: int
             fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                field[activity, Int::class.javaPrimitiveType!!] == 0
+                field.get<Int>(activity) == 0
             }?.set(activity, -1)
 
             val binder = getBinderMethod.call(null, activity.intent, "observer")

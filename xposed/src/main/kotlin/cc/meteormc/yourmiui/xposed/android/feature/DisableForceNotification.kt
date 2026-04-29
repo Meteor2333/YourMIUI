@@ -39,12 +39,12 @@ object DisableForceNotification : XposedFeature(
         }
 
         operator("com.android.server.pm.permission.PermissionState") {
-            // name: mPermission | type: com.android.server.pm.permission
+            // name: mPermission | type: com.android.server.pm.permission.Permission
             val permField = field("mPermission") ?: return@operator
             // modifier: public | signature: getFlags()I
             method("getFlags")?.replaceResult {
-                val permission = permField[it.thisObject] ?: return@replaceResult Unit
-                val permissionInfo = permInfoField[permission, PermissionInfo::class.java] ?: return@replaceResult Unit
+                val permission = permField.get<Any>(it.thisObject) ?: return@replaceResult Unit
+                val permissionInfo = permInfoField.get<PermissionInfo>(permission) ?: return@replaceResult Unit
                 if (permissionInfo.name != NOTIFICATION_PERMISSION) return@replaceResult Unit
                 it.getIntResult() and (FLAG_PERMISSION_POLICY_FIXED or FLAG_PERMISSION_SYSTEM_FIXED or FLAG_PERMISSION_GRANTED_BY_DEFAULT or FLAG_PERMISSION_GRANTED_BY_ROLE).inv()
             }

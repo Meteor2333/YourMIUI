@@ -34,7 +34,7 @@ object BlockProcessKill : XposedFeature(
                 Context::class.java
             )?.hookDoNothing {
                 val process = it.findArg(recordClass) ?: return@hookDoNothing false
-                val info = infoField[process, ApplicationInfo::class.java] ?: return@hookDoNothing false
+                val info = infoField.get<ApplicationInfo>(process) ?: return@hookDoNothing false
                 blockedPackages.contains(info.packageName)
             }
         }

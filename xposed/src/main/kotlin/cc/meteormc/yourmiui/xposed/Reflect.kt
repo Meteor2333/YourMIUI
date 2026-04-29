@@ -231,11 +231,7 @@ class ConstructorWrapper<T : Any>(private val delegate: Constructor<T>) : Hookab
 class FieldWrapper<T : Any>(private val delegate: Field) {
     fun type(): Class<*> = delegate.type
 
-    operator fun get(obj: T?): Any? {
-        return delegate.apply { isAccessible = true }[obj]
-    }
-
-    operator fun <R> get(obj: T?, returnType: Class<R>): R? {
+    operator fun <R : Any> get(obj: T?): R? {
         return delegate.apply { isAccessible = true }[obj] as? R?
     }
 
