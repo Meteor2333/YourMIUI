@@ -26,6 +26,7 @@ class YourMIUI : Application() {
 		instance = this
 	}
 
+	var isActivated = false
 	val moduleBridge = Module(this)
 	var scopes: Map<Scope, List<AppInfo>> = emptyMap()
 

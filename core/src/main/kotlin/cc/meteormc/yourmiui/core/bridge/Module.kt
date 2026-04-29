@@ -30,11 +30,12 @@ class Module(private val context: Context) : BroadcastReceiver() {
         channel: Channel<REQ, RES>,
         packageName: String,
         onResponse: ResponseCallback<RES>,
+        timeout: Long = 1000L,
         body: REQ = Bridge.EmptyBody as REQ
     ) {
         val id = UUID.randomUUID()
         pendings[id] = onResponse as ResponseCallback<Serializable>
-        timeoutHandler.postDelayed({ pendings.remove(id)?.onFailure() }, 3000L)
+        timeoutHandler.postDelayed({ pendings.remove(id)?.onFailure() }, timeout)
 
         val request = Intent(channel.action)
         request.setPackage(packageName)

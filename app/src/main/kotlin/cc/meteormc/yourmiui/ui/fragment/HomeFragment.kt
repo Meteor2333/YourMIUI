@@ -26,27 +26,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindModuleStatus() {
-        val isActivated = true
-        val statusIconRes = if (isActivated) R.drawable.ic_check_24dp else R.drawable.ic_cross_24dp
-        val statusTextRes = if (isActivated) R.string.status_active else R.string.status_inactive
-        val statusVersionText = getString(R.string.status_version, "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}")
+        binding.statusVersion.text = getString(R.string.status_version, "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}")
 
-        binding.statusIcon.setImageResource(statusIconRes)
-        binding.statusText.setText(statusTextRes)
-        binding.statusVersion.text = statusVersionText
-
-        fun updateApiStatus(name: String?, version: Int?) {
-            binding.statusApi.text = buildString {
-                if (isActivated) {
-                    append("Activated")
-                    if (name != null) append(" by $name")
-                    if (version != null) append(" (API $version)")
-                } else {
-                    append("Not activated")
-                }
-            }
+        @SuppressLint("SetTextI18n")
+        fun updateStatus(status: Pair<String, Int>?) {
+            val isActivated = status != null
+            YourMIUI.get().isActivated = isActivated
+            binding.statusIcon.setImageResource(
+                if (isActivated) R.drawable.ic_check_24dp
+                else R.drawable.ic_cross_24dp
+            )
+            binding.statusText.setText(
+                if (isActivated) R.string.status_active
+                else R.string.status_inactive
+            )
+            binding.statusApi.text = if (isActivated) {
+                val (name, version) = status
+                "Activated by $name (API $version)"
+            } else "Not activated"
         }
 
         YourMIUI.get().moduleBridge.request(
@@ -54,13 +52,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             BuildConfig.APPLICATION_ID,
             object : ResponseCallback<Pair<String, Int>> {
                 override fun onSuccess(data: Pair<String, Int>) {
-                    updateApiStatus(data.first, data.second)
+                    updateStatus(data)
                 }
 
                 override fun onFailure() {
-                    updateApiStatus(null, null)
+                    updateStatus(null)
                 }
-            }
+            },
+            300L
         )
     }
 

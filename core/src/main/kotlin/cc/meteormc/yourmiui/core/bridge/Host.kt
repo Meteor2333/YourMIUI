@@ -24,10 +24,10 @@ class Host(private val context: Context) : BroadcastReceiver() {
     @Suppress("UNCHECKED_CAST")
     fun <REQ: Serializable, RES: Serializable> register(
         channel: Channel<REQ, RES>,
-        packageName: String = context.packageName,
+        vararg packages: String = arrayOf(context.packageName),
         handler: ChannelHandler<REQ, RES>
     ): Host {
-        if (context.packageName != packageName) return this
+        if (!packages.contains(context.packageName)) return this
         val action = channel.action
         filter.addAction(action)
         handlers[action] = handler as ChannelHandler<Serializable, Serializable>
