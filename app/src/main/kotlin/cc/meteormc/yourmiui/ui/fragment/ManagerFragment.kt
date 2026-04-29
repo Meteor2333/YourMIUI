@@ -10,7 +10,7 @@ class ManagerFragment : BaseFragment<FragmentManagerBinding>({ inflater, contain
     FragmentManagerBinding.inflate(inflater, container, false)
 }) {
     override fun onCreate(): View {
-        val scopes = YourMIUI.INSTANCE.scopes
+        val scopes = YourMIUI.get().scopes
         if (scopes.isEmpty()) {
             binding.emptyView.visibility = View.VISIBLE
             return binding.root

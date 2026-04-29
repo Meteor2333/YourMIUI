@@ -51,7 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 
         var apiName: String? = null
         var apiVersion: Int? = null
-        YourMIUI.INSTANCE.moduleBridge.request(
+        YourMIUI.get().moduleBridge.request(
             Bridge.API_NAME_CHANNEL,
             BuildConfig.APPLICATION_ID,
             object : ResponseCallback<String> {
@@ -65,7 +65,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                 }
             }
         )
-        YourMIUI.INSTANCE.moduleBridge.request(
+        YourMIUI.get().moduleBridge.request(
             Bridge.API_VERSION_CHANNEL,
             BuildConfig.APPLICATION_ID,
             object : ResponseCallback<Int> {

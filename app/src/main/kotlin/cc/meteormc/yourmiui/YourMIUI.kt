@@ -17,13 +17,13 @@ import kotlin.system.exitProcess
 
 class YourMIUI : Application() {
 	companion object {
-		@JvmStatic
-		lateinit var INSTANCE: YourMIUI
-			private set
+		private lateinit var instance: YourMIUI
+
+		fun get() = instance
 	}
 
 	init {
-	    INSTANCE = this
+		instance = this
 	}
 
 	val moduleBridge = Module(this)

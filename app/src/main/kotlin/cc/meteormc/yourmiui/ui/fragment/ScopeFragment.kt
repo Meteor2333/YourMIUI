@@ -180,7 +180,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
         var failures = 0
         var resolved = false
         packages.forEach {
-            YourMIUI.INSTANCE.moduleBridge.request(
+            YourMIUI.get().moduleBridge.request(
                 Bridge.RESTART_SCOPE_CHANNEL,
                 it,
                 object : ResponseCallback<Bridge.EmptyBody> {
