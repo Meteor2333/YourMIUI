@@ -30,38 +30,33 @@ object HostStore {
         fetchScopes()
     }
 
-    fun refrashScopes(scopes: Collection<Scope>) {
-        this.scopes.value = scopes.associateWith {
-            // 获取目标应用的名称和图标
-            val pm = YourMIUI.get().packageManager
-            it.getPackages().mapNotNull { pkg ->
-                val info = runCatching {
-                    pm.getApplicationInfo(pkg.first, PackageManager.GET_META_DATA)
-                }.getOrNull() ?: return@mapNotNull null
-                AppInfo(
-                    pkg.first,
-                    pm.getApplicationLabel(info).toString(),
-                    pm.getApplicationIcon(info).toBitmap(),
-                    pkg.second
-                )
-            }
-        }.filterValues {
-            // 过滤掉未安装的应用
-            it.isNotEmpty()
-        }
-    }
-
     private fun fetchScopes() {
         YourMIUI.get().moduleBridge.request(
             Bridge.GET_SCOPES_CHANNEL,
             BuildConfig.APPLICATION_ID,
             object : ResponseCallback<ArrayList<Scope>> {
                 override fun onSuccess(data: ArrayList<Scope>) {
-                    refrashScopes(data)
+                    scopes.value = data.associateWith {
+                        // 获取目标应用的名称和图标
+                        val pm = YourMIUI.get().packageManager
+                        it.getPackages().mapNotNull { pkg ->
+                            val info = runCatching {
+                                pm.getApplicationInfo(pkg.first, PackageManager.GET_META_DATA)
+                            }.getOrNull() ?: return@mapNotNull null
+                            AppInfo(
+                                pkg.first,
+                                pm.getApplicationLabel(info).toString(),
+                                pm.getApplicationIcon(info).toBitmap(),
+                                pkg.second
+                            )
+                        }
+                    }.filterValues {
+                        // 过滤掉未安装的应用
+                        it.isNotEmpty()
+                    }
                 }
 
                 override fun onFailure() {
-
                 }
             }
         )

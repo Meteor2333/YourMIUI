@@ -81,7 +81,6 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
                     if (selected != SettingsPreferences.colorMode) {
                         SettingsPreferences.colorMode = selected
                         ThemeController.apply(selected)
-                        it.settingSummary.setText(selected.res)
                         requireActivity().recreate()
                     }
                 }

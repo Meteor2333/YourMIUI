@@ -6,6 +6,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.ActivityMainBinding
+import cc.meteormc.yourmiui.store.HostStore
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +16,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        val controller = (fragment as? NavHostFragment)?.navController ?: return
+        val controller = (fragment as NavHostFragment).navController
         binding.nav.setupWithNavController(controller)
+
+        HostStore.init()
     }
 }

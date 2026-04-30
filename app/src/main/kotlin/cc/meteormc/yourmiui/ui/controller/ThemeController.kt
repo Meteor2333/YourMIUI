@@ -10,6 +10,7 @@ object ThemeController {
             SettingsPreferences.ColorModeOption.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
             SettingsPreferences.ColorModeOption.DARK -> AppCompatDelegate.MODE_NIGHT_YES
         }
+
         AppCompatDelegate.setDefaultNightMode(mode)
     }
 }
