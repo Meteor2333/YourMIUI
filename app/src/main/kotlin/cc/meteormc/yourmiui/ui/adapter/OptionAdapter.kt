@@ -55,25 +55,25 @@ class OptionAdapter(
                 } ?: item.getDefaultValue()
                 @Suppress("UNCHECKED_CAST")
                 when (type) {
-                    is Option.Type.APP -> TODO("Not yet implemented")
-                    is Option.Type.APP_LIST -> onClickAppListOption(
+                    is Option.Type.App -> TODO("Not yet implemented")
+                    is Option.Type.AppList -> onClickAppListOption(
                         context, item, type,
                         untypedValue as? Set<String> ?: return@setOnClickListener
                     )
-                    is Option.Type.SINGLE_LIST -> onClickSingleChoiceListOption(
+                    is Option.Type.SingleChoiceList -> onClickSingleChoiceListOption(
                         context, item, type,
                         untypedValue as? String ?: return@setOnClickListener
                     )
-                    is Option.Type.MULTI_LIST -> onClickMultiChoiceListOption(
+                    is Option.Type.MultiChoiceList -> onClickMultiChoiceListOption(
                         context, item, type,
                         untypedValue as? Set<String> ?: return@setOnClickListener
                     )
-                    is Option.Type.SWITCH -> onClickSwitchOption(
+                    is Option.Type.Switch -> onClickSwitchOption(
                         context, item, type,
                         untypedValue as? Boolean ?: return@setOnClickListener,
                         view
                     )
-                    is Option.Type.TEXT -> TODO("Not yet implemented")
+                    is Option.Type.Text -> TODO("Not yet implemented")
                 }
             }
         }
@@ -81,7 +81,7 @@ class OptionAdapter(
         private fun onClickAppListOption(
             context: Context,
             option: Option,
-            type: Option.Type.APP_LIST,
+            type: Option.Type.AppList,
             value: Set<String>
         ) {
             val pm = context.packageManager
@@ -169,7 +169,7 @@ class OptionAdapter(
         private fun onClickSingleChoiceListOption(
             context: Context,
             option: Option,
-            type: Option.Type.SINGLE_LIST,
+            type: Option.Type.SingleChoiceList,
             value: String
         ) {
             val options = type.options
@@ -187,7 +187,7 @@ class OptionAdapter(
         private fun onClickMultiChoiceListOption(
             context: Context,
             option: Option,
-            type: Option.Type.MULTI_LIST,
+            type: Option.Type.MultiChoiceList,
             value: Set<String>
         ) {
             val options = type.options
@@ -214,7 +214,7 @@ class OptionAdapter(
         private fun onClickSwitchOption(
             context: Context,
             option: Option,
-            type: Option.Type.SWITCH,
+            type: Option.Type.Switch,
             value: Boolean,
             anchor: View
         ) {

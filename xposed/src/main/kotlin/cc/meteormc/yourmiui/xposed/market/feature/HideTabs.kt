@@ -34,7 +34,7 @@ object HideTabs : XposedFeature(
                 "reserved_tags",
                 R.string.option_market_hide_tabs_reserved_tags_name,
                 R.string.option_market_hide_tabs_reserved_tags_summary,
-                Option.Type.MULTI_LIST(
+                Option.Type.MultiChoiceList(
                     "native_market_home" to R.string.option_market_hide_tabs_reserved_tags_home,
                     "native_market_video" to R.string.option_market_hide_tabs_reserved_tags_video,
                     "native_market_agent" to R.string.option_market_hide_tabs_reserved_tags_agent,

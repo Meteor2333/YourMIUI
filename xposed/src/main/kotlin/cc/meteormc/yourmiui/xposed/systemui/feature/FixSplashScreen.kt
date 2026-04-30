@@ -135,7 +135,7 @@ object FixSplashScreen : XposedFeature(
                 "replace_background_color",
                 R.string.option_systemui_fix_splash_screen_replace_background_color_name,
                 R.string.option_systemui_fix_splash_screen_replace_background_color_summary,
-                Option.Type.SWITCH(),
+                Option.Type.Switch(),
                 replaceBackgroundColor
             ) { replaceBackgroundColor = it }
         )

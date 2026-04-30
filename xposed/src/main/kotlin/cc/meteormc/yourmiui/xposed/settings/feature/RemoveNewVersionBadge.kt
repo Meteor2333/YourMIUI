@@ -37,7 +37,7 @@ object RemoveNewVersionBadge : XposedFeature(
                 "modify_property",
                 R.string.option_settings_remove_new_version_badge_modify_property_name,
                 R.string.option_settings_remove_new_version_badge_modify_property_summary,
-                Option.Type.SWITCH(),
+                Option.Type.Switch(),
                 modifyProperty
             ) { modifyProperty = it }
         )

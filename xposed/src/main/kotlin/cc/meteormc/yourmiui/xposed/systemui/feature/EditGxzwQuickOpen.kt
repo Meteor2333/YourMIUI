@@ -48,7 +48,7 @@ object EditGxzwQuickOpen : XposedFeature(
                 "reserved_items",
                 R.string.option_systemui_edit_gxzw_quick_open_reserved_items_name,
                 R.string.option_systemui_edit_gxzw_quick_open_reserved_items_summary,
-                Option.Type.MULTI_LIST(
+                Option.Type.MultiChoiceList(
                     QuickOpenItem.ADD_EVENT.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_add_event,
                     QuickOpenItem.QR_CODE.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_qr_code,
                     QuickOpenItem.SEARCH.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_search,

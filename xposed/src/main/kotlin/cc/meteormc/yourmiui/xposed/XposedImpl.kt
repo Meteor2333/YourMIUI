@@ -26,7 +26,7 @@ abstract class XposedScope : Scope {
 
     final override fun getPackages() = this.packages
 
-    abstract override fun getFeatures(): Iterable<XposedFeature>
+    abstract override fun getFeatures(): List<XposedFeature>
 }
 
 abstract class XposedFeature(
@@ -59,7 +59,7 @@ abstract class XposedFeature(
 
     final override fun getOriginalAuthor() = this.originalAuthor
 
-    override fun getOptions(): Iterable<XposedOption<*>> = emptyList()
+    override fun getOptions(): List<XposedOption<*>> = emptyList()
 }
 
 class XposedOption<T : Any>(

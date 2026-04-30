@@ -46,7 +46,7 @@ object BlockProcessKill : XposedFeature(
                 "blocked_packages",
                 R.string.option_android_block_process_kill_blocked_packages_name,
                 R.string.option_android_block_process_kill_blocked_packages_summary,
-                Option.Type.APP_LIST(),
+                Option.Type.AppList(),
                 emptySet()
             ) { blockedPackages = it }
         )

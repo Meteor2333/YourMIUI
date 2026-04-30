@@ -13,9 +13,6 @@ interface Option : Serializable {
 
     fun getDefaultValue(): Any
 
-    // TODO: 优化此处的逻辑
-    // 一种仿enum类的写法
-    @Suppress("ClassName")
     sealed class Type<T>(
         serializer: (T) -> String,
         deserializer: (String) -> T?
@@ -27,48 +24,48 @@ interface Option : Serializable {
         var deserializer: (String) -> T? = deserializer
             private set
 
-        class APP : Type<String>(
+        class App : Type<String>(
             { it },
             { it }
         )
 
-        class APP_LIST : Type<Set<String>>(
+        class AppList : Type<Set<String>>(
             { it.serializeToString() },
             { it.deserializeToCollection().toSet() }
         )
 
-        class SINGLE_LIST(vararg options: Pair<String, Int>) : Type<String>(
+        class SingleChoiceList(vararg options: Pair<String, Int>) : Type<String>(
             { it },
             { it }
         ) {
             val options: List<Pair<String, Int>> = options.toList()
         }
 
-        class MULTI_LIST(vararg options: Pair<String, Int>) : Type<Set<String>>(
+        class MultiChoiceList(vararg options: Pair<String, Int>) : Type<Set<String>>(
             { it.serializeToString() },
             { it.deserializeToCollection().toSet() }
         ) {
             val options: List<Pair<String, Int>> = options.toList()
         }
 
-        class SWITCH : Type<Boolean>(
+        class Switch : Type<Boolean>(
             { it.toString() },
             { it.toBooleanStrictOrNull() }
         )
 
-        class TEXT : Type<String>(
+        class Text : Type<String>(
             { it },
             { it }
         )
 
         companion object {
             private val lookupTypes = mapOf(
-                "APP" to APP(),
-                "APP_LIST" to APP_LIST(),
-                "SINGLE_LIST" to SINGLE_LIST(),
-                "MULTI_LIST" to MULTI_LIST(),
-                "SWITCH" to SWITCH(),
-                "TEXT" to TEXT()
+                "App" to App(),
+                "AppList" to AppList(),
+                "SingleChoiceList" to SingleChoiceList(),
+                "MultiChoiceList" to MultiChoiceList(),
+                "Switch" to Switch(),
+                "Text" to Text()
             )
 
             @Suppress("UNCHECKED_CAST")
