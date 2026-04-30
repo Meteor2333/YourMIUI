@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import cc.meteormc.yourmiui.core.Feature
+import cc.meteormc.yourmiui.common.Feature
 
 class FeaturePreference(val prefKey: String) {
     companion object {

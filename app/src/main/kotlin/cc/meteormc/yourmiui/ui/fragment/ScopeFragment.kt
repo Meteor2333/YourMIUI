@@ -14,8 +14,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
-import cc.meteormc.yourmiui.core.bridge.Bridge
-import cc.meteormc.yourmiui.core.bridge.ResponseCallback
+import cc.meteormc.yourmiui.common.bridge.Bridge
+import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import cc.meteormc.yourmiui.ui.data.AppInfo

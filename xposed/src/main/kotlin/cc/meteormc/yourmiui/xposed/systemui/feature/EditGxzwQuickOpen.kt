@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.RectF
 import android.graphics.Region
 import android.widget.ImageView
-import cc.meteormc.yourmiui.core.Option
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.*
 
 object EditGxzwQuickOpen : XposedFeature(

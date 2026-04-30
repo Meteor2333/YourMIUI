@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.os.Process
 import android.util.Log
-import cc.meteormc.yourmiui.core.Feature
-import cc.meteormc.yourmiui.core.bridge.Bridge
-import cc.meteormc.yourmiui.core.bridge.Host
+import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.bridge.Bridge
+import cc.meteormc.yourmiui.common.bridge.Host
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.market.Market

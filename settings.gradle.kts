@@ -23,6 +23,6 @@ dependencyResolutionManagement {
 rootProject.name = "YourMIUI"
 include(
     ":app",
-    ":core",
+    ":common",
     ":xposed"
 )

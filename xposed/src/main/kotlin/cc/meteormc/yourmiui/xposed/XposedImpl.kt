@@ -1,9 +1,9 @@
 package cc.meteormc.yourmiui.xposed
 
 import android.content.res.XResources
-import cc.meteormc.yourmiui.core.Feature
-import cc.meteormc.yourmiui.core.Option
-import cc.meteormc.yourmiui.core.Scope
+import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.Scope
 
 abstract class XposedScope : Scope {
     private val nameRes: Int?

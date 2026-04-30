@@ -3,7 +3,7 @@ package cc.meteormc.yourmiui.xposed.android.feature
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Handler
-import cc.meteormc.yourmiui.core.Option
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.*
 
 object BlockProcessKill : XposedFeature(

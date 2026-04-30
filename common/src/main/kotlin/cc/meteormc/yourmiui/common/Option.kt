@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.core
+package cc.meteormc.yourmiui.common
 
 import java.io.*
 

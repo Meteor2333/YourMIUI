@@ -14,7 +14,7 @@ import android.os.Build
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.withScale
-import cc.meteormc.yourmiui.core.Option
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.*
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt

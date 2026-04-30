@@ -1,7 +1,7 @@
 package cc.meteormc.yourmiui
 
 import android.app.Application
-import cc.meteormc.yourmiui.core.bridge.Module
+import cc.meteormc.yourmiui.common.bridge.Module
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.FeaturePreference
 import cc.meteormc.yourmiui.service.HostDataStore

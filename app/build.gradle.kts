@@ -61,7 +61,7 @@ kotlin {
 }
 
 dependencies {
-    compileOnly(project(":core"))
+    compileOnly(project(":common"))
     runtimeOnly(project(":xposed"))
 
     implementation("androidx.core:core-ktx:1.18.0")

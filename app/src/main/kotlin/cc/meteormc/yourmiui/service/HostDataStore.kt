@@ -6,10 +6,10 @@ import android.os.Looper
 import androidx.core.graphics.drawable.toBitmap
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.YourMIUI
-import cc.meteormc.yourmiui.core.Scope
-import cc.meteormc.yourmiui.core.bridge.Bridge
-import cc.meteormc.yourmiui.core.bridge.Module
-import cc.meteormc.yourmiui.core.bridge.ResponseCallback
+import cc.meteormc.yourmiui.common.Scope
+import cc.meteormc.yourmiui.common.bridge.Bridge
+import cc.meteormc.yourmiui.common.bridge.Module
+import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.ui.data.AppInfo
 import java.util.concurrent.CountDownLatch
 

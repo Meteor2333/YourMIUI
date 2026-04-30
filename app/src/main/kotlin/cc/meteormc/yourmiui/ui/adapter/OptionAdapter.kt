@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
-import cc.meteormc.yourmiui.core.Option
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
 import cc.meteormc.yourmiui.service.FeaturePreference
 import cc.meteormc.yourmiui.ui.data.AppInfo

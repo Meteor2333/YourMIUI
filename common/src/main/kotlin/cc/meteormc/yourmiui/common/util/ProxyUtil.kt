@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.core.util
+package cc.meteormc.yourmiui.common.util
 
 import java.lang.reflect.Proxy
 

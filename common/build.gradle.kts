@@ -6,7 +6,7 @@ plugins {
 val projectNamespace: String by rootProject.extra
 
 android {
-    namespace = "$projectNamespace.core"
+    namespace = "$projectNamespace.common"
 }
 
 kotlin {

@@ -2,7 +2,7 @@ package cc.meteormc.yourmiui.ui.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import cc.meteormc.yourmiui.core.Option
+import cc.meteormc.yourmiui.common.Option
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler

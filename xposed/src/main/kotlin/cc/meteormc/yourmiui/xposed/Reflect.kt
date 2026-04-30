@@ -2,8 +2,8 @@
 
 package cc.meteormc.yourmiui.xposed
 
-import cc.meteormc.yourmiui.core.util.compareParameterTypes
-import cc.meteormc.yourmiui.core.util.getClass
+import cc.meteormc.yourmiui.common.util.compareParameterTypes
+import cc.meteormc.yourmiui.common.util.getClass
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge

@@ -1,6 +1,6 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
-import cc.meteormc.yourmiui.core.Option
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.*
 import org.json.JSONObject
 

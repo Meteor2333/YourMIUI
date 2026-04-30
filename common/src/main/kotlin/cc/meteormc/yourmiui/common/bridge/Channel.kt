@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.core.bridge
+package cc.meteormc.yourmiui.common.bridge
 
 import java.io.Serializable
 

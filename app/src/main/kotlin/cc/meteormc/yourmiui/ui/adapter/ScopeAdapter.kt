@@ -8,10 +8,10 @@ import android.os.Looper
 import androidx.core.graphics.drawable.toDrawable
 import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
-import cc.meteormc.yourmiui.core.Feature
-import cc.meteormc.yourmiui.core.Option
-import cc.meteormc.yourmiui.core.Scope
-import cc.meteormc.yourmiui.core.util.proxyClass
+import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.Scope
+import cc.meteormc.yourmiui.common.util.proxyClass
 import cc.meteormc.yourmiui.databinding.ItemScopeBinding
 import cc.meteormc.yourmiui.ui.data.AppInfo
 import cc.meteormc.yourmiui.ui.data.FeatureNavConfig

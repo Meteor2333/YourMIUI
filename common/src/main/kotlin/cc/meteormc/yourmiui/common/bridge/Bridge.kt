@@ -1,6 +1,6 @@
-package cc.meteormc.yourmiui.core.bridge
+package cc.meteormc.yourmiui.common.bridge
 
-import cc.meteormc.yourmiui.core.Scope
+import cc.meteormc.yourmiui.common.Scope
 import java.io.Serializable
 
 object Bridge {
