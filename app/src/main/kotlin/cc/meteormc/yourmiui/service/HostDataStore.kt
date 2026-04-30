@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.service
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
+import androidx.core.graphics.drawable.toBitmap
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.core.Scope
@@ -78,12 +79,13 @@ class HostDataStore {
                         val pm = YourMIUI.get().packageManager
                         it.getPackages().mapNotNull { pkg ->
                             val info = runCatching {
-                                pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
+                                pm.getApplicationInfo(pkg.first, PackageManager.GET_META_DATA)
                             }.getOrNull() ?: return@mapNotNull null
                             AppInfo(
-                                pkg,
+                                pkg.first,
                                 pm.getApplicationLabel(info).toString(),
-                                pm.getApplicationIcon(info)
+                                pm.getApplicationIcon(info).toBitmap(),
+                                pkg.second
                             )
                         }
                     }.filterValues {

@@ -5,6 +5,7 @@ import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.core.graphics.drawable.toDrawable
 import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.core.Feature
@@ -41,7 +42,7 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
                 val bundle = Bundle()
                 bundle.putString("name", name)
                 bundle.putBoolean("restartable", scope.isRestartable())
-                bundle.putStringArray("packages", scope.getPackages())
+                bundle.putParcelableArrayList("apps", infos.toCollection(ArrayList()))
                 bundle.putParcelableArrayList(
                     "features",
                     scope.getFeatures()
@@ -65,13 +66,13 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
 
             // 如果不支持多软件 直接设置为第一项软件图标
             if (infos.size == 1) {
-                binding.scopeIcon.setImageDrawable(first.icon)
+                binding.scopeIcon.setImageBitmap(first.icon)
                 return
             }
 
             // 否则循环播放多软件图标
             this.currentIndex = 0
-            this.icons = infos.map { it.icon }.toTypedArray()
+            this.icons = infos.map { it.icon.toDrawable(context.resources) }.toTypedArray()
             handler.removeCallbacks(runnable)
             handler.post(runnable)
         }

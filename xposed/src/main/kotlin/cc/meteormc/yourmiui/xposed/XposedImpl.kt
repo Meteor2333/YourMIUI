@@ -8,9 +8,13 @@ import cc.meteormc.yourmiui.core.Scope
 abstract class XposedScope : Scope {
     private val nameRes: Int?
     private val restartable: Boolean
-    private val packages: Array<String>
+    private val packages: Array<Pair<String, String?>>
 
-    constructor(vararg packages: String, nameRes: Int? = null, restartable: Boolean = true) {
+    constructor(
+        vararg packages: Pair<String, String?>,
+        nameRes: Int? = null,
+        restartable: Boolean = true
+    ) {
         this.nameRes = nameRes
         this.restartable = restartable
         this.packages = arrayOf(*packages)

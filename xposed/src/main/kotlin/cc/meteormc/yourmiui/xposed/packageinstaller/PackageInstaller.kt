@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.xposed.XposedScope
 import cc.meteormc.yourmiui.xposed.packageinstaller.feature.DisableSafeCheck
 
 object PackageInstaller : XposedScope(
-    "com.miui.packageinstaller"
+    "com.miui.packageinstaller" to null
 ) {
     override fun getFeatures(): Iterable<XposedFeature> {
         return listOf(

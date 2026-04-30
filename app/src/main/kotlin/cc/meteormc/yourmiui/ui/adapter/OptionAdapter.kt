@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -133,7 +134,7 @@ class OptionAdapter(
                     val info = AppInfo(
                         it.packageName,
                         pm.getApplicationLabel(it).toString(),
-                        pm.getApplicationIcon(it)
+                        pm.getApplicationIcon(it).toBitmap()
                     )
                     emit(info)
                 }

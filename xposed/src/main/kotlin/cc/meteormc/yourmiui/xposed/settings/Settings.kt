@@ -6,7 +6,7 @@ import cc.meteormc.yourmiui.xposed.settings.feature.DisableForceNotification
 import cc.meteormc.yourmiui.xposed.settings.feature.RemoveNewVersionBadge
 
 object Settings : XposedScope(
-    "com.android.settings"
+    "com.android.settings" to "com.android.settings.MainSettings"
 ) {
     override fun getFeatures(): Iterable<XposedFeature> {
         return listOf(

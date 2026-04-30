@@ -100,7 +100,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             scopes.toCollection(ArrayList())
         }.register(Bridge.RESTART_SCOPE_CHANNEL) {
             Thread {
-                Thread.sleep(1000)
+                Thread.sleep(300)
                 Process.killProcess(Process.myPid())
             }.start()
             Bridge.EmptyBody
@@ -109,7 +109,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
     private fun initFeatures(packageName: String, initializer: (feature: XposedFeature) -> Unit) {
         this.scopes.firstOrNull {
-            it.getPackages().contains(packageName)
+            it.getPackages().map { pkg -> pkg.first }.contains(packageName)
         }?.getFeatures()?.forEach {
             if (!prefs.getBoolean(Feature.enabledKeyOf(it.getPreferenceKey()), false)) return@forEach
             initializer(it)

@@ -1,5 +1,7 @@
 package cc.meteormc.yourmiui.ui.fragment
 
+import android.content.ComponentName
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.InsetDrawable
@@ -16,6 +18,7 @@ import cc.meteormc.yourmiui.core.bridge.Bridge
 import cc.meteormc.yourmiui.core.bridge.ResponseCallback
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
+import cc.meteormc.yourmiui.ui.data.AppInfo
 import cc.meteormc.yourmiui.ui.data.FeatureNavConfig
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
@@ -31,8 +34,13 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
         get() = arguments?.getString("name") ?: "Unknown Scope"
     private val restartable: Boolean
         get() = arguments?.getBoolean("restartable") ?: false
-    private val packages: Array<String>
-        get() = arguments?.getStringArray("packages") ?: emptyArray()
+    private val packages: List<AppInfo>
+        get() = if (android.os.Build.VERSION.SDK_INT >= 33) {
+            arguments?.getParcelableArrayList("apps", AppInfo::class.java)
+        } else {
+            @Suppress("DEPRECATION", "UNCHECKED_CAST")
+            arguments?.getParcelableArrayList<AppInfo>("apps") as? List<AppInfo>
+        } ?: emptyList()
     private val features: List<FeatureNavConfig>
         get() = if (android.os.Build.VERSION.SDK_INT >= 33) {
             arguments?.getParcelableArrayList("features", FeatureNavConfig::class.java)
@@ -81,7 +89,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
         val content = MaterialTextView(context).apply {
             gravity = Gravity.CENTER
             textSize = 16f
-            text = getString(R.string.restart_scope_content, packages.joinToString("\n"))
+            text = getString(R.string.restart_scope_content, packages.joinToString("\n") { it.packageName })
 
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -177,10 +185,20 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
     }
 
     private fun executeRestart() {
+        fun launchApp(app: AppInfo) {
+            if (app.launchIntent == null) return
+            requireView().postDelayed({
+                val intent = Intent().apply {
+                    component = ComponentName(app.packageName, app.launchIntent)
+                }
+                startActivity(intent)
+            }, 1000)
+        }
+
         packages.forEach {
             YourMIUI.get().moduleBridge.request(
                 Bridge.RESTART_SCOPE_CHANNEL,
-                it,
+                it.packageName,
                 object : ResponseCallback<Bridge.EmptyBody> {
                     private var failures = 0
                     private var resolved = false
@@ -188,14 +206,24 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
                     override fun onSuccess(data: Bridge.EmptyBody) {
                         if (resolved) return
                         resolved = true
-                        Toast.makeText(context, R.string.restart_scope_success, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.restart_scope_success,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        launchApp(it)
                     }
 
                     override fun onFailure() {
                         if (resolved) return
                         if (++failures < packages.size) return
                         resolved = true
-                        Toast.makeText(context, R.string.restart_scope_failure, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.restart_scope_failure,
+                            Toast.LENGTH_LONG
+                        ).show()
+                        launchApp(it)
                     }
                 }
             )

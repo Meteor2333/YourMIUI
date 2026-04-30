@@ -6,7 +6,7 @@ import cc.meteormc.yourmiui.xposed.android.feature.BlockProcessKill
 import cc.meteormc.yourmiui.xposed.android.feature.DisableForceNotification
 
 object Android : XposedScope(
-    "android",
+    "android" to null,
     restartable = false
 ) {
     override fun getFeatures(): Iterable<XposedFeature> {

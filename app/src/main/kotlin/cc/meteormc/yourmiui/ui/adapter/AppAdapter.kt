@@ -83,7 +83,7 @@ class AppAdapter(size: Int, val selected: MutableSet<String>) : BaseAdapter<Item
         return object : BaseViewHolder(binding, binding.root) {
             override fun onBind(item: AppInfo?) {
                 if (item == null) return
-                binding.appIcon.setImageDrawable(item.icon)
+                binding.appIcon.setImageBitmap(item.icon)
                 binding.appName.text = item.label
 
                 val checkbox = binding.checkbox

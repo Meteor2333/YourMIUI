@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.xposed.XposedScope
 import cc.meteormc.yourmiui.xposed.nfc.feature.AllowLockedAccess
 
 object NFC : XposedScope(
-    "com.android.nfc"
+    "com.android.nfc" to null
 ) {
     override fun getFeatures(): Iterable<XposedFeature> {
         return listOf(

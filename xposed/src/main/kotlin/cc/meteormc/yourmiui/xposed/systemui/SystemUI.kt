@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.systemui.feature.EditGxzwQuickOpen
 import cc.meteormc.yourmiui.xposed.systemui.feature.FixSplashScreen
 
 object SystemUI : XposedScope(
-    "com.android.systemui"
+    "com.android.systemui" to null
 ) {
     override fun getFeatures(): Iterable<XposedFeature> {
         return listOf(

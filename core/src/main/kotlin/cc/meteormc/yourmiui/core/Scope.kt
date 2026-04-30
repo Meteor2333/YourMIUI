@@ -7,7 +7,7 @@ interface Scope : Serializable {
 
     fun isRestartable(): Boolean
 
-    fun getPackages(): Array<String>
+    fun getPackages(): Array<Pair<String, String?>>
 
     fun getFeatures(): Iterable<Any>
 }
