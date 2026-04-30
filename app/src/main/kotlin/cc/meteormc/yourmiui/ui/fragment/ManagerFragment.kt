@@ -12,15 +12,15 @@ class ManagerFragment : BaseFragment<FragmentManagerBinding>({ inflater, contain
 }) {
     override fun onCreate(): View {
         val emptyView = binding.emptyView
+        val scopeList = binding.scopeList
         emptyView.visibility = View.VISIBLE
+        scopeList.layoutManager = LinearLayoutManager(requireContext())
         HostStore.scopes.observe(DataField.ObserveType.INIT) {
             val scopes = HostStore.scopes.value
             if (scopes.isEmpty()) return@observe
             emptyView.visibility = View.GONE
-            val scopeList = binding.scopeList
             scopeList.visibility = View.VISIBLE
             scopeList.adapter = ScopeAdapter(scopes)
-            scopeList.layoutManager = LinearLayoutManager(requireContext())
         }
 
         return binding.root
