@@ -83,28 +83,30 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
         operator(Application::class.java) {
             method("attach")?.hookAfter {
-                initHostBridge(it.getThisObject(Context::class.java))
+                initHostBridge(lpparam.classLoader, it.getThisObject(Context::class.java))
             }
         }
     }
 
-    private fun initHostBridge(context: Context) {
+    private fun initHostBridge(classLoader: ClassLoader, context: Context) {
         hostBridge = Host(context)
-        hostBridge.register(Bridge.GET_API_STATUS_CHANNEL) {
-            val apiName = ReflectOperator(XposedBridge::class.java).run {
-                field("TAG")?.get(null) ?: "Unknown"
-            }
-            val apiVersion = XposedBridge.getXposedVersion()
-            apiName to apiVersion
-        }.register(Bridge.GET_SCOPES_CHANNEL) {
+        hostBridge.register(Bridge.GET_SCOPES_CHANNEL) {
             scopes.toCollection(ArrayList())
         }.register(Bridge.RESTART_SCOPE_CHANNEL) {
             Thread {
                 Thread.sleep(300)
                 Process.killProcess(Process.myPid())
             }.start()
-            Bridge.EmptyBody
         }.attach()
+
+        operator(classLoader, Bridge::class.java.name) {
+            val apiName = ReflectOperator(XposedBridge::class.java).run {
+                field("TAG")?.get(null)
+            } ?: "Unknown"
+            val apiVersion = XposedBridge.getXposedVersion()
+            field("apiName")?.set(null, apiName)
+            field("apiVersion")?.set(null, apiVersion)
+        }
     }
 
     private fun initFeatures(packageName: String, initializer: (feature: XposedFeature) -> Unit) {

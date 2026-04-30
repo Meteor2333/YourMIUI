@@ -199,11 +199,11 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             YourMIUI.get().moduleBridge.request(
                 Bridge.RESTART_SCOPE_CHANNEL,
                 it.packageName,
-                object : ResponseCallback<Bridge.EmptyBody> {
+                object : ResponseCallback<Unit> {
                     private var failures = 0
                     private var resolved = false
 
-                    override fun onSuccess(data: Bridge.EmptyBody) {
+                    override fun onSuccess(data: Unit) {
                         if (resolved) return
                         resolved = true
                         Toast.makeText(

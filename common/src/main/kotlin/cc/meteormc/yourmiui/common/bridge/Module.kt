@@ -8,11 +8,10 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import java.io.Serializable
 import java.util.*
 
 class Module(private val context: Context) : BroadcastReceiver() {
-    private val pendings = mutableMapOf<UUID, ResponseCallback<Serializable>>()
+    private val pendings = mutableMapOf<UUID, ResponseCallback<Any>>()
     private val timeoutHandler = Handler(Looper.getMainLooper())
 
     fun attach() {
@@ -26,30 +25,29 @@ class Module(private val context: Context) : BroadcastReceiver() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <REQ: Serializable, RES: Serializable> request(
+    fun <REQ : Any, RES : Any> request(
         channel: Channel<REQ, RES>,
         packageName: String,
         onResponse: ResponseCallback<RES>,
         timeout: Long = 1000L,
-        body: REQ = Bridge.EmptyBody as REQ
+        body: REQ = Unit as REQ
     ) {
         val id = UUID.randomUUID()
-        pendings[id] = onResponse as ResponseCallback<Serializable>
+        pendings[id] = onResponse as ResponseCallback<Any>
         timeoutHandler.postDelayed({ pendings.remove(id)?.onFailure() }, timeout)
 
         val request = Intent(channel.action)
         request.setPackage(packageName)
         request.putExtra("id", id)
-        request.putExtra("body", body)
         request.putExtra("validation", packageName)
+        Bridge.saveBody(body, request)
         context.sendBroadcast(request)
     }
 
     @Suppress("DEPRECATION")
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getSerializableExtra("id") ?: return
-        val body = intent.getSerializableExtra("body") ?: return
-
-        pendings.remove(id)?.onSuccess(body)
+        val callback = pendings.remove(id) ?: return
+        Bridge.parseBody(intent)?.let { callback.onSuccess(it) }
     }
 }

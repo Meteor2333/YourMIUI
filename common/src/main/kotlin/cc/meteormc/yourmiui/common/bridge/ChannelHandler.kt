@@ -1,7 +1,5 @@
 package cc.meteormc.yourmiui.common.bridge
 
-import java.io.Serializable
-
-fun interface ChannelHandler<REQ: Serializable, RES: Serializable> {
+fun interface ChannelHandler<REQ : Any, RES : Any> {
     fun handle(request: REQ): RES
 }

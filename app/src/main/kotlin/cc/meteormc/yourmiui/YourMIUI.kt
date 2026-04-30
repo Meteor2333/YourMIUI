@@ -4,8 +4,8 @@ import android.app.Application
 import cc.meteormc.yourmiui.common.bridge.Module
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.FeaturePreference
-import cc.meteormc.yourmiui.service.HostDataStore
 import cc.meteormc.yourmiui.service.SettingsPreferences
+import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.controller.LanguageController
 import cc.meteormc.yourmiui.ui.controller.ThemeController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,7 +23,6 @@ class YourMIUI : Application() {
 	}
 
 	val moduleBridge = Module(this)
-	val hostDataStore = HostDataStore()
 
 	override fun onCreate() {
 		super.onCreate()
@@ -54,6 +53,6 @@ class YourMIUI : Application() {
 
 	private fun initModuleBridge() {
 		moduleBridge.attach()
-		hostDataStore.fetch(moduleBridge)
+		HostStore.init()
 	}
 }

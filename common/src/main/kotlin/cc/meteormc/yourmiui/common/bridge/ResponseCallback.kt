@@ -1,8 +1,6 @@
 package cc.meteormc.yourmiui.common.bridge
 
-import java.io.Serializable
-
-interface ResponseCallback<T: Serializable> {
+interface ResponseCallback<T : Any> {
     fun onSuccess(data: T)
 
     fun onFailure()

@@ -6,11 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import java.io.Serializable
 
 class Host(private val context: Context) : BroadcastReceiver() {
     private val filter = IntentFilter()
-    private val handlers = mutableMapOf<String, ChannelHandler<Serializable, Serializable>>()
+    private val handlers = mutableMapOf<String, ChannelHandler<Any, Any>>()
 
     fun attach() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -22,7 +21,7 @@ class Host(private val context: Context) : BroadcastReceiver() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <REQ: Serializable, RES: Serializable> register(
+    fun <REQ : Any, RES : Any> register(
         channel: Channel<REQ, RES>,
         vararg packages: String = arrayOf(context.packageName),
         handler: ChannelHandler<REQ, RES>
@@ -30,23 +29,23 @@ class Host(private val context: Context) : BroadcastReceiver() {
         if (!packages.contains(context.packageName)) return this
         val action = channel.action
         filter.addAction(action)
-        handlers[action] = handler as ChannelHandler<Serializable, Serializable>
+        handlers[action] = handler as ChannelHandler<Any, Any>
         return this
     }
 
     @Suppress("DEPRECATION")
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getSerializableExtra("id") ?: return
-        val body = intent.getSerializableExtra("body") ?: return
         val validation = intent.getStringExtra("validation") ?: return
         if (context.packageName != validation) {
             return
         }
 
-        val data = handlers[intent.action]?.handle(body)
+        val handler = handlers[intent.action] ?: return
+        val body = Bridge.parseBody(intent)?.let { handler.handle(it) } ?: return
         val response = Intent(Bridge.RESPONSE_ACTION)
         response.putExtra("id", id)
-        response.putExtra("body", data)
+        Bridge.saveBody(body, response)
         context.sendBroadcast(response, Bridge.REQUIRED_PERMISSION)
     }
 }

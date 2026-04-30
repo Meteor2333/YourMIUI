@@ -7,10 +7,11 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
-import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.UpdateChecker
+import cc.meteormc.yourmiui.store.DataField
+import cc.meteormc.yourmiui.store.HostStore
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
@@ -33,11 +34,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                 .start()
         }
 
-        YourMIUI.get().hostDataStore.observe {
+        HostStore.isActivated.observe(DataField.ObserveType.INIT) {
             val icon = binding.statusIcon
             icon.createFade {
                 icon.setImageResource(
-                    if (isActivated) R.drawable.ic_check_24dp
+                    if (HostStore.isActivated.value) R.drawable.ic_check_24dp
                     else R.drawable.ic_cross_24dp
                 )
             }
@@ -45,7 +46,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             val text = binding.statusText
             text.createFade {
                 text.setText(
-                    if (isActivated) R.string.status_active
+                    if (HostStore.isActivated.value) R.string.status_active
                     else R.string.status_inactive
                 )
             }
@@ -60,8 +61,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 
             val api = binding.statusApi
             api.createFade {
-                api.text = if (isActivated) {
-                    "Activated by $apiName (API $apiVersion)"
+                api.text = if (HostStore.isActivated.value) {
+                    "Activated by ${HostStore.apiName} (API ${HostStore.apiVersion})"
                 } else "Not activated"
             }
         }
