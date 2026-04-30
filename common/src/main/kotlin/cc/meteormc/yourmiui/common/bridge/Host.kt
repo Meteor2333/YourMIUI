@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import cc.meteormc.yourmiui.common.util.getExtra
+import cc.meteormc.yourmiui.common.util.putExtra
 
 class Host(private val context: Context) : BroadcastReceiver() {
     private val filter = IntentFilter()
@@ -42,10 +44,10 @@ class Host(private val context: Context) : BroadcastReceiver() {
         }
 
         val handler = handlers[intent.action] ?: return
-        val body = Bridge.parseBody(intent)?.let { handler.handle(it) } ?: return
+        val body = intent.getExtra("body")?.let { handler.handle(it) } ?: return
         val response = Intent(Bridge.RESPONSE_ACTION)
         response.putExtra("id", id)
-        Bridge.saveBody(body, response)
+        response.putExtra("body", body)
         context.sendBroadcast(response, Bridge.REQUIRED_PERMISSION)
     }
 }

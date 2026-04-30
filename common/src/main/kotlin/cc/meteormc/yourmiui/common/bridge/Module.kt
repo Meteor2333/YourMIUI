@@ -8,6 +8,8 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import cc.meteormc.yourmiui.common.util.getExtra
+import cc.meteormc.yourmiui.common.util.putExtra
 import java.util.*
 
 class Module(private val context: Context) : BroadcastReceiver() {
@@ -40,7 +42,7 @@ class Module(private val context: Context) : BroadcastReceiver() {
         request.setPackage(packageName)
         request.putExtra("id", id)
         request.putExtra("validation", packageName)
-        Bridge.saveBody(body, request)
+        request.putExtra("body", body)
         context.sendBroadcast(request)
     }
 
@@ -48,6 +50,6 @@ class Module(private val context: Context) : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getSerializableExtra("id") ?: return
         val callback = pendings.remove(id) ?: return
-        Bridge.parseBody(intent)?.let { callback.onSuccess(it) }
+        intent.getExtra("body")?.let { callback.onSuccess(it) }
     }
 }
