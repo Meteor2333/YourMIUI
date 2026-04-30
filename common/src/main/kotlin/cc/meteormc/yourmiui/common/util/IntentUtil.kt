@@ -56,9 +56,8 @@ fun Intent.getExtra(name: String): Any? {
         "List<Empty>" -> arrayListOf<Any>()
         "List<Parcelable>" -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val classLoader = javaClass.classLoader ?: return null
                 val className = getStringExtra($$"$$name$element") ?: return null
-                val clazz = getClass(classLoader, className, false)
+                val clazz = getClass(null, className, false)
                 if (clazz != null) {
                     return getParcelableArrayListExtra(name, clazz)
                 }
