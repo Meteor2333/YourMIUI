@@ -10,7 +10,6 @@ import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.service.UpdateChecker
-import cc.meteormc.yourmiui.store.DataField
 import cc.meteormc.yourmiui.store.HostStore
 import kotlinx.coroutines.launch
 
@@ -25,46 +24,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
     }
 
     private fun bindModuleStatus() {
-        fun View.createFade(block: () -> Unit) {
-            alpha = 0f
-            block()
-            animate()
-                .alpha(1f)
-                .setDuration(100)
-                .start()
-        }
+        HostStore.isActivated.observe(viewLifecycleOwner) {
+            binding.statusIcon.setImageResource(
+                if (it) R.drawable.ic_check_24dp
+                else R.drawable.ic_cross_24dp
+            )
 
-        HostStore.isActivated.observe(DataField.ObserveType.INIT) {
-            val icon = binding.statusIcon
-            icon.createFade {
-                icon.setImageResource(
-                    if (HostStore.isActivated.value) R.drawable.ic_check_24dp
-                    else R.drawable.ic_cross_24dp
-                )
-            }
+            binding.statusText.setText(
+                if (it) R.string.status_active
+                else R.string.status_inactive
+            )
 
-            val text = binding.statusText
-            text.createFade {
-                text.setText(
-                    if (HostStore.isActivated.value) R.string.status_active
-                    else R.string.status_inactive
-                )
-            }
+            binding.statusVersion.text = getString(
+                R.string.status_version,
+                "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
+            )
 
-            val version = binding.statusVersion
-            version.createFade {
-                version.text = getString(
-                    R.string.status_version,
-                    "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
-                )
-            }
-
-            val api = binding.statusApi
-            api.createFade {
-                api.text = if (HostStore.isActivated.value) {
-                    "Activated by ${HostStore.apiName} (API ${HostStore.apiVersion})"
-                } else "Not activated"
-            }
+            binding.statusApi.text = if (it) {
+                "Activated by ${HostStore.apiName.value} (API ${HostStore.apiVersion.value})"
+            } else "Not activated"
         }
     }
 
