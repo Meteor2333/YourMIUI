@@ -1,9 +1,7 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
-import android.app.Activity
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.getThisObject
 import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
 
@@ -24,18 +22,17 @@ object DisableAdbInstallAlert : XposedFeature(
             method("asInterface")
         } ?: return
         AlertActivityHelper.disableAlert(classLoader, "com.miui.permcenter.install.AdbInstallActivity") {
-            val activity = it.getThisObject(Activity::class.java)
             // name: (obfuscated) | type: int
             fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                field.get<Int>(activity) == 0
-            }?.set(activity, -1)
+                field.get<Int>(it) == 0
+            }?.set(it, -1)
 
-            val binder = getBinderMethod.call(null, activity.intent, "observer")
+            val binder = getBinderMethod.call(null, it.intent, "observer")
             val messenger = asInterfaceMethod.call(null, binder)
             // name: (obfuscated) | type: android.os.IMessenger
-            fields(messagerClass).firstOrNull()?.set(activity, messenger)
+            fields(messagerClass).firstOrNull()?.set(it, messenger)
 
-            activity.finish()
+            it.finish()
             true
         }
     }
