@@ -17,10 +17,10 @@ import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
+import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.common.util.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
-import cc.meteormc.yourmiui.ui.data.AppInfo
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
