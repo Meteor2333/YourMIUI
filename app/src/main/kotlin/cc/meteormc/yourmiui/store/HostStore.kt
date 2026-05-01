@@ -8,7 +8,7 @@ import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
-import cc.meteormc.yourmiui.ui.data.AppInfo
+import cc.meteormc.yourmiui.common.data.AppInfo
 
 object HostStore {
     val apiName = MutableLiveData("Unknown")

@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
+import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
 import cc.meteormc.yourmiui.service.FeaturePreference
-import cc.meteormc.yourmiui.ui.data.AppInfo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

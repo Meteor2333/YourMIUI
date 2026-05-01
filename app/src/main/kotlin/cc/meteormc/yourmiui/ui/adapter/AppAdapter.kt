@@ -2,8 +2,8 @@ package cc.meteormc.yourmiui.ui.adapter
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
+import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.databinding.ItemAppBinding
-import cc.meteormc.yourmiui.ui.data.AppInfo
 
 @SuppressLint("NotifyDataSetChanged")
 class AppAdapter(size: Int, val selected: MutableSet<String>) : BaseAdapter<ItemAppBinding, AppInfo?>(
