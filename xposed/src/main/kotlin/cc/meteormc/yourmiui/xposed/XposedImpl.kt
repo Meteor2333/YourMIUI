@@ -59,7 +59,7 @@ abstract class XposedFeature(
 
     final override fun getOriginalAuthor() = this.originalAuthor
 
-    override fun getOptions(): List<XposedOption<*>> = emptyList()
+    override fun getOptions() = emptyList<Option>()
 }
 
 class XposedOption<T : Any>(
@@ -76,7 +76,7 @@ class XposedOption<T : Any>(
 
     override fun getSummaryRes() = this.summaryRes
 
-    override fun getType(): Option.Type<T> = this.type
+    override fun getType() = this.type
 
-    override fun getDefaultValue(): T = this.defaultValue
+    override fun getDefaultValue() = this.defaultValue
 }

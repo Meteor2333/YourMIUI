@@ -129,7 +129,7 @@ object FixSplashScreen : XposedFeature(
         }
     }
 
-    override fun getOptions(): Iterable<XposedOption<*>> {
+    override fun getOptions(): List<XposedOption<*>> {
         return listOf(
             XposedOption(
                 "replace_background_color",

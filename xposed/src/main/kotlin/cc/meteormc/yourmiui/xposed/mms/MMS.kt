@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.mms.feature.RemoveAds
 object MMS : XposedScope(
     "com.android.mms" to "com.android.mms.ui.MmsTabActivity"
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             RemoveAds
         )

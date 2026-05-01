@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.securitycenter.feature.*
 object SecurityCenter : XposedScope(
     "com.miui.securitycenter" to "com.miui.securityscan.MainActivity"
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             DisableAdbInstallAlert,
             DisableCountdownDialog,

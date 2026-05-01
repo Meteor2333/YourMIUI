@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.mirror.feature.DisableClipTip
 object Mirror : XposedScope(
     "com.xiaomi.mirror" to "com.xiaomi.mirror.settings.SettingsHomeActivity"
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             DisableClipTip
         )

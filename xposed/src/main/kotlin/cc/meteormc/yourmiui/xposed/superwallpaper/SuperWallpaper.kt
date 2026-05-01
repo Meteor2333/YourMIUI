@@ -13,7 +13,7 @@ object SuperWallpaper : XposedScope(
     "com.miui.miwallpaper.snowmountain" to null,
     nameRes = R.string.scope_superwallpaper
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             DisablePause
         )

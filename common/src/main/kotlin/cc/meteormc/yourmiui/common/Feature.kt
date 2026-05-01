@@ -23,5 +23,5 @@ interface Feature : Serializable {
 
     fun getOriginalAuthor(): String?
 
-    fun getOptions(): Iterable<Any>
+    fun getOptions(): List<Option>
 }

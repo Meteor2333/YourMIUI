@@ -28,7 +28,7 @@ object HideTabs : XposedFeature(
         }
     }
 
-    override fun getOptions(): Iterable<XposedOption<Set<String>>> {
+    override fun getOptions(): List<XposedOption<Set<String>>> {
         return listOf(
             XposedOption(
                 "reserved_tags",

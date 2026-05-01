@@ -9,7 +9,7 @@ interface Option : Serializable {
 
     fun getSummaryRes(): Int
 
-    fun getType(): Any
+    fun getType(): Type<*>
 
     fun getDefaultValue(): Any
 

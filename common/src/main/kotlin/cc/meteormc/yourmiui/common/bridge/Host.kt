@@ -44,7 +44,7 @@ class Host(private val context: Context) : BroadcastReceiver() {
         }
 
         val handler = handlers[intent.action] ?: return
-        val body = intent.getExtra("body")?.let { handler.handle(it) } ?: return
+        val body = intent.getExtra<Any>("body")?.let { handler.handle(it) } ?: return
         val response = Intent(Bridge.RESPONSE_ACTION)
         response.putExtra("id", id)
         response.putExtra("body", body)

@@ -50,6 +50,6 @@ class Module(private val context: Context) : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getSerializableExtra("id") ?: return
         val callback = pendings.remove(id) ?: return
-        intent.getExtra("body")?.let { callback.onSuccess(it) }
+        intent.getExtra<Any>("body")?.let { callback.onSuccess(it) }
     }
 }

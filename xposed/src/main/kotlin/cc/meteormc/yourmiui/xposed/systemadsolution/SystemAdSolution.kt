@@ -10,7 +10,7 @@ object SystemAdSolution : XposedScope(
     // 智能服务？ 广告服务！
     nameRes = R.string.scope_systemadsolution
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             RemoveSplashAds
         )

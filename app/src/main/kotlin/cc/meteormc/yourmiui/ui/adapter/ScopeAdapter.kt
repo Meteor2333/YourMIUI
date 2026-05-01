@@ -8,13 +8,10 @@ import android.os.Looper
 import androidx.core.graphics.drawable.toDrawable
 import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Scope
-import cc.meteormc.yourmiui.common.util.proxyClass
+import cc.meteormc.yourmiui.common.util.putObject
 import cc.meteormc.yourmiui.databinding.ItemScopeBinding
 import cc.meteormc.yourmiui.ui.data.AppInfo
-import cc.meteormc.yourmiui.ui.data.FeatureNavConfig
 
 class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>(
     scopes.toList().toTypedArray(),
@@ -42,23 +39,8 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
                 val bundle = Bundle()
                 bundle.putString("name", name)
                 bundle.putBoolean("restartable", scope.isRestartable())
-                bundle.putParcelableArrayList("apps", infos.toCollection(ArrayList()))
-                bundle.putParcelableArrayList(
-                    "features",
-                    scope.getFeatures()
-                        .map { feature -> proxyClass(Feature::class.java, feature) }
-                        .filterIsInstance<Feature>()
-                        .map { feature -> FeatureNavConfig(
-                            feature.getPreferenceKey(),
-                            context.getString(feature.getNameRes()),
-                            context.getString(feature.getDescriptionRes()),
-                            feature.getWarningRes()?.let { res -> context.getString(res) },
-                            feature.getTestEnvironmentRes()?.let { res -> context.getString(res) },
-                            feature.getOriginalAuthor(),
-                            feature.getOptions().map { options -> proxyClass(Option::class.java, options) }.filterIsInstance<Option>()
-                        ) }
-                        .toCollection(ArrayList())
-                )
+                bundle.putObject("apps", infos)
+                bundle.putObject("features", scope.getFeatures())
                 it.findNavController().navigate(R.id.action_to_scope, bundle)
             }
 

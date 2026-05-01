@@ -31,7 +31,7 @@ object RemoveNewVersionBadge : XposedFeature(
         }
     }
 
-    override fun getOptions(): Iterable<XposedOption<Boolean>> {
+    override fun getOptions(): List<XposedOption<Boolean>> {
         return listOf(
             XposedOption(
                 "modify_property",

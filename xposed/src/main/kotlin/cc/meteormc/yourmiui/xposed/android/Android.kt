@@ -9,7 +9,7 @@ object Android : XposedScope(
     "android" to null,
     restartable = false
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             BlockProcessKill,
             DisableForceNotification

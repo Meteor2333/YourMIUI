@@ -3,36 +3,40 @@ package cc.meteormc.yourmiui.ui.adapter
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.databinding.ItemFeatureBinding
 import cc.meteormc.yourmiui.service.FeaturePreference
-import cc.meteormc.yourmiui.ui.data.FeatureNavConfig
 
-class FeatureAdapter(features: List<FeatureNavConfig>) : BaseAdapter<ItemFeatureBinding, FeatureNavConfig>(
+class FeatureAdapter(features: List<Feature>) : BaseAdapter<ItemFeatureBinding, Feature>(
     features.toTypedArray(),
     { inflater, parent -> ItemFeatureBinding.inflate(inflater, parent, false) }
 ) {
-    override fun newHolder(binding: ItemFeatureBinding): BaseAdapter<ItemFeatureBinding, FeatureNavConfig>.BaseViewHolder {
+    override fun newHolder(binding: ItemFeatureBinding): BaseAdapter<ItemFeatureBinding, Feature>.BaseViewHolder {
         return ViewHolder(binding)
     }
 
-    private inner class ViewHolder(binding: ItemFeatureBinding) : BaseAdapter<ItemFeatureBinding, FeatureNavConfig>.BaseViewHolder(binding, binding.root) {
+    private inner class ViewHolder(binding: ItemFeatureBinding) : BaseAdapter<ItemFeatureBinding, Feature>.BaseViewHolder(binding, binding.root) {
         private lateinit var prefs: FeaturePreference
 
-        override fun onBind(item: FeatureNavConfig) {
-            this.prefs = FeaturePreference.getPreference(item.key)
-            binding.featureName.text = item.name
-            binding.featureDescription.text = item.description
-            item.warning?.let {
+        override fun onBind(item: Feature) {
+            this.prefs = FeaturePreference.getPreference(item.getPreferenceKey())
+            binding.featureName.setText(item.getNameRes())
+            binding.featureDescription.setText(item.getDescriptionRes())
+            item.getWarningRes()?.let {
                 val view = binding.featureWarning
                 view.visibility = View.VISIBLE
-                view.text = view.context.getString(R.string.feature_warning, it)
+
+                val context = view.context
+                view.text = context.getString(R.string.feature_warning, context.getString(it))
             }
-            item.testEnvironment?.let {
+            item.getTestEnvironmentRes()?.let {
                 val view = binding.featureTestEnvironment
                 view.visibility = View.VISIBLE
-                view.text = view.context.getString(R.string.feature_test_environment, it)
+
+                val context = view.context
+                view.text = view.context.getString(R.string.feature_test_environment, context.getString(it))
             }
-            item.originalAuthor?.let {
+            item.getOriginalAuthor()?.let {
                 val view = binding.featureOriginalAuthor
                 view.visibility = View.VISIBLE
                 view.text = view.context.getString(R.string.feature_original_author, it)
@@ -49,7 +53,7 @@ class FeatureAdapter(features: List<FeatureNavConfig>) : BaseAdapter<ItemFeature
                 else list.visibility = View.GONE
             }
 
-            val options = item.options
+            val options = item.getOptions()
             if (options.isEmpty()) return
 
             val context = binding.root.context

@@ -9,5 +9,5 @@ interface Scope : Serializable {
 
     fun getPackages(): Array<Pair<String, String?>>
 
-    fun getFeatures(): Iterable<Any>
+    fun getFeatures(): List<Feature>
 }

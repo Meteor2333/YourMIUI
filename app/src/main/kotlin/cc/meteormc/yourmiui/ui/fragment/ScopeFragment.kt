@@ -14,12 +14,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
+import cc.meteormc.yourmiui.common.util.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import cc.meteormc.yourmiui.ui.data.AppInfo
-import cc.meteormc.yourmiui.ui.data.FeatureNavConfig
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
@@ -35,19 +36,9 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
     private val restartable: Boolean
         get() = arguments?.getBoolean("restartable") ?: false
     private val packages: List<AppInfo>
-        get() = if (android.os.Build.VERSION.SDK_INT >= 33) {
-            arguments?.getParcelableArrayList("apps", AppInfo::class.java)
-        } else {
-            @Suppress("DEPRECATION", "UNCHECKED_CAST")
-            arguments?.getParcelableArrayList<AppInfo>("apps") as? List<AppInfo>
-        } ?: emptyList()
-    private val features: List<FeatureNavConfig>
-        get() = if (android.os.Build.VERSION.SDK_INT >= 33) {
-            arguments?.getParcelableArrayList("features", FeatureNavConfig::class.java)
-        } else {
-            @Suppress("DEPRECATION", "UNCHECKED_CAST")
-            arguments?.getParcelableArrayList<FeatureNavConfig>("features") as? List<FeatureNavConfig>
-        } ?: emptyList()
+        get() = arguments?.getObject("apps") ?: emptyList()
+    private val features: List<Feature>
+        get() = arguments?.getObject("features") ?: emptyList()
 
     override fun onCreate(): View {
         val scopeToolbar = binding.scopeToolbar

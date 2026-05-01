@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.contentextension.feature.FixLinkHandling
 object ContentExtension : XposedScope(
     "com.miui.contentextension" to "com.miui.contentextension.setting.activity.MainSettingsActivity"
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             FixLinkHandling
         )

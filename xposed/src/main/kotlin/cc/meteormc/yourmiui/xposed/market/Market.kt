@@ -8,7 +8,7 @@ import cc.meteormc.yourmiui.xposed.market.feature.RemoveAds
 object Market : XposedScope(
     "com.xiaomi.market" to "com.xiaomi.market.ui.MarketTabActivity"
 ) {
-    override fun getFeatures(): Iterable<XposedFeature> {
+    override fun getFeatures(): List<XposedFeature> {
         return listOf(
             HideTabs,
             RemoveAds
