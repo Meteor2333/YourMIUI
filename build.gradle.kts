@@ -3,7 +3,7 @@ import com.android.build.gradle.BaseExtension
 plugins {
     id("com.android.application") version "8.12.3" apply false
     id("com.android.library") version "8.12.3" apply false
-    id("org.jetbrains.kotlin.android") version "2.3.20" apply false
+    id("org.jetbrains.kotlin.android") version "2.3.21" apply false
 }
 
 val sdkMinVersion by extra(24)
