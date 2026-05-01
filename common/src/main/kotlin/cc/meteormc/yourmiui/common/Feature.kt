@@ -19,9 +19,12 @@ abstract class Feature(
         fun optionKeyOf(featureKey: String, optionKey: String) = "pref_${featureKey}_option_${optionKey}"
     }
 
+    @Transient
+    lateinit var resources: Resources
+    @Transient
     lateinit var classLoader: ClassLoader
 
-    open fun onInitResources(resources: Resources) {
+    open fun onInitResources() {
 
     }
 

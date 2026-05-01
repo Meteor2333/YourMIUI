@@ -56,15 +56,26 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
     override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam) {
         initFeatures(resparam.packageName) {
-            it.onInitResources(resparam.res)
+            it.resources = resparam.res
+
+            runCatching {
+                it.onInitResources()
+            }.onFailure { exception ->
+                XposedBridge.log("[YourMIUI] Failed to initialize resources " +
+                        "for feature '${it.javaClass.simpleName}' " +
+                        "in scope '${this.javaClass.simpleName}':\n" +
+                        Log.getStackTraceString(exception)
+                )
+            }
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         initFeatures(lpparam.packageName) {
+            it.classLoader = lpparam.classLoader
+
             runCatching {
-                it.classLoader = lpparam.classLoader
                 it.getOptions().forEach { option ->
                     val key = Feature.optionKeyOf(it.key, option.key)
                     val value = prefs.getString(key, null)?.let { preference ->
@@ -72,14 +83,16 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
                     } ?: option.defaultValue
                     (option as Option<Any>).onValueInit(value)
                 }
+
+                it.onLoadPackage()
             }.onFailure { exception ->
-                val scopeName = this.javaClass.simpleName
-                val featureName = it.javaClass.simpleName
-                val stackTrace = Log.getStackTraceString(exception)
-                XposedBridge.log("[YourMIUI] Failed to initialize feature '$featureName' in scope '$scopeName':\n$stackTrace")
+                XposedBridge.log("[YourMIUI] Failed to " +
+                        "initialize feature '${it.javaClass.simpleName}' " +
+                        "in scope '${this.javaClass.simpleName}':\n" +
+                        Log.getStackTraceString(exception)
+                )
             }
 
-            it.onLoadPackage()
         }
 
         operator(Application::class.java) {

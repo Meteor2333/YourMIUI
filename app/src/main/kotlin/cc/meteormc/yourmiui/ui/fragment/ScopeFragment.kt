@@ -177,10 +177,10 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
 
     private fun executeRestart() {
         fun launchApp(app: AppInfo) {
-            if (app.launchIntent == null) return
+            val intent = app.launchIntent ?: return
             requireView().postDelayed({
                 val intent = Intent().apply {
-                    component = ComponentName(app.packageName, app.launchIntent)
+                    component = ComponentName(app.packageName, intent)
                 }
                 startActivity(intent)
             }, 1000)

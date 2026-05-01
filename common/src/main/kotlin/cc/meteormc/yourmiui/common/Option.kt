@@ -8,6 +8,7 @@ class Option<T : Any>(
     val summaryRes: Int,
     val type: Type<T>,
     val defaultValue: T,
+    @Transient
     val onValueInit: (value: T) -> Unit
 ) : Serializable {
     sealed class Type<T>(
