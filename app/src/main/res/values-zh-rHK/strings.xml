@@ -42,8 +42,6 @@
     <string name="settings_language">語言</string>
     <string name="settings_language_language_title">語言</string>
     <string name="settings_language_language_followsystem">跟隨系統</string>
-    <string name="settings_language_language_english">English</string>
-    <string name="settings_language_language_simplifiedchinese">簡體中文</string>
     <string name="settings_language_translate_title">貢獻翻譯</string>
     <string name="settings_language_translate_summary">説明作者讓本軟體擁有你的語言</string>
     <string name="settings_theme">主題</string>
