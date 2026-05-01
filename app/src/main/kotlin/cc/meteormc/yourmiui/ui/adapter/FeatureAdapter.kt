@@ -19,24 +19,24 @@ class FeatureAdapter(features: List<Feature>) : BaseAdapter<ItemFeatureBinding, 
         private lateinit var prefs: FeaturePreference
 
         override fun onBind(item: Feature) {
-            this.prefs = FeaturePreference.getPreference(item.getPreferenceKey())
-            binding.featureName.setText(item.getNameRes())
-            binding.featureDescription.setText(item.getDescriptionRes())
-            item.getWarningRes()?.let {
+            this.prefs = FeaturePreference.getPreference(item.key)
+            binding.featureName.setText(item.nameRes)
+            binding.featureDescription.setText(item.descriptionRes)
+            item.warningRes?.let {
                 val view = binding.featureWarning
                 view.visibility = View.VISIBLE
 
                 val context = view.context
                 view.text = context.getString(R.string.feature_warning, context.getString(it))
             }
-            item.getTestEnvironmentRes()?.let {
+            item.testEnvironmentRes?.let {
                 val view = binding.featureTestEnvironment
                 view.visibility = View.VISIBLE
 
                 val context = view.context
                 view.text = view.context.getString(R.string.feature_test_environment, context.getString(it))
             }
-            item.getOriginalAuthor()?.let {
+            item.originalAuthor?.let {
                 val view = binding.featureOriginalAuthor
                 view.visibility = View.VISIBLE
                 view.text = view.context.getString(R.string.feature_original_author, it)

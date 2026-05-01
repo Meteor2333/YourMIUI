@@ -1,10 +1,10 @@
 package cc.meteormc.yourmiui.xposed.mms.feature
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveAds : XposedFeature(
+object RemoveAds : Feature(
     key = "remove_mms_ads",
     nameRes = R.string.feature_mms_remove_ads_name,
     descriptionRes = R.string.feature_mms_remove_ads_description,

@@ -1,8 +1,16 @@
 package cc.meteormc.yourmiui.common
 
+import android.content.res.Resources
 import java.io.Serializable
 
-interface Feature : Serializable {
+abstract class Feature(
+    val key: String,
+    val nameRes: Int,
+    val descriptionRes: Int,
+    val warningRes: Int? = null,
+    val testEnvironmentRes: Int? = null,
+    val originalAuthor: String? = null
+) : Serializable {
     companion object {
         const val PREFERENCE_TAG = "features"
 
@@ -11,17 +19,15 @@ interface Feature : Serializable {
         fun optionKeyOf(featureKey: String, optionKey: String) = "pref_${featureKey}_option_${optionKey}"
     }
 
-    fun getPreferenceKey(): String
+    lateinit var classLoader: ClassLoader
 
-    fun getNameRes(): Int
+    open fun onInitResources(resources: Resources) {
 
-    fun getDescriptionRes(): Int
+    }
 
-    fun getWarningRes(): Int?
+    open fun onLoadPackage() {
 
-    fun getTestEnvironmentRes(): Int?
+    }
 
-    fun getOriginalAuthor(): String?
-
-    fun getOptions(): List<Option>
+    open fun getOptions(): List<Option<*>> = emptyList()
 }

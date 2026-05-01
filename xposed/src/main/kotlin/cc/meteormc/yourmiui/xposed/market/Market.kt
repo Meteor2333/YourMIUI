@@ -1,14 +1,14 @@
 package cc.meteormc.yourmiui.xposed.market
 
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.XposedScope
+import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.xposed.market.feature.HideTabs
 import cc.meteormc.yourmiui.xposed.market.feature.RemoveAds
 
-object Market : XposedScope(
+object Market : Scope(
     "com.xiaomi.market" to "com.xiaomi.market.ui.MarketTabActivity"
 ) {
-    override fun getFeatures(): List<XposedFeature> {
+    override fun getFeatures(): List<Feature> {
         return listOf(
             HideTabs,
             RemoveAds

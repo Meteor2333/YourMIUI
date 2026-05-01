@@ -1,10 +1,14 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.xposed.*
+import cc.meteormc.yourmiui.common.Option.Type
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONObject
 
-object HideTabs : XposedFeature(
+object HideTabs : Feature(
     key = "hide_market_tabs",
     nameRes = R.string.feature_market_hide_tabs_name,
     descriptionRes = R.string.feature_market_hide_tabs_description,
@@ -28,13 +32,13 @@ object HideTabs : XposedFeature(
         }
     }
 
-    override fun getOptions(): List<XposedOption<Set<String>>> {
+    override fun getOptions(): List<Option<Set<String>>> {
         return listOf(
-            XposedOption(
+            Option(
                 "reserved_tags",
                 R.string.option_market_hide_tabs_reserved_tags_name,
                 R.string.option_market_hide_tabs_reserved_tags_summary,
-                Option.Type.MultiChoiceList(
+                Type.MultiChoiceList(
                     "native_market_home" to R.string.option_market_hide_tabs_reserved_tags_home,
                     "native_market_video" to R.string.option_market_hide_tabs_reserved_tags_video,
                     "native_market_agent" to R.string.option_market_hide_tabs_reserved_tags_agent,

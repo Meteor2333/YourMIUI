@@ -1,11 +1,11 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
 
-object DisableAdbInstallAlert : XposedFeature(
+object DisableAdbInstallAlert : Feature(
     key = "disable_adb_install_alert",
     nameRes = R.string.feature_securitycenter_disable_adb_install_alert_name,
     descriptionRes = R.string.feature_securitycenter_disable_adb_install_alert_description,

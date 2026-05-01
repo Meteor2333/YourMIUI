@@ -2,12 +2,20 @@ package cc.meteormc.yourmiui.common
 
 import java.io.Serializable
 
-interface Scope : Serializable {
-    fun getNameRes(): Int?
+abstract class Scope(
+    val nameRes: Int?,
+    val restartable: Boolean,
+    val packages: Array<Pair<String, String?>>
+) : Serializable {
+    constructor(
+        vararg packages: Pair<String, String?>,
+        nameRes: Int? = null,
+        restartable: Boolean = true
+    ) : this(
+        nameRes,
+        restartable,
+        arrayOf(*packages)
+    )
 
-    fun isRestartable(): Boolean
-
-    fun getPackages(): Array<Pair<String, String?>>
-
-    fun getFeatures(): List<Feature>
+    abstract fun getFeatures(): List<Feature>
 }

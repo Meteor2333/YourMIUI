@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Process
 import android.util.Log
 import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
 import cc.meteormc.yourmiui.xposed.android.Android
@@ -65,11 +66,11 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             runCatching {
                 it.classLoader = lpparam.classLoader
                 it.getOptions().forEach { option ->
-                    val key = Feature.optionKeyOf(it.getPreferenceKey(), option.getPreferenceKey())
+                    val key = Feature.optionKeyOf(it.key, option.key)
                     val value = prefs.getString(key, null)?.let { preference ->
-                        option.getType().deserializer(preference)
-                    } ?: option.getDefaultValue()
-                    (option as XposedOption<Any>).onValueInit(value)
+                        option.type.deserializer(preference)
+                    } ?: option.defaultValue
+                    (option as Option<Any>).onValueInit(value)
                 }
             }.onFailure { exception ->
                 val scopeName = this.javaClass.simpleName
@@ -109,11 +110,11 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
         }
     }
 
-    private fun initFeatures(packageName: String, initializer: (feature: XposedFeature) -> Unit) {
+    private fun initFeatures(packageName: String, initializer: (feature: Feature) -> Unit) {
         this.scopes.firstOrNull {
-            it.getPackages().map { pkg -> pkg.first }.contains(packageName)
+            it.packages.map { pkg -> pkg.first }.contains(packageName)
         }?.getFeatures()?.forEach {
-            if (!prefs.getBoolean(Feature.enabledKeyOf(it.getPreferenceKey()), false)) return@forEach
+            if (!prefs.getBoolean(Feature.enabledKeyOf(it.key), false)) return@forEach
             initializer(it)
         }
     }

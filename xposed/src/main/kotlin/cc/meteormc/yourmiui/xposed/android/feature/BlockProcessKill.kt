@@ -3,10 +3,14 @@ package cc.meteormc.yourmiui.xposed.android.feature
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Handler
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.xposed.*
+import cc.meteormc.yourmiui.common.Option.Type
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.operator
 
-object BlockProcessKill : XposedFeature(
+object BlockProcessKill : Feature(
     key = "block_process_kill",
     nameRes = R.string.feature_android_block_process_kill_name,
     descriptionRes = R.string.feature_android_block_process_kill_description,
@@ -40,13 +44,13 @@ object BlockProcessKill : XposedFeature(
         }
     }
 
-    override fun getOptions(): List<XposedOption<Set<String>>> {
+    override fun getOptions(): List<Option<Set<String>>> {
         return listOf(
-            XposedOption(
+            Option(
                 "blocked_packages",
                 R.string.option_android_block_process_kill_blocked_packages_name,
                 R.string.option_android_block_process_kill_blocked_packages_summary,
-                Option.Type.AppList(),
+                Type.AppList(),
                 emptySet()
             ) { blockedPackages = it }
         )
