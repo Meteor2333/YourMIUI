@@ -5,10 +5,12 @@ import android.content.Context
 import android.graphics.RectF
 import android.graphics.Region
 import android.widget.ImageView
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.*
 
-object EditGxzwQuickOpen : XposedFeature(
+object EditGxzwQuickOpen : Feature(
     key = "edit_gxzw_quick_open",
     nameRes = R.string.feature_systemui_edit_gxzw_quick_open_name,
     descriptionRes = R.string.feature_systemui_edit_gxzw_quick_open_description,
@@ -42,13 +44,13 @@ object EditGxzwQuickOpen : XposedFeature(
         }
     }
 
-    override fun getOptions(): List<XposedOption<Set<String>>> {
+    override fun getOptions(): List<Option<Set<String>>> {
         return listOf(
-            XposedOption(
+            Option(
                 "reserved_items",
                 R.string.option_systemui_edit_gxzw_quick_open_reserved_items_name,
                 R.string.option_systemui_edit_gxzw_quick_open_reserved_items_summary,
-                Option.Type.MultiChoiceList(
+                Type.MultiChoiceList(
                     QuickOpenItem.ADD_EVENT.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_add_event,
                     QuickOpenItem.QR_CODE.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_qr_code,
                     QuickOpenItem.SEARCH.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_search,
@@ -66,9 +68,11 @@ object EditGxzwQuickOpen : XposedFeature(
                     QuickOpenItem.WECHAT_PAY.key,
                     QuickOpenItem.WECHAT_SCAN.key
                 )
-            ) { reservedItems = it.mapNotNull { key ->
-                QuickOpenItem.entries.firstOrNull { entry -> entry.key == key}
-            }.toSet() }
+            ) {
+                reservedItems = it.mapNotNull { key ->
+                    QuickOpenItem.entries.firstOrNull { entry -> entry.key == key }
+                }.toSet()
+            }
         )
     }
 

@@ -1,10 +1,10 @@
 package cc.meteormc.yourmiui.xposed.packageinstaller.feature
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisableSafeCheck : XposedFeature(
+object DisableSafeCheck : Feature(
     key = "disable_safe_check",
     nameRes = R.string.feature_packageinstaller_disable_safe_check_name,
     descriptionRes = R.string.feature_packageinstaller_disable_safe_check_description,

@@ -2,6 +2,7 @@
 
 package cc.meteormc.yourmiui.xposed
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.util.compareParameterTypes
 import cc.meteormc.yourmiui.common.util.getClass
 import de.robv.android.xposed.XC_MethodHook
@@ -27,7 +28,7 @@ fun operator(classLoader: ClassLoader, className: String): ReflectOperator<Any>?
     }
 }
 
-fun XposedFeature.operator(className: String): ReflectOperator<Any>? {
+fun Feature.operator(className: String): ReflectOperator<Any>? {
     return operator(classLoader, className)
 }
 
@@ -39,7 +40,7 @@ fun <R> operator(classLoader: ClassLoader, className: String, operator: ReflectO
     return operator(classLoader, className)?.run(operator)
 }
 
-fun <R> XposedFeature.operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
+fun <R> Feature.operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
     return operator(className)?.run(operator)
 }
 

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
 import cc.meteormc.yourmiui.service.FeaturePreference
 import cc.meteormc.yourmiui.ui.data.AppInfo
@@ -25,9 +26,9 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 
 class OptionAdapter(
-    options: List<Option>,
+    options: List<Option<*>>,
     private var prefs: FeaturePreference
-) : BaseAdapter<ItemOptionBinding, Option>(
+) : BaseAdapter<ItemOptionBinding, Option<*>>(
     options.toTypedArray(),
     { inflater, parent -> ItemOptionBinding.inflate(inflater, parent, false) }
 ) {
@@ -35,53 +36,53 @@ class OptionAdapter(
         private var appCache: List<AppInfo> = emptyList()
     }
 
-    override fun newHolder(binding: ItemOptionBinding): BaseAdapter<ItemOptionBinding, Option>.BaseViewHolder {
+    override fun newHolder(binding: ItemOptionBinding): BaseAdapter<ItemOptionBinding, Option<*>>.BaseViewHolder {
         return ViewHolder(binding, prefs)
     }
 
     private inner class ViewHolder(
         binding: ItemOptionBinding,
         private var prefs: FeaturePreference
-    ) : BaseAdapter<ItemOptionBinding, Option>.BaseViewHolder(binding, binding.root) {
-        override fun onBind(item: Option) {
-            binding.optionName.setText(item.getNameRes())
-            binding.optionSummary.setText(item.getSummaryRes())
+    ) : BaseAdapter<ItemOptionBinding, Option<*>>.BaseViewHolder(binding, binding.root) {
+        override fun onBind(item: Option<*>) {
+            binding.optionName.setText(item.nameRes)
+            binding.optionSummary.setText(item.summaryRes)
             binding.root.setOnClickListener { view ->
                 val context = view.context
-                val type = Option.Type.getTypeByObject<Any>(item.getType()) ?: return@setOnClickListener
-                val untypedValue = prefs.option(item.getPreferenceKey())?.let { preference ->
+                val type = Type.getTypeByObject<Any>(item.type) ?: return@setOnClickListener
+                val untypedValue = prefs.option(item.key)?.let { preference ->
                     val deserializer = type.deserializer(preference)
                     deserializer
-                } ?: item.getDefaultValue()
+                } ?: item.defaultValue
                 @Suppress("UNCHECKED_CAST")
                 when (type) {
-                    is Option.Type.App -> TODO("Not yet implemented")
-                    is Option.Type.AppList -> onClickAppListOption(
+                    is Type.App -> TODO("Not yet implemented")
+                    is Type.AppList -> onClickAppListOption(
                         context, item, type,
                         untypedValue as? Set<String> ?: return@setOnClickListener
                     )
-                    is Option.Type.SingleChoiceList -> onClickSingleChoiceListOption(
+                    is Type.SingleChoiceList -> onClickSingleChoiceListOption(
                         context, item, type,
                         untypedValue as? String ?: return@setOnClickListener
                     )
-                    is Option.Type.MultiChoiceList -> onClickMultiChoiceListOption(
+                    is Type.MultiChoiceList -> onClickMultiChoiceListOption(
                         context, item, type,
                         untypedValue as? Set<String> ?: return@setOnClickListener
                     )
-                    is Option.Type.Switch -> onClickSwitchOption(
+                    is Type.Switch -> onClickSwitchOption(
                         context, item, type,
                         untypedValue as? Boolean ?: return@setOnClickListener,
                         view
                     )
-                    is Option.Type.Text -> TODO("Not yet implemented")
+                    is Type.Text -> TODO("Not yet implemented")
                 }
             }
         }
 
         private fun onClickAppListOption(
             context: Context,
-            option: Option,
-            type: Option.Type.AppList,
+            option: Option<*>,
+            type: Type.AppList,
             value: Set<String>
         ) {
             val pm = context.packageManager
@@ -162,14 +163,14 @@ class OptionAdapter(
                 .setView(container)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .setPositiveButton(R.string.dialog_save) { _, _ ->
-                    prefs.option(option.getPreferenceKey(), type.serializer(adapter.selected))
+                    prefs.option(option.key, type.serializer(adapter.selected))
                 }.show()
         }
 
         private fun onClickSingleChoiceListOption(
             context: Context,
-            option: Option,
-            type: Option.Type.SingleChoiceList,
+            option: Option<*>,
+            type: Type.SingleChoiceList,
             value: String
         ) {
             val options = type.options
@@ -179,15 +180,15 @@ class OptionAdapter(
                     options.indexOfFirst { it.first == value }
                 ) { dialog, which ->
                     val selected = options[which].first
-                    prefs.option(option.getPreferenceKey(), type.serializer(selected))
+                    prefs.option(option.key, type.serializer(selected))
                     dialog.dismiss()
                 }.show()
         }
 
         private fun onClickMultiChoiceListOption(
             context: Context,
-            option: Option,
-            type: Option.Type.MultiChoiceList,
+            option: Option<*>,
+            type: Type.MultiChoiceList,
             value: Set<String>
         ) {
             val options = type.options
@@ -202,7 +203,7 @@ class OptionAdapter(
                     val selected = checkedItem.toList().mapIndexedNotNull { index, isChecked ->
                         if (isChecked) options[index].first else null
                     }.toSet()
-                    prefs.option(option.getPreferenceKey(), type.serializer(selected))
+                    prefs.option(option.key, type.serializer(selected))
                 }.setMultiChoiceItems(
                     options.map { context.getString(it.second) }.toTypedArray(),
                     checkedItem
@@ -213,8 +214,8 @@ class OptionAdapter(
 
         private fun onClickSwitchOption(
             context: Context,
-            option: Option,
-            type: Option.Type.Switch,
+            option: Option<*>,
+            type: Type.Switch,
             value: Boolean,
             anchor: View
         ) {
@@ -242,7 +243,7 @@ class OptionAdapter(
                     disableBotton.isChecked = true
                 }
 
-                prefs.option(option.getPreferenceKey(), type.serializer(selected))
+                prefs.option(option.key, type.serializer(selected))
                 return@setOnMenuItemClickListener true
             }
             popup.show()

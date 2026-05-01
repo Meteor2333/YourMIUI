@@ -1,10 +1,10 @@
 package cc.meteormc.yourmiui.xposed.notification.feature
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisableForceNotification : XposedFeature(
+object DisableForceNotification : Feature(
     key = "disable_force_notification",
     nameRes = R.string.feature_notification_disable_force_notification_name,
     descriptionRes = R.string.feature_notification_disable_force_notification_description,

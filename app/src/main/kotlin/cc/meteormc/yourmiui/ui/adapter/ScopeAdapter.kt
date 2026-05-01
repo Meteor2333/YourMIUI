@@ -34,11 +34,11 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
             val context = binding.root.context
             val first = infos.firstOrNull() ?: return
             // 优先使用设置的名称 若没有 则选取已安装的第一项软件名称作为作用域名称
-            val name = scope.getNameRes()?.let { context.getString(it) } ?: first.label
+            val name = scope.nameRes?.let { context.getString(it) } ?: first.label
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("name", name)
-                bundle.putBoolean("restartable", scope.isRestartable())
+                bundle.putBoolean("restartable", scope.restartable)
                 bundle.putObject("apps", infos)
                 bundle.putObject("features", scope.getFeatures())
                 it.findNavController().navigate(R.id.action_to_scope, bundle)

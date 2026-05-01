@@ -1,13 +1,13 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.Handler
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.ReflectOperator
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 import de.robv.android.xposed.XC_MethodHook
 
-object DisableCountdownDialog : XposedFeature(
+object DisableCountdownDialog : Feature(
     key = "disable_countdown_dialog",
     nameRes = R.string.feature_securitycenter_disable_countdown_dialog_name,
     descriptionRes = R.string.feature_securitycenter_disable_countdown_dialog_description,

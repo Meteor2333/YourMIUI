@@ -1,16 +1,16 @@
 package cc.meteormc.yourmiui.xposed.systemadsolution
 
+import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
-import cc.meteormc.yourmiui.xposed.XposedScope
 import cc.meteormc.yourmiui.xposed.systemadsolution.feature.RemoveSplashAds
 
-object SystemAdSolution : XposedScope(
+object SystemAdSolution : Scope(
     "com.miui.systemAdSolution" to null,
     // 智能服务？ 广告服务！
     nameRes = R.string.scope_systemadsolution
 ) {
-    override fun getFeatures(): List<XposedFeature> {
+    override fun getFeatures(): List<Feature> {
         return listOf(
             RemoveSplashAds
         )

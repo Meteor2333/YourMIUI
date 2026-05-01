@@ -2,17 +2,14 @@ package cc.meteormc.yourmiui.common
 
 import java.io.*
 
-interface Option : Serializable {
-    fun getPreferenceKey(): String
-
-    fun getNameRes(): Int
-
-    fun getSummaryRes(): Int
-
-    fun getType(): Type<*>
-
-    fun getDefaultValue(): Any
-
+class Option<T : Any>(
+    val key: String,
+    val nameRes: Int,
+    val summaryRes: Int,
+    val type: Type<T>,
+    val defaultValue: T,
+    val onValueInit: (value: T) -> Unit
+) : Serializable {
     sealed class Type<T>(
         serializer: (T) -> String,
         deserializer: (String) -> T?

@@ -3,13 +3,13 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.AsyncTask
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.MethodWrapper
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
 
-object RemoveAdbSwitchRestrictions : XposedFeature(
+object RemoveAdbSwitchRestrictions : Feature(
     key = "remove_adb_switch_restrictions",
     nameRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_name,
     descriptionRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_description,

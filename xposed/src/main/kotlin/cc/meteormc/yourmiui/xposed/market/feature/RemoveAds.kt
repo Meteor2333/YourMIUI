@@ -1,11 +1,11 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.getResult
 import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveAds : XposedFeature(
+object RemoveAds : Feature(
     key = "remove_market_ads",
     nameRes = R.string.feature_market_remove_ads_name,
     descriptionRes = R.string.feature_market_remove_ads_description,

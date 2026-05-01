@@ -39,7 +39,7 @@ object HostStore {
                     scopes.value = data.associateWith {
                         // 获取目标应用的名称和图标
                         val pm = YourMIUI.get().packageManager
-                        it.getPackages().mapNotNull { pkg ->
+                        it.packages.mapNotNull { pkg ->
                             val info = runCatching {
                                 pm.getApplicationInfo(pkg.first, PackageManager.GET_META_DATA)
                             }.getOrNull() ?: return@mapNotNull null

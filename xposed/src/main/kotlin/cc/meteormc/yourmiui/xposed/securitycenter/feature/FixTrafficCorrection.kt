@@ -1,12 +1,12 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.Looper
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.findIntArg
 import cc.meteormc.yourmiui.xposed.operator
 
-object FixTrafficCorrection : XposedFeature(
+object FixTrafficCorrection : Feature(
     key = "fix_traffic_correction",
     nameRes = R.string.feature_securitycenter_fix_traffic_correction_name,
     descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,

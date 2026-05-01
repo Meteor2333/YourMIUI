@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.findArg
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisableForceNotification : XposedFeature(
+object DisableForceNotification : Feature(
     key = "disable_force_notification",
     nameRes = R.string.feature_settings_disable_force_notification_name,
     descriptionRes = R.string.feature_settings_disable_force_notification_description,

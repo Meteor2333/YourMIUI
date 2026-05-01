@@ -14,12 +14,16 @@ import android.os.Build
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.withScale
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.xposed.*
+import cc.meteormc.yourmiui.common.Option.Type
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
-object FixSplashScreen : XposedFeature(
+object FixSplashScreen : Feature(
     key = "fix_splash_screen",
     nameRes = R.string.feature_systemui_fix_splash_screen_name,
     descriptionRes = R.string.feature_systemui_fix_splash_screen_description,
@@ -129,13 +133,13 @@ object FixSplashScreen : XposedFeature(
         }
     }
 
-    override fun getOptions(): List<XposedOption<*>> {
+    override fun getOptions(): List<Option<*>> {
         return listOf(
-            XposedOption(
+            Option(
                 "replace_background_color",
                 R.string.option_systemui_fix_splash_screen_replace_background_color_name,
                 R.string.option_systemui_fix_splash_screen_replace_background_color_summary,
-                Option.Type.Switch(),
+                Type.Switch(),
                 replaceBackgroundColor
             ) { replaceBackgroundColor = it }
         )

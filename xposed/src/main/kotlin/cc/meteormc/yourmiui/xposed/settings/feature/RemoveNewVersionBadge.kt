@@ -2,10 +2,14 @@ package cc.meteormc.yourmiui.xposed.settings.feature
 
 import android.content.Context
 import android.provider.Settings
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.xposed.*
+import cc.meteormc.yourmiui.common.Option.Type
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.findArg
+import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveNewVersionBadge : XposedFeature(
+object RemoveNewVersionBadge : Feature(
     key = "remove_new_version_badge",
     nameRes = R.string.feature_settings_remove_new_version_badge_name,
     descriptionRes = R.string.feature_settings_remove_new_version_badge_description,
@@ -31,13 +35,13 @@ object RemoveNewVersionBadge : XposedFeature(
         }
     }
 
-    override fun getOptions(): List<XposedOption<Boolean>> {
+    override fun getOptions(): List<Option<Boolean>> {
         return listOf(
-            XposedOption(
+            Option(
                 "modify_property",
                 R.string.option_settings_remove_new_version_badge_modify_property_name,
                 R.string.option_settings_remove_new_version_badge_modify_property_summary,
-                Option.Type.Switch(),
+                Type.Switch(),
                 modifyProperty
             ) { modifyProperty = it }
         )

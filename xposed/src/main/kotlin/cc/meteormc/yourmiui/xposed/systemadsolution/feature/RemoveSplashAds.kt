@@ -1,11 +1,11 @@
 package cc.meteormc.yourmiui.xposed.systemadsolution.feature
 
 import android.os.Binder
+import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.XposedFeature
 import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveSplashAds : XposedFeature(
+object RemoveSplashAds : Feature(
     key = "remove_splash_ads",
     nameRes = R.string.feature_systemadsolution_remove_splash_ads_name,
     descriptionRes = R.string.feature_systemadsolution_remove_splash_ads_description,
