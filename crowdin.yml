@@ -1,4 +1,4 @@
-pull_request_title: Update translation from Crowdin
+pull_request_title: chore(i18n): update translation from Crowdin
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/%android_code%/%original_file_name%
