@@ -182,6 +182,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
                 val intent = Intent().apply {
                     component = ComponentName(app.packageName, intent)
                 }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }, 1000)
         }
