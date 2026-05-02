@@ -34,6 +34,7 @@
     <string name="feature_mms_remove_ads_test_environment">14.2.5.14版本</string>
     <string name="feature_nfc_allow_locked_access_name">允許鎖定時識別卡片</string>
     <string name="feature_nfc_allow_locked_access_description">使手機在未解鎖的狀態下依然能夠識別卡片</string>
+    <string name="feature_nfc_allow_locked_access_warning">开启此功能可能导致NFC失去鉴权作用</string>
     <string name="feature_nfc_allow_locked_access_test_environment">Android13版本</string>
     <string name="feature_notification_disable_force_notification_name">禁用強制通知</string>
     <string name="feature_notification_disable_force_notification_description">解除系統應用不允許關閉通知的限制</string>
