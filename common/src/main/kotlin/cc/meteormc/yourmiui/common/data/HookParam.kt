@@ -61,4 +61,8 @@ data class HookParam(
     fun <T : Throwable> throwable() = this.throwable as T?
 
     fun callSuper() = this.onCallSuper(this)
+
+    override fun equals(other: Any?) = other is HookParam && this.member == other.member
+
+    override fun hashCode() = this.member.hashCode()
 }
