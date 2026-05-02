@@ -6,7 +6,6 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.findArg
 import cc.meteormc.yourmiui.xposed.operator
 
 object RemoveNewVersionBadge : Feature(
@@ -24,7 +23,7 @@ object RemoveNewVersionBadge : Feature(
             // modifier: public static | signature: getUpdateInfo(Landroid/content/Context;)Ljava/lang/String;
             method("getUpdateInfo")?.hookBefore {
                 if (modifyProperty) {
-                    val context = it.findArg(Context::class.java) ?: return@hookBefore
+                    val context = it.argByGenerics<Context>() ?: return@hookBefore
                     Settings.Global.putString(
                         context.contentResolver,
                         PROPERTY_MIUI_NEW_VERSION,

@@ -97,7 +97,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
         operator(Application::class.java) {
             method("attach")?.hookAfter {
-                initHostBridge(lpparam.classLoader, it.getThisObject(Context::class.java))
+                initHostBridge(lpparam.classLoader, it.instance())
             }
         }
     }

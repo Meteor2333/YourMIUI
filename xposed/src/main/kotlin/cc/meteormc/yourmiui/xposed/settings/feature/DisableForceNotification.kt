@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.findArg
 import cc.meteormc.yourmiui.xposed.operator
 
 object DisableForceNotification : Feature(
@@ -25,7 +24,7 @@ object DisableForceNotification : Feature(
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {
                 // name: mHasNotifPermission | type: boolean
-                field("mHasNotifPermission")?.set(it.thisObject, true)
+                field("mHasNotifPermission")?.set(it.instance, true)
             }
         }
 
@@ -48,10 +47,10 @@ object DisableForceNotification : Feature(
             )?.overrideResult {
                 // 所以将冗余逻辑去掉 直接返回基本数据即可
                 loadMethod.call(
-                    it.thisObject,
-                    it.findArg(Context::class.java),
-                    it.findArg(PackageManager::class.java),
-                    it.findArg(PackageInfo::class.java)?.applicationInfo
+                    it.instance,
+                    it.argByGenerics<Context>(),
+                    it.argByGenerics<PackageManager>(),
+                    it.argByGenerics<PackageInfo>()?.applicationInfo
                 )
             }
         }

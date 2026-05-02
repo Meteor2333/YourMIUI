@@ -18,7 +18,6 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.findArg
 import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
@@ -98,12 +97,12 @@ object FixSplashScreen : Feature(
             // modifier: public final | signature: updateDensity()V
             val updateDensityMethod = method("updateDensity") ?: return@operator
             method("makeSplashScreenContentView")?.hookBefore {
-                val swi = it.findArg(swiClass.delegate) ?: return@hookBefore
+                val swi = it.argByClass(swiClass.delegate) ?: return@hookBefore
                 if (launchPackageNameField.get<String>(swi) != ALLOW_LAUNCH_PACKAGE) return@hookBefore
 
-                updateDensityMethod.call(it.thisObject)
-                iconSizeChannel.trySend(iconSizeField[it.thisObject])
-                iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.thisObject])
+                updateDensityMethod.call(it.instance)
+                iconSizeChannel.trySend(iconSizeField[it.instance])
+                iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.instance])
                 activityInfoChannel.trySend(targetActivityInfoField[swi] ?: topActivityInfoField[taskInfoField[swi]])
             }
 
@@ -112,8 +111,8 @@ object FixSplashScreen : Feature(
                 val currentIconSize = iconSizeChannel.tryReceive().getOrNull() ?: return@hookAfter
                 val currentIconDefaultSize = iconDefaultSizeChannel.tryReceive().getOrNull() ?: return@hookAfter
                 val currentActivityInfo = activityInfoChannel.tryReceive().getOrNull() ?: return@hookAfter
-                val context = it.findArg(Context::class.java) ?: return@hookAfter
-                val attrs = it.findArg(sswaClass.delegate) ?: return@hookAfter
+                val context = it.argByGenerics<Context>() ?: return@hookAfter
+                val attrs = it.argByClass(sswaClass.delegate) ?: return@hookAfter
                 val appData by lazy {
                     currentActivityInfo.loadSplashScreenInfo(context, currentIconSize, currentIconDefaultSize)
                 }

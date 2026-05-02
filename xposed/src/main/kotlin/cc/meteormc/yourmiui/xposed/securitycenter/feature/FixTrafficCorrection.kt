@@ -3,7 +3,6 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 import android.os.Looper
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.findIntArg
 import cc.meteormc.yourmiui.xposed.operator
 
 object FixTrafficCorrection : Feature(
@@ -22,9 +21,9 @@ object FixTrafficCorrection : Feature(
                 // 由于一些神秘原因 网络助手的校正号码白名单总是不更新
                 // 导致运营商的响应短信被过滤掉 (打印日志为`onProcessSms 解析失败 need block sms`)
                 // 所以我们来帮他手动校正
-                for (i in 0 until 3) {
-                    val result = refreshMethod.call(it.thisObject, it.findIntArg()) as? List<*>
-                    if (!result.isNullOrEmpty()) break
+                repeat(3) { _ ->
+                    val result = refreshMethod.call(it.instance, it.intArg()) as? List<*>
+                    if (!result.isNullOrEmpty()) return@hookBefore
                     if (!Looper.getMainLooper().isCurrentThread) {
                         // 刷新有时会失败 多尝试几次
                         Thread.sleep(3000)

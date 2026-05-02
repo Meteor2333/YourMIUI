@@ -3,7 +3,6 @@ package cc.meteormc.yourmiui.xposed.android.feature
 import android.content.pm.PermissionInfo
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.getIntResult
 import cc.meteormc.yourmiui.xposed.operator
 
 object DisableForceNotification : Feature(
@@ -43,10 +42,10 @@ object DisableForceNotification : Feature(
             val permField = field("mPermission") ?: return@operator
             // modifier: public | signature: getFlags()I
             method("getFlags")?.replaceResult {
-                val permission = permField.get<Any>(it.thisObject) ?: return@replaceResult Unit
+                val permission = permField.get<Any>(it.instance) ?: return@replaceResult Unit
                 val permissionInfo = permInfoField.get<PermissionInfo>(permission) ?: return@replaceResult Unit
                 if (permissionInfo.name != NOTIFICATION_PERMISSION) return@replaceResult Unit
-                it.getIntResult() and (FLAG_PERMISSION_POLICY_FIXED or FLAG_PERMISSION_SYSTEM_FIXED or FLAG_PERMISSION_GRANTED_BY_DEFAULT or FLAG_PERMISSION_GRANTED_BY_ROLE).inv()
+                it.intResult and (FLAG_PERMISSION_POLICY_FIXED or FLAG_PERMISSION_SYSTEM_FIXED or FLAG_PERMISSION_GRANTED_BY_DEFAULT or FLAG_PERMISSION_GRANTED_BY_ROLE).inv()
             }
         }
     }

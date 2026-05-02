@@ -2,10 +2,10 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.Handler
 import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.data.HookParam
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.ReflectOperator
 import cc.meteormc.yourmiui.xposed.operator
-import de.robv.android.xposed.XC_MethodHook
 
 object DisableCountdownDialog : Feature(
     key = "disable_countdown_dialog",
@@ -20,7 +20,7 @@ object DisableCountdownDialog : Feature(
                 // name: (obfuscated) | type: (obfuscated)
                 val handler = fields(Handler::class.java)
                     .firstOrNull()
-                    ?.get<Handler>(it.thisObject) ?: return@hookAfter
+                    ?.get<Handler>(it.instance) ?: return@hookAfter
                 operator(handler.javaClass) {
                     // name: (obfuscated) | type: int
                     fields(Int::class.java).firstOrNull()?.set(handler, -1)
@@ -30,17 +30,17 @@ object DisableCountdownDialog : Feature(
             }
         }
 
-        fun hookGetter(operator: ReflectOperator<Any>): (param: XC_MethodHook.MethodHookParam) -> Unit {
+        fun hookGetter(operator: ReflectOperator<Any>): (param: HookParam) -> Unit {
             return tag@{
-                val thisObject = it.thisObject
+                val instance = it.instance
                 // name: (obfuscated) | type: int
                 operator.fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                    field.get<Int>(thisObject) == 5
-                }?.set(thisObject, 1)
+                    field.get<Int>(instance) == 5
+                }?.set(instance, 1)
                 // name: (obfuscated) | type: android.os.Handler
                 val handler = operator.fields(Handler::class.java)
                     .firstOrNull()
-                    ?.get<Handler>(thisObject) ?: return@tag
+                    ?.get<Handler>(instance) ?: return@tag
                 handler.removeMessages(100)
                 handler.sendEmptyMessage(100)
             }

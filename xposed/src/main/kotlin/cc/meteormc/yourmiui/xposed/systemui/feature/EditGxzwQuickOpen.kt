@@ -8,7 +8,9 @@ import android.widget.ImageView
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
-import cc.meteormc.yourmiui.xposed.*
+import cc.meteormc.yourmiui.xposed.ConstructorWrapper
+import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.operator
 
 object EditGxzwQuickOpen : Feature(
     key = "edit_gxzw_quick_open",
@@ -32,13 +34,15 @@ object EditGxzwQuickOpen : Feature(
 
             // modifier: public static | signature: generateQuickOpenItem(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;I)Lcom/android/keyguard/fod/item/IQuickOpenItem;
             method("generateQuickOpenItem")?.overrideResult {
-                val id = it.findIntArg() ?: return@overrideResult Unit
+                val id = it.intArg() ?: return@overrideResult Unit
                 val item = QuickOpenItem.entries.firstOrNull { entry -> entry.id == id } ?: return@overrideResult Unit
-                val newArgs = it.args.copyOfRange(0, 3)
+                val rectF = it.argByGenerics<RectF>()
+                val region = it.argByGenerics<Region>()
+                val context = it.argByGenerics<Context>()
                 if (item.extra != null) {
-                    item.extra.newInstance(it.findArg(Context::class.java), *newArgs)
+                    item.extra.newInstance(it.argByGenerics<Context>(), rectF, region, context)
                 } else {
-                    item.constructor?.new(*newArgs)
+                    item.constructor?.new(rectF, region, context)
                 }
             }
         }
@@ -116,7 +120,7 @@ object EditGxzwQuickOpen : Feature(
     ) {
         private fun identifierOf() = "$EXTRA_ITEM_IDENTIFIER$$identifier"
 
-        fun newInstance(context: Context?, vararg args: Any): Any? {
+        fun newInstance(context: Context?, vararg args: Any?): Any? {
             // 利用AddEventItem来实现额外功能项
             return operator(EXTRA_ITEM_CLASS) {
                 // name: mView | type: android.widget.ImageView
@@ -149,27 +153,28 @@ object EditGxzwQuickOpen : Feature(
             operator(EXTRA_ITEM_CLASS) {
                 // modifier: public | signature: getTag()Ljava/lang/String;
                 method("getTag")?.overrideResult {
-                    if (!it.thisObject.isExtraClass()) Unit
+                    if (!it.instance!!.isExtraClass()) Unit
                     else tag
                 }
 
                 // modifier: public | signature: getTitle()Ljava/lang/String;
                 method("getTitle")?.overrideResult {
-                    if (!it.thisObject.isExtraClass()) Unit
+                    if (!it.instance!!.isExtraClass()) Unit
                     else title
                 }
 
                 // modifier: public | signature: getSubTitle()Ljava/lang/String;
                 method("getSubTitle")?.overrideResult {
-                    if (!it.thisObject.isExtraClass()) Unit
+                    if (!it.instance!!.isExtraClass()) Unit
                     else subtitle
                 }
             }
 
             operator("com.android.keyguard.fod.MiuiGxzwQuickOpenView") {
+                val itemClass = operator("com.android.keyguard.fod.item.IQuickOpenItem")?.delegate ?: return@operator
                 // modifier: public final | signature: handleQuickOpenItemTouchUp(Lcom/android/keyguard/fod/item/IQuickOpenItem;)V
                 (method("handleQucikOpenItemTouchUp") ?: method("handleQuickOpenItemTouchUp"))?.hookDoNothing {
-                    it.args[0].isExtraClass() && handler()
+                    handler() && it.argByClass(itemClass)?.isExtraClass() == true
                 }
             }
         }

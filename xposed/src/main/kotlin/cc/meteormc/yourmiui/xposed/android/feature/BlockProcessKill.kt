@@ -7,7 +7,6 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.findArg
 import cc.meteormc.yourmiui.xposed.operator
 
 object BlockProcessKill : Feature(
@@ -37,7 +36,7 @@ object BlockProcessKill : Feature(
                 Handler::class.java,
                 Context::class.java
             )?.hookDoNothing {
-                val process = it.findArg(recordClass) ?: return@hookDoNothing false
+                val process = it.argByClass(recordClass) ?: return@hookDoNothing false
                 val info = infoField.get<ApplicationInfo>(process) ?: return@hookDoNothing false
                 blockedPackages.contains(info.packageName)
             }

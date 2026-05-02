@@ -2,7 +2,6 @@ package cc.meteormc.yourmiui.xposed.market.feature
 
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.getResult
 import cc.meteormc.yourmiui.xposed.operator
 
 object RemoveAds : Feature(
@@ -87,7 +86,7 @@ object RemoveAds : Feature(
         operator("com.xiaomi.market.business_ui.search.NativeSearchSugFragment") {
             // modifier: public | signature: getRequestParams()Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;
             method("getRequestParams")?.replaceResult {
-                it.getResult(Map::class.java)?.toMutableMap()?.apply {
+                it.result<Map<*, *>>()?.toMutableMap()?.apply {
                     this["adFlag"] = 0
                 }
             }
@@ -100,7 +99,7 @@ object RemoveAds : Feature(
             } ?: return@operator
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
             method("parseResponseData")?.replaceResult {
-                it.getResult(List::class.java)?.toMutableList()?.apply {
+                it.result<List<*>>()?.toMutableList()?.apply {
                     retainAll { component -> componentClass.isInstance(component) }
                 }
             }
@@ -113,7 +112,7 @@ object RemoveAds : Feature(
             } ?: return@operator
             // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
             method("parseResponseData")?.replaceResult {
-                it.getResult(List::class.java)?.toMutableList()?.apply {
+                it.result<List<*>>()?.toMutableList()?.apply {
                     retainAll { component -> componentClass.isInstance(component) }
                 }
             }
@@ -131,11 +130,11 @@ object RemoveAds : Feature(
             // modifier: public | signature: <init>(Lcom/xiaomi/market/common/component/base/INativeFragmentContext<Lcom/xiaomi/market/ui/BaseFragment;>;)V
             declaredConstructors().forEach {
                 it.hookAfter { param ->
-                    val thisObj = param.thisObject
-                    operator(thisObj.javaClass) {
-                        field("forceExpanded")?.set(thisObj, true)
-                        field("foldButtonVisible")?.set(thisObj, false)
-                        field("pageCollapseState")?.set(thisObj, stateEnum)
+                    val instance = param.instance
+                    operator(instance!!.javaClass) {
+                        field("forceExpanded")?.set(instance, true)
+                        field("foldButtonVisible")?.set(instance, false)
+                        field("pageCollapseState")?.set(instance, stateEnum)
                     }
                 }
             }
@@ -159,7 +158,7 @@ object RemoveAds : Feature(
             // modifier: public | signature: initParams()Landroid/os/Bundle;
             method("initParams")?.hookAfter {
                 // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType
-                field("detailType")?.set(it.thisObject, typeEnum)
+                field("detailType")?.set(it.instance, typeEnum)
             }
         }
     }
