@@ -11,4 +11,8 @@ data class AppInfo(
     val label: String,
     val icon: Bitmap,
     val launchIntent: String? = null
-) : Serializable, Parcelable
+) : Serializable, Parcelable {
+    override fun equals(other: Any?) = other is AppInfo && packageName == other.packageName
+
+    override fun hashCode() = packageName.hashCode()
+}
