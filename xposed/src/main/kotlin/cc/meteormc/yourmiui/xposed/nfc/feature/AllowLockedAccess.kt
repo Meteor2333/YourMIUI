@@ -9,6 +9,7 @@ object AllowLockedAccess : Feature(
     key = "nfc_allow_locked_access",
     nameRes = R.string.feature_nfc_allow_locked_access_name,
     descriptionRes = R.string.feature_nfc_allow_locked_access_description,
+    warningRes = R.string.feature_nfc_allow_locked_access_warning,
     testEnvironmentRes = R.string.feature_nfc_allow_locked_access_test_environment
 ) {
     private const val SCREEN_STATE_ON_UNLOCKED = 8
