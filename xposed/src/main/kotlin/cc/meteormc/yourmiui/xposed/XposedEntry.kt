@@ -8,6 +8,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
+import cc.meteormc.yourmiui.common.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.market.Market
@@ -113,13 +114,16 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             }.start()
         }.attach()
 
-        operator(classLoader, Bridge::class.java.name) {
-            val apiName = ReflectOperator(XposedBridge::class.java).run {
-                field("TAG")?.get(null)
-            } ?: "Unknown"
-            val apiVersion = XposedBridge.getXposedVersion()
-            field("apiName")?.set(null, apiName)
-            field("apiVersion")?.set(null, apiVersion)
+        val bridgeClass = getClass(classLoader, Bridge::class.java.name, true)
+        if (bridgeClass != null) {
+            operator(bridgeClass) {
+                val apiName = ReflectOperator(XposedBridge::class.java).run {
+                    field("TAG")?.get(null)
+                } ?: "Unknown"
+                val apiVersion = XposedBridge.getXposedVersion()
+                field("apiName")?.set(null, apiName)
+                field("apiVersion")?.set(null, apiVersion)
+            }
         }
     }
 
