@@ -3,9 +3,11 @@
 package cc.meteormc.yourmiui.xposed
 
 import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.data.HookParam
 import cc.meteormc.yourmiui.common.util.compareParameterTypes
 import cc.meteormc.yourmiui.common.util.getClass
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XC_MethodHook.MethodHookParam
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
 import java.lang.reflect.Constructor
@@ -152,7 +154,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         return clazzes.joinToString(",") { it.getName() }
     }
 
-    private fun <R> findRecursive(func: (Class<*>) -> R?): R? {
+    private fun <R> findRecursive(func: (clazz: Class<*>) -> R?): R? {
         var superClass: Class<*> = delegate
         do {
             func(superClass)?.let { return it }
@@ -172,51 +174,74 @@ abstract class HookableWrapper(private val member: Member) {
         return this
     }
 
-    fun hookDoNothing(condition: (param: XC_MethodHook.MethodHookParam) -> Boolean): HookableWrapper {
+    fun hookDoNothing(condition: (param: HookParam) -> Boolean): HookableWrapper {
         this.hookBefore {
             if (condition(it)) it.result = null
         }
         return this
     }
 
-    fun hookBefore(callback: (param: XC_MethodHook.MethodHookParam) -> Unit): HookableWrapper {
+    fun overrideResult(block: (param: HookParam) -> Any?): HookableWrapper {
+        this.hookBefore {
+            val result = block(it)
+            if (result != Unit) it.result = result
+        }
+        return this
+    }
+
+    fun replaceResult(block: (param: HookParam) -> Any?): HookableWrapper {
+        this.hookAfter {
+            val result = block(it)
+            if (result != Unit) it.result = result
+        }
+        return this
+    }
+
+    fun hookBefore(callback: (param: HookParam) -> Unit): HookableWrapper {
         XposedBridge.hookMethod(
             member,
             object : XC_MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {
-                    callback(param)
+                    val internal = param.toInternal()
+                    callback(internal)
+                    internal.toExternal(param)
                 }
             }
         )
         return this
     }
 
-    fun overrideResult(block: (param: XC_MethodHook.MethodHookParam) -> Any?): HookableWrapper {
-        this.hookBefore {
-            val result = block(it)
-            if (result !== Unit) it.result = result
-        }
-        return this
-    }
-
-    fun hookAfter(callback: (param: XC_MethodHook.MethodHookParam) -> Unit): HookableWrapper {
+    fun hookAfter(callback: (param: HookParam) -> Unit): HookableWrapper {
         XposedBridge.hookMethod(
             member,
             object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam) {
-                    callback(param)
+                    val internal = param.toInternal()
+                    callback(internal)
+                    internal.toExternal(param)
                 }
             }
         )
         return this
     }
 
-    fun replaceResult(block: (param: XC_MethodHook.MethodHookParam) -> Any?): HookableWrapper {
-        this.hookAfter {
-            val result = block(it)
-            if (result !== Unit) it.result = result
+    private fun MethodHookParam.toInternal(): HookParam {
+        @Suppress("UNCHECKED_CAST")
+        return HookParam(
+            this.method,
+            this.thisObject,
+            this.args.copyOf(),
+            this.result,
+            this.throwable
+        ) {
+            XposedBridge.invokeOriginalMethod(it.member, it.instance, it.args)
         }
-        return this
+    }
+
+    private fun HookParam.toExternal(param: MethodHookParam) {
+        param.args = this.args.copyOf()
+        if (this.resultChanged) param.result = this.result
+        if (this.throwableChanged) param.throwable = this.throwable
     }
 }
 

@@ -3,7 +3,6 @@ package cc.meteormc.yourmiui.xposed.nfc.feature
 import android.os.Message
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.findArg
 import cc.meteormc.yourmiui.xposed.operator
 
 object AllowLockedAccess : Feature(
@@ -19,7 +18,7 @@ object AllowLockedAccess : Feature(
         operator($$"com.android.nfc.NfcService$NfcServiceHandler") {
             // modifier: public | signature: handleMessage(Landroid/os/Message;)V
             method("handleMessage")?.hookDoNothing {
-                it.findArg(Message::class.java)?.what == MSG_APPLY_SCREEN_STATE
+                it.argByGenerics<Message>()?.what == MSG_APPLY_SCREEN_STATE
             }
         }
 
