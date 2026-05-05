@@ -38,6 +38,26 @@ data class HookParam(
     fun <T> argByClass(type: Class<T>, index: Int = 0) = this.args.filterIsInstance(type).getOrNull(index)
     inline fun <reified T> argByGenerics(index: Int = 0) = this.args.filterIsInstance<T>().getOrNull(index)
 
+    fun booleanArg(value: Boolean, index: Int = 0) = argByGenerics<Boolean>(value, index)
+    fun byteArg(value: Byte, index: Int = 0) = argByGenerics<Byte>(value, index)
+    fun charArg(value: Char, index: Int = 0) = argByGenerics<Char>(value, index)
+    fun doubleArg(value: Double, index: Int = 0) = argByGenerics<Double>(value, index)
+    fun floatArg(value: Float, index: Int = 0) = argByGenerics<Float>(value, index)
+    fun intArg(value: Int, index: Int = 0) = argByGenerics<Int>(value, index)
+    fun longArg(value: Long, index: Int = 0) = argByGenerics<Long>(value, index)
+    fun shortArg(value: Short, index: Int = 0) = argByGenerics<Short>(value, index)
+    fun stringArg(value: String, index: Int = 0) = argByGenerics<String>(value, index)
+    fun <T> argByClass(value: Any, type: Class<T>, index: Int = 0) = this.args.withIndex()
+        .filter { type.isInstance(it.value) }
+        .getOrNull(index)
+        ?.index
+        ?.let { args[it] = value }
+    inline fun <reified T> argByGenerics(value: Any, index: Int = 0) = this.args.withIndex()
+        .filter { it.value is T }
+        .getOrNull(index)
+        ?.index
+        ?.let { args[it] = value }
+
     val booleanResult
         get() = this.result as Boolean
     val byteResult
