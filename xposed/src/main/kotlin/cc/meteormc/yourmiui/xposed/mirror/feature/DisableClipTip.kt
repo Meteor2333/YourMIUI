@@ -12,6 +12,7 @@ object DisableClipTip : Feature(
 ) {
     override fun onLoadPackage() {
         operator("com.xiaomi.mirror.widget.ClipTipHelper") {
+            // modifier: private static | signature: showToast(Ljava/lang/String;)V
             method("showToast")?.hookDoNothing()
         }
     }
