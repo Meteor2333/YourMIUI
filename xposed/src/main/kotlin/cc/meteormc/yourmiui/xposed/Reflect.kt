@@ -137,7 +137,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         return if (result != null) {
             MethodWrapper<T>(result).apply { methodCache[fullName] = this }
         } else {
-            XposedBridge.log("[YourMIUI] Method not found: $fullName)!")
+            XposedBridge.log("[YourMIUI] Method not found: $fullName!")
             null
         }
     }
@@ -151,7 +151,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     private fun getParametersString(vararg clazzes: Class<*>): String {
-        return clazzes.joinToString(",") { it.getName() }
+        return clazzes.joinToString(",") { it.name }
     }
 
     private fun <R> findRecursive(func: (clazz: Class<*>) -> R?): R? {
