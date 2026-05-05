@@ -19,6 +19,7 @@ object HideStatusBarIcons : Feature(
             "MiuiDripLeftStatusBarIconControllerImpl"
         ).forEach {
             operator("com.android.systemui.statusbar.phone.$it") {
+                // modifier: public | signature: setIconVisibility(Ljava/lang/String;ZI)V
                 method(
                     "setIconVisibility",
                     String::class.java,
