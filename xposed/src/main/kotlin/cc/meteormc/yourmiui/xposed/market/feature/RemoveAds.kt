@@ -32,7 +32,7 @@ object RemoveAds : Feature(
         operator("com.xiaomi.market.model.TabInfo") {
             val tabInfo = TabInfoWrapper()
             method("fromJSON", JSONArray::class.java)?.hookAfter {
-                it.result<MutableList<Any>>()?.retainAll { tab ->
+                it.result<MutableList<Any>>()?.removeIf { tab ->
                     tabInfo.from(tab)
                     hiddenTags.contains(tabInfo.tag)
                 }
