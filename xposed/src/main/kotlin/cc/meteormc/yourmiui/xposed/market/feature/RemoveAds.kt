@@ -1,76 +1,86 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
+import android.content.Intent
 import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.xposed.market.wrapper.NativeTabInfoWrapper
+import cc.meteormc.yourmiui.xposed.market.wrapper.TabInfoWrapper
 import cc.meteormc.yourmiui.xposed.operator
+import org.json.JSONArray
 
 object RemoveAds : Feature(
     key = "remove_market_ads",
     nameRes = R.string.feature_market_remove_ads_name,
     descriptionRes = R.string.feature_market_remove_ads_description,
-    testEnvironmentRes = R.string.feature_market_remove_ads_test_environment,
-    originalAuthor = "owo233"
+    testEnvironmentRes = R.string.feature_market_remove_ads_test_environment
 ) {
-    override fun onLoadPackage() {
-        operator("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
-            setOf(
-                // modifier: public,final | signature: isBrowserMarketAdOff()Z
-                "isBrowserMarketAdOff",
-                // modifier: public,final | signature: isBrowserSourceFileAdOff()Z
-                "isBrowserSourceFileAdOff",
-                // modifier: private,final | signature: supportShowCompat64bitAlert()Z
-                "supportShowCompat64bitAlert"
-            ).forEach {
-                method(it)?.hookResult(true)
-            }
+    private lateinit var hiddenTags: Set<String>
 
-            setOf(
-                // modifier: public,final | signature: isInternalAd()Z
-                "isInternalAd",
-                // modifier: public,final | signature: needShowAds()Z
-                "needShowAds",
-                // modifier: public,final | signature: needShowAdsWithSourceFile()Z
-                "needShowAdsWithSourceFile",
-                // modifier: public,final | signature: showComment()Z
-                "showComment",
-                // modifier: public,final | signature: showRecommend()Z
-                "showRecommend",
-                // modifier: public,final | signature: showTopBanner()Z
-                "showTopBanner",
-                // modifier: public,final | signature: showTopVideo()Z
-                "showTopVideo",
-                // modifier: public | signature: equals(Ljava/lang/Object;)Z
-                "equals",
-                // modifier: public,final | signature: getShowOpenScreenAd()Z
-                "getShowOpenScreenAd",
-                // modifier: public,final | signature: hasGoldLabel()Z
-                "hasGoldLabel",
-                // modifier: public,final | signature: isBottomButtonLayoutType()Z
-                "isBottomButtonLayoutType",
-                // modifier: public,final | signature: isPersonalization()Z
-                "isPersonalization",
-                // modifier: public,final | signature: isTopButtonLayoutType()Z
-                "isTopButtonLayoutType",
-                // modifier: public,final | signature: isTopSingleTabMultiButtonType()Z
-                "isTopSingleTabMultiButtonType",
-                // modifier: public,final | signature: needShowGrayBtn()Z
-                "needShowGrayBtn",
-                // modifier: public,final | signature: needShowPISafeModeStyle()Z
-                "needShowPISafeModeStyle",
-                // modifier: public,final | signature: supportShowCompatAlert()Z
-                "supportShowCompatAlert",
-                // modifier: public,final | signature: supportShowCompatChildForbidDownloadAlert()Z
-                "supportShowCompatChildForbidDownloadAlert"
-            ).forEach {
-                method(it)?.hookResult(false)
+    private val adTags = setOf(
+        "native_market_recommend",
+        "native_market_mine#native_market_myFavorite"
+    )
+    private val adComponents = setOf(
+        "com.xiaomi.market.common.component.componentbeans.RecAppsComponent",
+        "com.xiaomi.market.common.component.componentbeans.NativeSearchTopAdNormalAppComponent",
+        "com.xiaomi.market.common.component.componentbeans.RecommendCollectionComponent"
+    )
+
+    override fun onLoadPackage() {
+        operator("com.xiaomi.market.model.TabInfo") {
+            val tabInfo = TabInfoWrapper()
+            method("fromJSON", JSONArray::class.java)?.hookAfter {
+                it.result<MutableList<Any>>()?.retainAll { tab ->
+                    tabInfo.from(tab)
+                    hiddenTags.contains(tabInfo.tag)
+                }
             }
         }
 
-        // 主页
+        operator("com.xiaomi.market.ui.PagerTabsInfo") {
+            method("fromNativeTabs")?.hookBefore {
+                it.argByGenerics<MutableList<Any>>()?.removeIf { tab ->
+                    val wrapper = NativeTabInfoWrapper()
+                    wrapper.from(tab)
+                    adTags.contains(wrapper.tag)
+                }
+            }
+
+            val tabInfo = TabInfoWrapper()
+            val subTabInfo = TabInfoWrapper()
+            val emptyTabInfo by lazy {
+                TabInfoWrapper().new(classLoader)!!
+            }
+            method("fromTabInfo")?.hookBefore {
+                val tabInfoClass = operator(tabInfo.className)?.delegate ?: return@hookBefore
+                val arg = it.argByClass(tabInfoClass) ?: return@hookBefore
+                tabInfo.from(arg)
+
+                val subTabs = tabInfo.subTabs.toMutableList()
+                subTabs.removeIf { tab ->
+                    subTabInfo.from(tab)
+                    adTags.contains("${tabInfo.tag}#${subTabInfo.tag}")
+                }
+
+                // 放一个空TabInfo
+                // 以防止com.xiaomi.market.model.PageConfig#getBottomFragmentClazz()处的检查出错
+                subTabs.add(emptyTabInfo)
+                tabInfo.subTabs = subTabs
+            }
+        }
+
+        operator("com.xiaomi.market.business_ui.base.NativeFeedFragment") {
+            method("parseResponseData")?.hookAfter {
+                it.result<MutableList<Any>>()?.removeIf { component ->
+                    adComponents.contains(component.javaClass.name)
+                }
+            }
+        }
+
         operator("com.xiaomi.market.business_ui.main.MarketTabActivity") {
             setOf(
-                // modifier: public | signature: tryShowRecommend()V
-                "tryShowRecommend",
                 // modifier: private | signature: tryShowRecallReCommend()V
                 "tryShowRecallReCommend",
                 // modifier: private | signature: trySplash()V
@@ -82,84 +92,103 @@ object RemoveAds : Feature(
             }
         }
 
-        // 搜索建议页面
-        operator("com.xiaomi.market.business_ui.search.NativeSearchSugFragment") {
-            // modifier: public | signature: getRequestParams()Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;
-            method("getRequestParams")?.replaceResult {
-                it.result<Map<*, *>>()?.toMutableMap()?.apply {
-                    this["adFlag"] = 0
+        operator("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
+            setOf(
+                // modifier: public final | signature: isBrowserMarketAdOff()Z
+                "isBrowserMarketAdOff",
+                // modifier: public final | signature: isBrowserSourceFileAdOff()Z
+                "isBrowserSourceFileAdOff"
+            ).forEach {
+                method(it)?.hookResult(true)
+            }
+
+            setOf(
+                // modifier: public final | signature: isInternalAd()Z
+                "isInternalAd",
+                // modifier: public final | signature: needShowAds()Z
+                "needShowAds",
+                // modifier: public final | signature: needShowAdsWithSourceFile()Z
+                "needShowAdsWithSourceFile",
+                // modifier: public final | signature: showComment()Z
+                "showComment",
+                // modifier: public final | signature: showRecommend()Z
+                "showRecommend",
+                // modifier: public final | signature: showTopBanner()Z
+                "showTopBanner",
+                // modifier: public final | signature: showTopVideo()Z
+                "showTopVideo",
+                // modifier: public final | signature: getShowOpenScreenAd()Z
+                "getShowOpenScreenAd"
+            ).forEach {
+                method(it)?.hookResult(false)
+            }
+        }
+
+        // 搜索页推荐广告
+        operator("com.xiaomi.market.business_ui.base.NativeViewModel") {
+            val keptComponentClass = operator(
+                "com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent"
+            )?.delegate ?: return@operator
+            method("modifySearchSugData")?.hookBefore {
+                val components = it.argByGenerics<MutableList<Any>>() ?: return@hookBefore
+                val keptComponents = components.filter { component -> keptComponentClass.isInstance(component) }
+                if (keptComponents.isNotEmpty()) {
+                    components.retainAll(keptComponents)
                 }
             }
         }
 
-        // 搜索结果页面
-        operator("com.xiaomi.market.business_ui.search.NativeSearchResultFragment") {
-            val componentClass = operator("com.xiaomi.market.common.component.componentbeans.ListAppComponent") {
-                delegate
-            } ?: return@operator
-            // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-            method("parseResponseData")?.replaceResult {
-                it.result<List<*>>()?.toMutableList()?.apply {
-                    retainAll { component -> componentClass.isInstance(component) }
-                }
-            }
+        // 个人页横幅广告
+        operator("com.xiaomi.market.business_ui.main.mine.NativeMinePagerFragment") {
+            method("parseMenuData")?.hookResult(emptyMap<Any, Any>())
         }
 
-        // 搜索页面
-        operator("com.xiaomi.market.business_ui.search.NativeSearchGuideFragment") {
-            val componentClass = operator("com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent") {
-                delegate
-            } ?: return@operator
-            // modifier: public | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List<Lcom/xiaomi/market/common/component/componentbeans/BaseNativeComponent;>;
-            method("parseResponseData")?.replaceResult {
-                it.result<List<*>>()?.toMutableList()?.apply {
-                    retainAll { component -> componentClass.isInstance(component) }
-                }
-            }
-
-            // modifier: public | signature: isLoadMoreEndGone()Z
-            method("isLoadMoreEndGone")?.hookResult(true)
-        }
-
-        // 更新页面
-        operator("com.xiaomi.market.ui.UpdateListRvAdapter") {
-            val stateEnum = operator($$"com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState") {
-                // name: Expand | type: com.xiaomi.market.ui.UpdateListRvAdapter$PageCollapseState
-                field("Expand")?.get<Any>(null)
-            }
-            // modifier: public | signature: <init>(Lcom/xiaomi/market/common/component/base/INativeFragmentContext<Lcom/xiaomi/market/ui/BaseFragment;>;)V
-            declaredConstructors().forEach {
-                it.hookAfter { param ->
-                    val instance = param.instance
-                    operator(instance!!.javaClass) {
-                        field("forceExpanded")?.set(instance, true)
-                        field("foldButtonVisible")?.set(instance, false)
-                        field("pageCollapseState")?.set(instance, stateEnum)
-                    }
-                }
-            }
-
-            // modifier: private,final | signature: generateRecommendGroupItems(Ljava/util/ArrayList;I)Z
-            method("generateRecommendGroupItems")?.hookResult(null)
-        }
-
-        // 下载页面
+        // 下载队列页推荐广告
         operator("com.xiaomi.market.ui.DownloadListFragment") {
-            // modifier: private,final | signature: parseRecommendGroupResult(Lorg/json/JSONObject;)Lcom/xiaomi/market/viewmodels/RecommendGroupResult;
+            // modifier: private final | signature: parseRecommendGroupResult(Lorg/json/JSONObject;)Lcom/xiaomi/market/viewmodels/RecommendGroupResult;
             method("parseRecommendGroupResult")?.hookResult(null)
         }
 
-        // 应用详情页面
-        operator("com.xiaomi.market.ui.detail.BaseDetailActivity") {
-            val typeEnum = operator("com.xiaomi.market.business_ui.detail.DetailType") {
-                // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
-                field("UNKNOWN")?.get<Any>(null)
-            }
-            // modifier: public | signature: initParams()Landroid/os/Bundle;
-            method("initParams")?.hookAfter {
-                // name: detailType | type: com.xiaomi.market.business_ui.detail.DetailType
-                field("detailType")?.set(it.instance, typeEnum)
-            }
+        // 应用详情页推荐广告
+        operator($$"com.xiaomi.market.business_ui.detail.DetailType$Companion") {
+            method(
+                "getDetailType",
+                Intent::class.java,
+                Boolean::class.javaPrimitiveType!!,
+                Boolean::class.javaPrimitiveType!!
+            )?.hookResult(
+                operator("com.xiaomi.market.business_ui.detail.DetailType") {
+                    // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
+                    field("UNKNOWN")?.get(null)
+                }
+            )
         }
+    }
+
+    override fun getOptions(): List<Option<*>> {
+        return listOf(
+            Option(
+                "hidden_tags",
+                R.string.option_market_remove_ads_hidden_tags_name,
+                R.string.option_market_remove_ads_hidden_tags_summary,
+                Type.MultiChoiceList(
+                    "native_market_home" to R.string.option_market_remove_ads_hidden_tags_home,
+                    "native_market_video" to R.string.option_market_remove_ads_hidden_tags_video,
+                    "native_market_agent" to R.string.option_market_remove_ads_hidden_tags_agent,
+                    "native_app_assemble" to R.string.option_market_remove_ads_hidden_tags_assemble,
+                    "native_market_game" to R.string.option_market_remove_ads_hidden_tags_game,
+                    "native_market_rank" to R.string.option_market_remove_ads_hidden_tags_rank,
+                    "software_sub5" to R.string.option_market_remove_ads_hidden_tags_software,
+                    "native_market_mine" to R.string.option_market_remove_ads_hidden_tags_mine
+                ),
+                setOf(
+                    "native_market_video",
+                    "native_market_agent",
+                    "native_app_assemble",
+                    "native_market_game",
+                    "native_market_rank"
+                )
+            ) { hiddenTags = it }
+        )
     }
 }
