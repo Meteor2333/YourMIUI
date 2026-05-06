@@ -2,14 +2,17 @@ package cc.meteormc.yourmiui.xposed.nfc
 
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Scope
+import cc.meteormc.yourmiui.common.data.RestartMethod
 import cc.meteormc.yourmiui.xposed.nfc.feature.AllowLockedAccess
 
 object NFC : Scope(
-    "com.android.nfc" to null
+    "com.android.nfc"
 ) {
     override fun getFeatures(): List<Feature> {
         return listOf(
             AllowLockedAccess
         )
     }
+
+    override fun getRestartMethod() = RestartMethod.DoNothing
 }

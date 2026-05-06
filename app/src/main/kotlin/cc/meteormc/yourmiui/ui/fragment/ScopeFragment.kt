@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.ui.fragment
 
-import android.content.ComponentName
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -18,6 +17,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.common.data.AppInfo
+import cc.meteormc.yourmiui.common.data.RestartMethod
 import cc.meteormc.yourmiui.common.util.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
@@ -27,18 +27,20 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textview.MaterialTextView
+import java.util.concurrent.atomic.AtomicInteger
+
 
 class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container ->
     FragmentScopeBinding.inflate(inflater, container, false)
 }) {
     private val name: String
         get() = arguments?.getString("name") ?: "Unknown Scope"
-    private val restartable: Boolean
-        get() = arguments?.getBoolean("restartable") ?: false
     private val packages: List<AppInfo>
         get() = arguments?.getObject("apps") ?: emptyList()
     private val features: List<Feature>
         get() = arguments?.getObject("features") ?: emptyList()
+    private val restartMethod: RestartMethod?
+        get() = arguments?.getObject("restartMethod")
 
     override fun onCreate(): View {
         val scopeToolbar = binding.scopeToolbar
@@ -47,16 +49,14 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             it.findNavController().navigateUp()
         }
 
-        if (restartable) {
-            scopeToolbar.inflateMenu(R.menu.menu_scope)
-            scopeToolbar.setOnMenuItemClickListener {
-                if (it.itemId == R.id.item_restart) {
-                    onClickRestart()
-                    return@setOnMenuItemClickListener true
-                }
-
-                return@setOnMenuItemClickListener false
+        scopeToolbar.inflateMenu(R.menu.menu_scope)
+        scopeToolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.item_restart) {
+                onClickRestart()
+                return@setOnMenuItemClickListener true
             }
+
+            return@setOnMenuItemClickListener false
         }
 
         val featureList = binding.featureList
@@ -176,46 +176,50 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
     }
 
     private fun executeRestart() {
-        fun launchApp(app: AppInfo) {
-            val intent = app.launchIntent ?: return
-            requireView().postDelayed({
-                val intent = Intent().apply {
-                    component = ComponentName(app.packageName, intent)
-                }
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }, 1000)
-        }
-
         packages.forEach {
             YourMIUI.get().moduleBridge.request(
                 Bridge.RESTART_SCOPE_CHANNEL,
                 it.packageName,
                 object : ResponseCallback<Unit> {
-                    private var failures = 0
-                    private var resolved = false
+                    private var count = AtomicInteger(packages.size)
 
                     override fun onSuccess(data: Unit) {
-                        if (resolved) return
-                        resolved = true
-                        Toast.makeText(
-                            requireContext(),
-                            R.string.restart_scope_success,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        launchApp(it)
+                        onCallback(true)
                     }
 
                     override fun onFailure() {
-                        if (resolved) return
-                        if (++failures < packages.size) return
-                        resolved = true
-                        Toast.makeText(
-                            requireContext(),
-                            R.string.restart_scope_failure,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        launchApp(it)
+                        onCallback(false)
+                    }
+
+                    private fun onCallback(isSuccess: Boolean) {
+                        if (count.decrementAndGet() <= 0) {
+                            launch(isSuccess)
+                        }
+                    }
+
+                    private fun launch(isSuccess: Boolean) {
+                        if (restartMethod == null) return
+                        requireView().postDelayed({
+                            when (restartMethod) {
+                                is RestartMethod.Reboot -> {
+                                    Toast.makeText(requireContext(), "[Soon]", Toast.LENGTH_SHORT).show()
+                                }
+                                is RestartMethod.ViaComponent -> {
+                                    (restartMethod as RestartMethod.ViaComponent).components.forEach { component ->
+                                        val intent = Intent().apply { this.component = component }
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        startActivity(intent)
+                                    }
+                                }
+                                else -> Unit
+                            }
+
+                            Toast.makeText(
+                                requireContext(),
+                                if (isSuccess) R.string.restart_scope_success else R.string.restart_scope_failure,
+                                if (isSuccess) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+                            ).show()
+                        }, 1000)
                     }
                 }
             )

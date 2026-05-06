@@ -129,7 +129,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
     private fun initFeatures(packageName: String, initializer: (feature: Feature) -> Unit) {
         this.scopes.firstOrNull {
-            it.packages.map { pkg -> pkg.first }.contains(packageName)
+            it.packages.contains(packageName)
         }?.getFeatures()?.forEach {
             if (!prefs.getBoolean(Feature.enabledKeyOf(it.key), false)) return@forEach
             initializer(it)
