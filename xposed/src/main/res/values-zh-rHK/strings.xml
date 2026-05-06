@@ -97,4 +97,22 @@
     <string name="feature_systemui_fix_splash_screen_test_environment">20220714.0版本</string>
     <string name="option_systemui_fix_splash_screen_replace_background_color_name">替換背景顏色</string>
     <string name="option_systemui_fix_splash_screen_replace_background_color_summary">將啟動畫面的背景顏色替換為相應的圖示主題色</string>
+    <string name="feature_systemui_hide_status_bar_icon_name">隐藏状态栏图标</string>
+    <string name="feature_systemui_hide_status_bar_icon_description">隐藏状态栏中指定的图标项</string>
+    <string name="feature_systemui_hide_status_bar_icon_test_environment">20220714.0版本</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_name">隐藏的图标列表</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_summary">选择要隐藏的图标</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_privacy_mode">隐私模式</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_nfc">NFC</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_zen">勿扰模式</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_cast">投屏</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_bluetooth">蓝牙</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_bluetooth_handsfree_battery">蓝牙设备电量</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_stealth">隐身模式</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_volume">静音模式</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_alarm_clock">闹钟</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_vpn">VPN</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_airplane">飞行模式</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_hotspot">热点</string>
+    <string name="option_systemui_hide_status_bar_icon_hidden_icons_wifi">WiFi</string>
 </resources>
