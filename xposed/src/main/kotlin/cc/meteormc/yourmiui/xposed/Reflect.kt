@@ -255,6 +255,8 @@ class ConstructorWrapper<T : Any>(private val delegate: Constructor<T>) : Hookab
 
 @Suppress("UNCHECKED_CAST")
 class FieldWrapper<T : Any>(private val delegate: Field) {
+    fun name(): String = delegate.name
+
     fun type(): Class<*> = delegate.type
 
     operator fun <R : Any> get(obj: T?): R? {
