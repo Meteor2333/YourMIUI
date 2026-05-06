@@ -38,9 +38,9 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("name", name)
-                bundle.putBoolean("restartable", scope.restartable)
                 bundle.putObject("apps", infos)
                 bundle.putObject("features", scope.getFeatures())
+                bundle.putObject("restartMethod", scope.getRestartMethod())
                 it.findNavController().navigate(R.id.action_to_scope, bundle)
             }
 

@@ -41,13 +41,12 @@ object HostStore {
                         val pm = YourMIUI.get().packageManager
                         it.packages.mapNotNull { pkg ->
                             val info = runCatching {
-                                pm.getApplicationInfo(pkg.first, PackageManager.GET_META_DATA)
+                                pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
                             }.getOrNull() ?: return@mapNotNull null
                             AppInfo(
-                                pkg.first,
+                                pkg,
                                 pm.getApplicationLabel(info).toString(),
-                                pm.getApplicationIcon(info).toBitmap(),
-                                pkg.second
+                                pm.getApplicationIcon(info).toBitmap()
                             )
                         }
                     }.filterValues {

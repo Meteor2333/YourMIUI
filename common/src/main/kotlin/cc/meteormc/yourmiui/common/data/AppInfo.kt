@@ -9,8 +9,7 @@ import java.io.Serializable
 data class AppInfo(
     val packageName: String,
     val label: String,
-    val icon: Bitmap,
-    val launchIntent: String? = null
+    val icon: Bitmap
 ) : Serializable, Parcelable {
     override fun equals(other: Any?) = other is AppInfo && packageName == other.packageName
 
