@@ -9,6 +9,7 @@ import cc.meteormc.yourmiui.xposed.market.wrapper.NativeTabInfoWrapper
 import cc.meteormc.yourmiui.xposed.market.wrapper.TabInfoWrapper
 import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONArray
+import org.json.JSONObject
 
 object RemoveAds : Feature(
     key = "remove_market_ads",
@@ -135,6 +136,32 @@ object RemoveAds : Feature(
                 if (keptComponents.isNotEmpty()) {
                     components.retainAll(keptComponents)
                 }
+            }
+        }
+
+        // 软件页轮播广告
+        operator("com.xiaomi.market.common.webview.WebEvent") {
+            method("sendDataToCallback")?.hookBefore {
+                val callback = it.stringArg(0) ?: return@hookBefore
+                val data = it.stringArg(1) ?: return@hookBefore
+                if (!callback.contains("software_sub5")) return@hookBefore
+
+                val json = JSONObject(data)
+                val list = json.getJSONArray("list")
+
+                var i = 0
+                while (i < list.length()) {
+                    val element = list.getJSONObject(i)
+                    if (element.getString("type") != "carouselRecommend") {
+                        i++
+                        continue
+                    }
+
+                    list.remove(i)
+                }
+
+                it.stringArg(callback, 0)
+                it.stringArg(json.toString(), 1)
             }
         }
 
