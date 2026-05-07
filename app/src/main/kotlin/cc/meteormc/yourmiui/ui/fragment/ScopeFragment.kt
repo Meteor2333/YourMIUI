@@ -41,8 +41,8 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
                 BottomSheet.Builder(requireContext())
                     .setTitle(R.string.restart_scope_title)
                     .setContent(R.string.restart_scope_content, apps.joinToString("\n") { app -> app.packageName })
-                    .setNegativeButton(R.string.dialog_cancel) { dialog, _ -> dialog.dismiss() }
-                    .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
+                    .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
                         dialog.dismiss()
                         executeRestart()
                     }
