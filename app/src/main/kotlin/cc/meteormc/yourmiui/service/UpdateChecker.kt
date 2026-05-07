@@ -10,16 +10,16 @@ import org.json.JSONObject
 import java.net.URL
 
 object UpdateChecker {
-    private const val CHECK_URL = "https://api.github.com/repos/Meteor2333/YourMIUI/releases/latest"
     private const val CACHE_TIME = 24 * 60 * 60 * 1000
+    private const val CHECK_URL = "https://api.github.com/repos/Xposed-Modules-Repo/${BuildConfig.APPLICATION_ID}/releases/latest"
 
-    var latest: String? = null
-    var downloadUrl: String? = null
+    var latest: Int = 0
     var timestamp: Long = 0
+    var downloadUrl: String? = null
     private lateinit var prefs: SharedPreferences
 
     val hasUpdate: Boolean
-        get() = latest != null && latest != BuildConfig.VERSION_NAME
+        get() = latest > BuildConfig.VERSION_CODE
 
     suspend fun fetch(context: Context) {
         if (!SettingsPreferences.updateCheckEnabled) return
@@ -27,10 +27,12 @@ object UpdateChecker {
             this.prefs = context.getSharedPreferences("version_cache", Context.MODE_PRIVATE)
         }
 
-        latest = prefs.getString("latest", null)
-        downloadUrl = prefs.getString("downloadUrl", null)
-        timestamp = prefs.getLong("timestamp", 0)
-        if (latest != null && System.currentTimeMillis() - timestamp <= CACHE_TIME) {
+        runCatching {
+            latest = prefs.getInt("latest", 0)
+            timestamp = prefs.getLong("timestamp", 0)
+            downloadUrl = prefs.getString("downloadUrl", null)
+        }
+        if (System.currentTimeMillis() - timestamp <= CACHE_TIME) {
             return
         }
 
@@ -42,15 +44,19 @@ object UpdateChecker {
                     setRequestProperty("Accept", "application/vnd.github.v3+json")
                 }.getInputStream().use {
                     val json = JSONObject(it.bufferedReader().use { reader -> reader.readText() })
-                    latest = json.getString("tag_name").removePrefix("v")
-                    downloadUrl = json.getString("html_url")
+                    latest = json.getString("tag_name")
+                        .split("-")
+                        .firstNotNullOfOrNull { split ->
+                            split.toIntOrNull()
+                        } ?: 0
                     timestamp = System.currentTimeMillis()
+                    downloadUrl = json.getString("html_url")
                 }
             }.onSuccess {
                 prefs.edit {
-                    putString("latest", latest)
-                    putString("downloadUrl", downloadUrl)
+                    putInt("latest", latest)
                     putLong("timestamp", timestamp)
+                    putString("downloadUrl", downloadUrl)
                 }
             }
         }
