@@ -9,8 +9,8 @@ plugins {
 val sdkMinVersion by extra(24)
 val sdkTargetVersion by extra(36)
 
-val appVersionCode by extra(7)
-val appVersionName by extra("1.2.1")
+val appVersionCode by extra(8)
+val appVersionName by extra("1.3")
 
 val projectNamespace by extra("cc.meteormc.yourmiui")
 
