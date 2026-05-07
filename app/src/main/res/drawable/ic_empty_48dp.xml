@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:width="48dp"
         android:height="48dp"
+        android:tint="?attr/colorControlNormal"
         android:viewportWidth="960"
         android:viewportHeight="960">
 
