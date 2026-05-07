@@ -13,7 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
-import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.common.data.AppInfo
@@ -35,12 +35,10 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
 }) {
     private val name: String
         get() = arguments?.getString("name") ?: "Unknown Scope"
-    private val packages: List<AppInfo>
+    private val scope: Scope?
+        get() = arguments?.getObject("scope")
+    private val apps: List<AppInfo>
         get() = arguments?.getObject("apps") ?: emptyList()
-    private val features: List<Feature>
-        get() = arguments?.getObject("features") ?: emptyList()
-    private val restartMethod: RestartMethod?
-        get() = arguments?.getObject("restartMethod")
 
     override fun onCreate(): View {
         val scopeToolbar = binding.scopeToolbar
@@ -59,9 +57,11 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             return@setOnMenuItemClickListener false
         }
 
-        val featureList = binding.featureList
-        featureList.adapter = FeatureAdapter(features)
-        featureList.layoutManager = LinearLayoutManager(requireContext())
+        if (scope != null) {
+            val featureList = binding.featureList
+            featureList.adapter = FeatureAdapter(scope!!.getFeatures())
+            featureList.layoutManager = LinearLayoutManager(requireContext())
+        }
 
         return binding.root
     }
@@ -80,7 +80,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
         val content = MaterialTextView(context).apply {
             gravity = Gravity.CENTER
             textSize = 16f
-            text = getString(R.string.restart_scope_content, packages.joinToString("\n") { it.packageName })
+            text = getString(R.string.restart_scope_content, apps.joinToString("\n") { it.packageName })
 
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -176,53 +176,55 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
     }
 
     private fun executeRestart() {
-        packages.forEach {
+        val restartMethod = scope?.getRestartMethod() ?: return
+        when (restartMethod) {
+            RestartMethod.DoNothing -> requestRestart()
+            RestartMethod.Reboot -> requestReboot()
+            is RestartMethod.ViaComponent -> requestRestart {
+                restartMethod.components.forEach { component ->
+                    val intent = Intent().apply { this.component = component }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
+    private fun requestRestart(callback: (successd: Boolean) -> Unit = { }) {
+        val onResponse = object : ResponseCallback<Unit> {
+            private var successd = false
+            private val count = AtomicInteger(apps.size)
+
+            override fun onSuccess(data: Unit) {
+                successd = true
+                onCallback()
+            }
+
+            override fun onFailure() {
+                onCallback()
+            }
+
+            private fun onCallback() {
+                if (count.decrementAndGet() > 0) return
+                requireView().postDelayed({ callback(successd) }, 500)
+                Toast.makeText(
+                    requireContext(),
+                    if (successd) R.string.restart_scope_success else R.string.restart_scope_failure,
+                    if (successd) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        apps.forEach {
             YourMIUI.get().moduleBridge.request(
                 Bridge.RESTART_SCOPE_CHANNEL,
                 it.packageName,
-                object : ResponseCallback<Unit> {
-                    private var count = AtomicInteger(packages.size)
-
-                    override fun onSuccess(data: Unit) {
-                        onCallback(true)
-                    }
-
-                    override fun onFailure() {
-                        onCallback(false)
-                    }
-
-                    private fun onCallback(isSuccess: Boolean) {
-                        if (count.decrementAndGet() <= 0) {
-                            launch(isSuccess)
-                        }
-                    }
-
-                    private fun launch(isSuccess: Boolean) {
-                        if (restartMethod == null) return
-                        requireView().postDelayed({
-                            when (restartMethod) {
-                                is RestartMethod.Reboot -> {
-                                    Toast.makeText(requireContext(), "[Soon]", Toast.LENGTH_SHORT).show()
-                                }
-                                is RestartMethod.ViaComponent -> {
-                                    (restartMethod as RestartMethod.ViaComponent).components.forEach { component ->
-                                        val intent = Intent().apply { this.component = component }
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        startActivity(intent)
-                                    }
-                                }
-                                else -> Unit
-                            }
-
-                            Toast.makeText(
-                                requireContext(),
-                                if (isSuccess) R.string.restart_scope_success else R.string.restart_scope_failure,
-                                if (isSuccess) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
-                            ).show()
-                        }, 1000)
-                    }
-                }
+                onResponse
             )
         }
+    }
+
+    private fun requestReboot() {
+        Toast.makeText(requireContext(), "[Soon]", Toast.LENGTH_SHORT).show()
     }
 }
