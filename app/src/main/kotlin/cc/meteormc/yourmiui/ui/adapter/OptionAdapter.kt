@@ -2,7 +2,6 @@ package cc.meteormc.yourmiui.ui.adapter
 
 import android.content.Context
 import android.view.View
-import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
@@ -104,8 +103,8 @@ class OptionAdapter(
             }
 
             MaterialAlertDialogBuilder(context)
-                .setNegativeButton(R.string.dialog_cancel, null)
-                .setPositiveButton(R.string.dialog_ok) { _, _ ->
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     val selected = checkedItem.toList().mapIndexedNotNull { index, isChecked ->
                         if (isChecked) options[index].first else null
                     }.toSet()

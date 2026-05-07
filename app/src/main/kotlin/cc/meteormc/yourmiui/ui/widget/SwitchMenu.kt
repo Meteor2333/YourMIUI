@@ -16,8 +16,8 @@ class SwitchMenu(
     private var changeListener: (selected: Boolean) -> Unit = { }
 
     override fun show() {
-        val enableBotton = menu.add(0, ENABLE_BOTTON_ID, 0, R.string.popup_enable)
-        val disableBotton = menu.add(0, DISABLE_BOTTON_ID, 0, R.string.popup_disable)
+        val enableBotton = menu.add(0, ENABLE_BOTTON_ID, 0, R.string.switch_menu_enable)
+        val disableBotton = menu.add(0, DISABLE_BOTTON_ID, 0, R.string.switch_menu_disable)
         if (initial) {
             enableBotton.isCheckable = true
             enableBotton.isChecked = true
