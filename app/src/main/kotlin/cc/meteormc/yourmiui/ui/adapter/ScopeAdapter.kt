@@ -29,32 +29,31 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
 
         override fun onBind(item: Pair<Scope, List<AppInfo>>) {
             val scope = item.first
-            val infos = item.second
+            val apps = item.second
 
             val context = binding.root.context
-            val first = infos.firstOrNull() ?: return
+            val first = apps.firstOrNull() ?: return
             // 优先使用设置的名称 若没有 则选取已安装的第一项软件名称作为作用域名称
             val name = scope.nameRes?.let { context.getString(it) } ?: first.label
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("name", name)
-                bundle.putObject("apps", infos)
-                bundle.putObject("features", scope.getFeatures())
-                bundle.putObject("restartMethod", scope.getRestartMethod())
+                bundle.putObject("scope", scope)
+                bundle.putObject("apps", apps)
                 it.findNavController().navigate(R.id.action_to_scope, bundle)
             }
 
             binding.scopeName.text = name
 
             // 如果不支持多软件 直接设置为第一项软件图标
-            if (infos.size == 1) {
+            if (apps.size == 1) {
                 binding.scopeIcon.setImageBitmap(first.icon)
                 return
             }
 
             // 否则循环播放多软件图标
             this.currentIndex = 0
-            this.icons = infos.map { it.icon.toDrawable(context.resources) }.toTypedArray()
+            this.icons = apps.map { it.icon.toDrawable(context.resources) }.toTypedArray()
             handler.removeCallbacks(runnable)
             handler.post(runnable)
         }
