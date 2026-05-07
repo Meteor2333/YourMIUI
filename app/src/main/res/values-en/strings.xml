@@ -30,8 +30,8 @@
     <string name="feature_original_author">Original Author: %s</string>
     <string name="app_picker_title">App Picker</string>
     <string name="app_picker_hint">App name or package name</string>
-    <string name="switch_menu_enable">开启</string>
-    <string name="switch_menu_disable">关闭</string>
+    <string name="switch_menu_enable">Enable</string>
+    <string name="switch_menu_disable">Disable</string>
     <string name="restart_scope_title">Restart Scope</string>
     <string name="restart_scope_content">The following packages will be restarted to apply changes:\n%s\n\nContinue?</string>
     <string name="restart_scope_success">Restart successful!</string>
