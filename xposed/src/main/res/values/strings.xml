@@ -14,6 +14,10 @@
     <string name="feature_contentextension_fix_link_handling_description">修复默认浏览器被修改后无法正常打开链接的问题</string>
     <string name="feature_contentextension_fix_link_handling_test_environment">2.6.24版本</string>
 
+    <string name="feature_home_disable_today_recommend_name">禁用今日推荐</string>
+    <string name="feature_home_disable_today_recommend_description">禁用桌面文件夹中的今日推荐相关内容</string>
+    <string name="feature_home_disable_today_recommend_test_environment">RELEASE-4.39.7.6042-04172040版本</string>
+
     <string name="feature_home_hide_folder_scroll_bar_name">隐藏文件夹滚动条</string>
     <string name="feature_home_hide_folder_scroll_bar_description">隐藏桌面文件夹中软件较多时出现的滚动条</string>
     <string name="feature_home_hide_folder_scroll_bar_test_environment">RELEASE-4.39.7.6042-04172040版本</string>
