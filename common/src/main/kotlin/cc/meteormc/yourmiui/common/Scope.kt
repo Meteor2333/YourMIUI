@@ -5,15 +5,12 @@ import java.io.Serializable
 
 abstract class Scope(
     val nameRes: Int?,
-    val packages: Array<String>
+    val packages: Array<out String>
 ) : Serializable {
     constructor(
         vararg packages: String,
         nameRes: Int? = null
-    ) : this(
-        nameRes,
-        arrayOf(*packages)
-    )
+    ) : this(nameRes, packages)
 
     abstract fun getFeatures(): List<Feature>
 
