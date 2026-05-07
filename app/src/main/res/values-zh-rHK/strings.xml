@@ -31,10 +31,10 @@
     <string name="dialog_cancel">取消</string>
     <string name="dialog_ok">確定</string>
     <string name="dialog_save">保存</string>
-    <string name="dialog_app_picker_title">App選擇器</string>
-    <string name="dialog_app_picker_hint">搜索應用名稱或包名</string>
     <string name="popup_enable">開啟</string>
     <string name="popup_disable">關閉</string>
+    <string name="app_picker_title">App选择器</string>
+    <string name="app_picker_hint">搜索应用名称或包名</string>
     <string name="restart_scope_title">重啟作用域</string>
     <string name="restart_scope_content">此操作將重啟以下套件以套用變更：\n%s\n\n是否繼續？</string>
     <string name="restart_scope_success">重啟成功！</string>
