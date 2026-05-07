@@ -1,29 +1,15 @@
 package cc.meteormc.yourmiui.ui.adapter
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.view.View
-import android.widget.LinearLayout
-import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.SearchView
-import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
-import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
 import cc.meteormc.yourmiui.service.FeaturePreference
+import cc.meteormc.yourmiui.ui.widget.AppPicker
+import cc.meteormc.yourmiui.ui.widget.SwitchMenu
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.launch
 
 class OptionAdapter(
     options: List<Option<*>>,
@@ -32,10 +18,6 @@ class OptionAdapter(
     options.toTypedArray(),
     { inflater, parent -> ItemOptionBinding.inflate(inflater, parent, false) }
 ) {
-    companion object {
-        private var appCache: List<AppInfo> = emptyList()
-    }
-
     override fun newHolder(binding: ItemOptionBinding): BaseAdapter<ItemOptionBinding, Option<*>>.BaseViewHolder {
         return ViewHolder(binding, prefs)
     }
@@ -85,85 +67,9 @@ class OptionAdapter(
             type: Type.AppList,
             value: Set<String>
         ) {
-            val pm = context.packageManager
-            val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA).toList()
-            val adapter = AppAdapter(installedApps.size, value.toMutableSet())
-
-            val searchView = SearchView(context).apply {
-                this.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                this.queryHint = context.getString(R.string.dialog_app_picker_hint)
-                this.setIconifiedByDefault(false)
-                this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        adapter.filter(query)
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        adapter.filter(newText)
-                        return true
-                    }
-                })
-            }
-
-            val appList = RecyclerView(context).apply {
-                this.adapter = adapter
-                this.layoutManager = LinearLayoutManager(context)
-                this.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-
-                adapter.listView = this
-            }
-
-            val container = LinearLayout(context).apply {
-                this.orientation = LinearLayout.VERTICAL
-                this.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-            }
-            container.addView(searchView)
-            container.addView(appList)
-
-            fun loadAppInfos(): Flow<AppInfo> = flow {
-                installedApps.forEach {
-                    val info = AppInfo(
-                        it.packageName,
-                        pm.getApplicationLabel(it).toString(),
-                        pm.getApplicationIcon(it).toBitmap()
-                    )
-                    emit(info)
-                }
-            }
-
-            if (appCache.isNotEmpty()) {
-                adapter.submitAll(appCache)
-            } else {
-                (context as LifecycleOwner).lifecycleScope.launch {
-                    val cache = mutableListOf<AppInfo>()
-                    loadAppInfos()
-                        .flowOn(Dispatchers.IO)
-                        .onCompletion {
-                            appCache = cache.toList()
-                        }
-                        .collect {
-                            cache.add(it)
-                            adapter.submit(it, searchView.query?.toString())
-                        }
-                }
-            }
-
-            MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.dialog_app_picker_title)
-                .setView(container)
-                .setNegativeButton(R.string.dialog_cancel, null)
-                .setPositiveButton(R.string.dialog_save) { _, _ ->
-                    prefs.option(option.key, type.serializer(adapter.selected))
+            AppPicker(context, value)
+                .setSaveListener {
+                    prefs.option(option.key, type.serializer(it))
                 }.show()
         }
 
@@ -199,7 +105,7 @@ class OptionAdapter(
 
             MaterialAlertDialogBuilder(context)
                 .setNegativeButton(R.string.dialog_cancel, null)
-                .setPositiveButton(R.string.dialog_save) { _, _ ->
+                .setPositiveButton(R.string.dialog_ok) { _, _ ->
                     val selected = checkedItem.toList().mapIndexedNotNull { index, isChecked ->
                         if (isChecked) options[index].first else null
                     }.toSet()
@@ -219,34 +125,10 @@ class OptionAdapter(
             value: Boolean,
             anchor: View
         ) {
-            val popup = PopupMenu(context, anchor)
-            val menu = popup.menu
-
-            val enableBotton = menu.add(0, 0, 0, R.string.popup_enable)
-            val disableBotton = menu.add(0, 1, 0, R.string.popup_disable)
-            if (value) {
-                enableBotton.isCheckable = true
-                enableBotton.isChecked = true
-            } else {
-                disableBotton.isCheckable = true
-                disableBotton.isChecked = true
-            }
-            popup.setOnMenuItemClickListener {
-                val selected = it.itemId == 0
-                if (selected) {
-                    enableBotton.isCheckable = true
-                    enableBotton.isChecked = true
-                    disableBotton.isCheckable = false
-                } else {
-                    enableBotton.isCheckable = false
-                    disableBotton.isCheckable = true
-                    disableBotton.isChecked = true
-                }
-
-                prefs.option(option.key, type.serializer(selected))
-                return@setOnMenuItemClickListener true
-            }
-            popup.show()
+            SwitchMenu(context, anchor, value)
+                .setChangeListener {
+                    prefs.option(option.key, type.serializer(it))
+                }.show()
         }
     }
 }

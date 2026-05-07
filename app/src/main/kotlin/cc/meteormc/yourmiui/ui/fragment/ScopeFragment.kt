@@ -1,14 +1,8 @@
 package cc.meteormc.yourmiui.ui.fragment
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.InsetDrawable
-import android.view.Gravity
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.graphics.ColorUtils
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
@@ -21,14 +15,8 @@ import cc.meteormc.yourmiui.common.data.RestartMethod
 import cc.meteormc.yourmiui.common.util.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.ShapeAppearanceModel
-import com.google.android.material.textview.MaterialTextView
+import cc.meteormc.yourmiui.ui.widget.BottomSheet
 import java.util.concurrent.atomic.AtomicInteger
-
 
 class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container ->
     FragmentScopeBinding.inflate(inflater, container, false)
@@ -50,7 +38,16 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
         scopeToolbar.inflateMenu(R.menu.menu_scope)
         scopeToolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.item_restart) {
-                onClickRestart()
+                BottomSheet.Builder(requireContext())
+                    .setTitle(R.string.restart_scope_title)
+                    .setContent(R.string.restart_scope_content, apps.joinToString("\n") { app -> app.packageName })
+                    .setNegativeButton(R.string.dialog_cancel) { dialog, _ -> dialog.dismiss() }
+                    .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
+                        dialog.dismiss()
+                        executeRestart()
+                    }
+                    .build()
+                    .show()
                 return@setOnMenuItemClickListener true
             }
 
@@ -64,115 +61,6 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
         }
 
         return binding.root
-    }
-
-    private fun Int.dp() = (this * requireContext().resources.displayMetrics.density).toInt()
-
-    private fun onClickRestart() {
-        val context = requireContext()
-        val dialog = BottomSheetDialog(context)
-
-        val title = MaterialTextView(context).apply {
-            gravity = Gravity.CENTER
-            textSize = 18f
-            setText(R.string.restart_scope_title)
-        }
-        val content = MaterialTextView(context).apply {
-            gravity = Gravity.CENTER
-            textSize = 16f
-            text = getString(R.string.restart_scope_content, apps.joinToString("\n") { it.packageName })
-
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.topMargin = 16.dp()
-            params.bottomMargin = 24.dp()
-            layoutParams = params
-        }
-
-        val cancel = MaterialButton(context).apply {
-            setText(R.string.dialog_cancel)
-            setOnClickListener { dialog.dismiss() }
-            layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
-            )
-
-            setBackgroundColor(Color.TRANSPARENT)
-            setTextColor(
-                MaterialColors.getColor(this, android.R.attr.colorPrimary)
-            )
-            strokeWidth = 1.dp()
-            strokeColor = ColorStateList.valueOf(
-                ColorUtils.setAlphaComponent(
-                    MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface),
-                    50
-                )
-            )
-        }
-        val spacer = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(16.dp(), 0)
-        }
-        val ok = MaterialButton(context).apply {
-            setText(R.string.dialog_ok)
-            setOnClickListener {
-                dialog.dismiss()
-                executeRestart()
-            }
-            layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
-            )
-        }
-
-        val buttons = LinearLayout(context).apply {
-            setPadding(12.dp(), 0, 12.dp(), 0)
-            orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-        buttons.addView(cancel)
-        buttons.addView(spacer)
-        buttons.addView(ok)
-
-        val container = LinearLayout(context).apply {
-            setPadding(18.dp(), 36.dp(), 18.dp(), 36.dp())
-            gravity = Gravity.CENTER_HORIZONTAL
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-        container.addView(title)
-        container.addView(content)
-        container.addView(buttons)
-
-        dialog.setContentView(container)
-        dialog.setOnShowListener {
-            val sheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            if (sheet != null) {
-                val model = ShapeAppearanceModel.builder(
-                    context,
-                    0,
-                    com.google.android.material.R.style.ShapeAppearanceOverlay_MaterialAlertDialog_Material3
-                ).build()
-                val background = MaterialShapeDrawable(model)
-                background.fillColor = ColorStateList.valueOf(
-                    MaterialColors.getColor(
-                        sheet,
-                        com.google.android.material.R.attr.colorSurfaceContainer
-                    )
-                )
-                sheet.background = InsetDrawable(background, 16.dp())
-            }
-        }
-        dialog.show()
     }
 
     private fun executeRestart() {
