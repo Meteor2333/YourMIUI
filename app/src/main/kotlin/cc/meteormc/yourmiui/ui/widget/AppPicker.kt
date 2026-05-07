@@ -108,8 +108,8 @@ class AppPicker(
 
         setView(container)
         setTitle(R.string.app_picker_title)
-        setNegativeButton(R.string.dialog_cancel, null)
-        setPositiveButton(R.string.dialog_save) { _, _ -> saveListener(adapter.selected) }
+        setNegativeButton(android.R.string.cancel, null)
+        setPositiveButton(android.R.string.ok) { _, _ -> saveListener(adapter.selected) }
         return super.create()
     }
 
