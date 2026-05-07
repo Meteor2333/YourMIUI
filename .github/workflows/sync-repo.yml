@@ -35,7 +35,6 @@ jobs:
             cat "$EXTRACTED" >> $SUMMARY_FILE
           else
             head -n $EMPTY_LINE $SUMMARY_FILE > temp.md
-            echo "" >> temp.md
             cat "$EXTRACTED" >> temp.md
             mv temp.md $SUMMARY_FILE
           fi
