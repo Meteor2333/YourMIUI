@@ -11,6 +11,7 @@ import cc.meteormc.yourmiui.common.bridge.Host
 import cc.meteormc.yourmiui.common.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
+import cc.meteormc.yourmiui.xposed.home.Home
 import cc.meteormc.yourmiui.xposed.market.Market
 import cc.meteormc.yourmiui.xposed.mirror.Mirror
 import cc.meteormc.yourmiui.xposed.mms.MMS
@@ -35,6 +36,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
         listOf(
             Android,
             ContentExtension,
+            Home,
             Market,
             Mirror,
             MMS,
