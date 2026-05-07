@@ -38,7 +38,7 @@
     <string name="restart_scope_title">重啟作用域</string>
     <string name="restart_scope_content">此操作將重啟以下套件以套用變更：\n%s\n\n是否繼續？</string>
     <string name="restart_scope_success">重啟成功！</string>
-    <string name="restart_scope_failure">重啟失敗！ 可能由於目標軟體\n未在運行或尚未注入模組</string>
+    <string name="restart_scope_failure">重啟成功！\n若更改未起效再次執行重啟即可</string>
     <string name="settings_language">語言</string>
     <string name="settings_language_language_title">語言</string>
     <string name="settings_language_language_followsystem">跟隨系統</string>

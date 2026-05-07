@@ -38,7 +38,7 @@
     <string name="restart_scope_title">Restart Scope</string>
     <string name="restart_scope_content">The following packages will be restarted to apply changes:\n%s\n\nContinue?</string>
     <string name="restart_scope_success">Restart successful!</string>
-    <string name="restart_scope_failure">Restart failed!\nIt may not be running or injected</string>
+    <string name="restart_scope_failure">Restart successful!\nIf changes didn’t apply, try again</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_language_title">Language</string>
     <string name="settings_language_language_followsystem">Follow system</string>
