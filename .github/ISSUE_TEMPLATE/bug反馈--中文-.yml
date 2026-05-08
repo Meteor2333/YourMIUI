@@ -32,6 +32,7 @@ body:
       required: false
 
   - type: input
+    id: device
     attributes:
       label: 设备型号
       placeholder: "小米13"
@@ -39,6 +40,7 @@ body:
       required: true
 
   - type: input
+    id: os
     attributes:
       label: 系统
       placeholder: "MIUI14.0.31.0.TMCCNXM"
@@ -46,6 +48,7 @@ body:
       required: true
 
   - type: input
+    id: module
     attributes:
       label: 模块版本
       placeholder: "1.0"
@@ -53,6 +56,7 @@ body:
       required: true
 
   - type: dropdown
+    id: framework
     attributes:
       label: 框架名称
       options:
@@ -63,6 +67,7 @@ body:
       required: true
 
   - type: upload
+    id: logs
     attributes:
       label: 模块日志
       description: "请上传关于此问题的模块日志"
@@ -70,6 +75,7 @@ body:
       required: true
 
   - type: upload
+    id: screenshots
     attributes:
       label: 问题截图(可选)
       description: "如有必要，请添加关于此问题的截图"
@@ -77,6 +83,7 @@ body:
       required: false
 
   - type: textarea
+    id: additional
     attributes:
       label: 补充(可选)
       description: "如有必要，请补充关于此问题的任何其他信息"
@@ -84,6 +91,7 @@ body:
       required: false
 
   - type: checkboxes
+    id: check
     attributes:
       label: 最终检查
       description: "请完成下面的清单，以确保您提供了足够的信息"

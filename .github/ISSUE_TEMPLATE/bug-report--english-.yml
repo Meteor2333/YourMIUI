@@ -32,6 +32,7 @@ body:
       required: false
 
   - type: input
+    id: device
     attributes:
       label: Device
       placeholder: "Xiaomi 13"
@@ -39,6 +40,7 @@ body:
       required: true
 
   - type: input
+    id: os
     attributes:
       label: OS
       placeholder: "MIUI14.0.31.0.TMCCNXM"
@@ -46,6 +48,7 @@ body:
       required: true
 
   - type: input
+    id: module
     attributes:
       label: Module version
       placeholder: "1.0"
@@ -53,6 +56,7 @@ body:
       required: true
 
   - type: dropdown
+    id: framework
     attributes:
       label: Framework name
       options:
@@ -63,6 +67,7 @@ body:
       required: true
 
   - type: upload
+    id: logs
     attributes:
       label: Logs
       description: "Add module logs about the problem here."
@@ -70,6 +75,7 @@ body:
       required: true
 
   - type: upload
+    id: screenshots
     attributes:
       label: Screenshots(optional)
       description: "If applicable, add screenshots about the problem here."
@@ -77,6 +83,7 @@ body:
       required: false
 
   - type: textarea
+    id: additional
     attributes:
       label: Additional(optional)
       description: "If applicable, add any other context about the problem here."
@@ -84,6 +91,7 @@ body:
       required: false
 
   - type: checkboxes
+    id: check
     attributes:
       label: Final check
       description: "Please complete the checklist below to ensure sufficient information is provided."
