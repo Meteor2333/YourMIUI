@@ -1,0 +1,95 @@
+name: Bug反馈 (中文)
+about: 反馈使用过程中遇到的问题以帮助我们改进
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      placeholder: "清晰简明地描述此问题"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤
+      placeholder: "|
+1. 转到 '...'
+2. 点击 '....'
+3. 向下滚动到 '....'
+4. 成功复现"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expectation
+    attributes:
+      label: 预期行为
+      placeholder: "清晰简明地描述预期发生的情况"
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: 设备型号
+      placeholder: "小米13"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: 系统
+      placeholder: "MIUI14.0.31.0.TMCCNXM"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: 模块版本
+      placeholder: "1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: 框架名称
+      options:
+        - "LSPosed"
+        - "LSPatch"
+        - "EdXposed"
+    validations:
+      required: true
+
+  - type: upload
+    attributes:
+      label: 模块日志
+      description: "请上传关于此问题的模块日志"
+    validations:
+      required: true
+
+  - type: upload
+    attributes:
+      label: 问题截图(可选)
+      description: "如有必要，请添加关于此问题的截图"
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: 补充(可选)
+      description: "如有必要，请补充关于此问题的任何其他信息"
+    validations:
+      required: false
+
+  - type: checkboxes
+    attributes:
+      label: 最终检查
+      description: "请完成下面的清单，以确保您提供了足够的信息"
+      options:
+        - label: "我同意在提交此报告之前检查现有问题"
+        - label: "我确定已经认真填写了此模板，并提供了所有必要信息"
+        - label: "我理解不遵守上述指南进行填写，issue可能会被关闭"
+    validations:
+      required: true
