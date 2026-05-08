@@ -15,11 +15,11 @@ body:
     id: reproduction
     attributes:
       label: To Reproduce
-      placeholder: "|
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error"
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
     validations:
       required: true
 
@@ -89,7 +89,8 @@ body:
       description: "Please complete the checklist below to ensure sufficient information is provided."
       options:
         - label: "I agree to check existing issues before submitting this report."
+          required: true
         - label: "I confirm that I have filled out this template carefully and provided all required information."
+          required: true
         - label: "I understand that issues not following the guidelines above may be closed."
-    validations:
-      required: true
+          required: true
