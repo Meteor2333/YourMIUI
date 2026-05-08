@@ -1,5 +1,5 @@
 name: Bug report (English)
-about: Report issues to help us improve
+description: Report issues to help us improve
 title: "[Bug] "
 labels: ["bug"]
 body:
