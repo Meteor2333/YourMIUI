@@ -62,10 +62,13 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
                 R.drawable.ic_translate_24dp,
                 R.string.settings_language_translate_title,
                 R.string.settings_language_translate_summary
-            ) { startActivity(Intent(
-                Intent.ACTION_VIEW,
-                "https://crowdin.com/project/yourmiui".toUri()
-            )) }
+            ) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://crowdin.com/project/yourmiui".toUri()
+                )
+                startActivity(intent)
+            }
         ),
         SettingGroup(
             R.string.settings_theme,

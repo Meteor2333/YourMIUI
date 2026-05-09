@@ -37,7 +37,7 @@ class YourMIUI : Application() {
 		val check = when (val current = SysVersion.getCurrent()) {
 			SysVersion.HYPEROS -> getString(R.string.syscheck_hyperos)
 			SysVersion.OTHER -> getString(R.string.syscheck_unknown_system)
-			SysVersion.UNSUPPORTED -> getString(R.string.syscheck_unsupported_version, current.code)
+			SysVersion.MIUI_UNSUPPORTED -> getString(R.string.syscheck_unsupported_version, current.code)
 			else -> return
 		}
 
