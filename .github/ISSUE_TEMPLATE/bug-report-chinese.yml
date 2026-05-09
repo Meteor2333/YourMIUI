@@ -1,7 +1,7 @@
 name: Bug反馈 (中文)
 description: 反馈使用过程中遇到的问题以帮助我们改进
 title: "[Bug] "
-labels: ["bug"]
+labels: [ "bug" ]
 body:
   - type: textarea
     id: description

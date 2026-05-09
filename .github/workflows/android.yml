@@ -10,92 +10,92 @@ on:
 permissions:
   contents: write
   pull-requests: read
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v5
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
+      - uses: actions/checkout@v6
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
 
-    - name: Decode keystore
-      run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/keystore.jks
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-    - name: Generate keystore properties
-      run: |
-        cat <<EOF > keystore.properties
-        storeFile=${{ runner.temp }}/keystore.jks
-        storePassword=${{ secrets.KEY_STORE_PASSWORD }}
-        keyAlias=${{ secrets.ALIAS }}
-        keyPassword=${{ secrets.KEY_PASSWORD }}
-        EOF
+      - name: Decode keystore
+        run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/keystore.jks
 
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Generate keystore properties
+        run: |
+          cat <<EOF > keystore.properties
+          storeFile=${{ runner.temp }}/keystore.jks
+          storePassword=${{ secrets.KEY_STORE_PASSWORD }}
+          keyAlias=${{ secrets.ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
 
-    - name: Collect artifact
-      id: collect_artifact
-      run: |
-        outputs_dir="outputs"
-        sudo mkdir -p "$outputs_dir"
-        find app/build/outputs/apk -type f -name "*.apk" -exec sudo cp {} "$outputs_dir" \;
-        echo "apk_outputs=$outputs_dir" >> $GITHUB_OUTPUT
-        
-    - name: Use short hash
-      id: use_hash
-      run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+      - name: Build with Gradle
+        run: ./gradlew build
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v7
-      with:
-        name: ${{ github.event.repository.name }}-${{ steps.use_hash.outputs.short_sha }}
-        path: ${{ steps.collect_artifact.outputs.apk_outputs }}
+      - name: Collect artifact
+        id: collect_artifact
+        run: |
+          outputs_dir="outputs"
+          sudo mkdir -p "$outputs_dir"
+          find app/build/outputs/apk -type f -name "*.apk" -exec sudo cp {} "$outputs_dir" \;
+          echo "apk_outputs=$outputs_dir" >> $GITHUB_OUTPUT
 
-    - name: Rename APKs
-      if: github.ref_type == 'tag'
-      run: |
-        outputs_dir="${{ steps.collect_artifact.outputs.apk_outputs }}"
-        project_name="${{ github.event.repository.name }}"
-        tag="${{ github.ref_name }}"
+      - name: Use short hash
+        id: use_hash
+        run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
-        for file in ${outputs_dir}/*.apk; do
-          filename=$(basename "$file")
-          suffix=${filename#app-}
-          suffix=${suffix%.apk}
-          new_name="${project_name}-${tag}-${suffix}.apk"
-          sudo mv "$file" "${outputs_dir}/${new_name}"
-        done
-        
-    - name: Build changelog
-      id: build_chanagelog
-      if: github.ref_type == 'tag'
-      uses: mikepenz/release-changelog-builder-action@v6
-      with:
-        mode: "COMMIT"
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ github.event.repository.name }}-${{ steps.use_hash.outputs.short_sha }}
+          path: ${{ steps.collect_artifact.outputs.apk_outputs }}
 
-    - name: Github release
-      uses: softprops/action-gh-release@v3
-      if: github.ref_type == 'tag'
-      with:
-        files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
-        body: ${{ steps.build_chanagelog.outputs.changelog }}
+      - name: Rename APKs
+        if: github.ref_type == 'tag'
+        run: |
+          outputs_dir="${{ steps.collect_artifact.outputs.apk_outputs }}"
+          project_name="${{ github.event.repository.name }}"
+          tag="${{ github.ref_name }}"
+          
+          for file in ${outputs_dir}/*.apk; do
+            filename=$(basename "$file")
+            suffix=${filename#app-}
+            suffix=${suffix%.apk}
+            new_name="${project_name}-${tag}-${suffix}.apk"
+            sudo mv "$file" "${outputs_dir}/${new_name}"
+          done
 
-    - name: Publish to Module repo
-      uses: softprops/action-gh-release@v3
-      if: github.ref_type == 'tag'
-      with:
-        repository: ${{ vars.MODULE_REPO }}
-        files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
-        body: ${{ steps.build_chanagelog.outputs.changelog }}
-        token: ${{ secrets.MODULE_REPO_TOKEN }}
+      - name: Build changelog
+        id: build_chanagelog
+        if: github.ref_type == 'tag'
+        uses: mikepenz/release-changelog-builder-action@v6
+        with:
+          mode: "COMMIT"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Github release
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
+        with:
+          files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
+          body: ${{ steps.build_chanagelog.outputs.changelog }}
+
+      - name: Publish to Module repo
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
+        with:
+          repository: ${{ vars.MODULE_REPO }}
+          files: ${{ steps.collect_artifact.outputs.apk_outputs }}/*.apk
+          body: ${{ steps.build_chanagelog.outputs.changelog }}
+          token: ${{ secrets.MODULE_REPO_TOKEN }}
