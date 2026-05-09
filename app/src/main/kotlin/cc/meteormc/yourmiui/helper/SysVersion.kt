@@ -1,15 +1,23 @@
 package cc.meteormc.yourmiui.helper
 
 import android.annotation.SuppressLint
+import android.os.Build
 
-enum class SysVersion(val code: Int) {
-    UNSUPPORTED(0),
-    MIUI_V11(11),
-    MIUI_V12(12),
-    MIUI_V13(13),
-    MIUI_V14(14),
-    HYPEROS(816),
-    OTHER(-1);
+enum class SysVersion(val code: Int, val prefix: String) {
+    MIUI_UNSUPPORTED(0, "V"),
+    MIUI_11(11, "V11"),
+    MIUI_12(12, "V12"),
+    MIUI_13(13, "V13"),
+    MIUI_14(14, "V14"),
+    HYPEROS(816, "OS"),
+    OTHER(-1, "");
+
+    val fullName: String
+        get() {
+            val incremental = Build.VERSION.INCREMENTAL
+            return if (this == OTHER) incremental
+            else "${name.replace("_", "")}${incremental.removePrefix(prefix)}"
+        }
 
     companion object {
         private const val VERSION_PROPERTY_KEY = "ro.miui.ui.version.code"
@@ -23,7 +31,7 @@ enum class SysVersion(val code: Int) {
                 ).also { it.isAccessible = true }.invoke(null, VERSION_PROPERTY_KEY, -1) as Int
             }.getOrDefault(0)
             if (versionCode <= 0) OTHER
-            else entries.find { it.code == versionCode } ?: UNSUPPORTED
+            else entries.find { it.code == versionCode } ?: MIUI_UNSUPPORTED
         }
 
         fun getCurrent() = currentSysVersion
