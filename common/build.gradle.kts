@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 val projectNamespace: String by rootProject.extra
@@ -12,4 +11,8 @@ android {
 
 kotlin {
     jvmToolchain(11)
+}
+
+dependencies {
+    api("androidx.core:core-ktx:1.18.0")
 }

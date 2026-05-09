@@ -1,10 +1,13 @@
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
 }
 
+val minSdkVersion: Int by rootProject.extra
+val targetSdkVersion: Int by rootProject.extra
+val appVersionCode: Int by rootProject.extra
+val appVersionName: String by rootProject.extra
 val projectNamespace: String by rootProject.extra
 
 android {
@@ -12,6 +15,10 @@ android {
 
     defaultConfig {
         applicationId = projectNamespace
+        minSdk = minSdkVersion
+        targetSdk = targetSdkVersion
+        versionCode = appVersionCode
+        versionName = appVersionName
     }
 
     val keystoreProp = Properties()
@@ -48,11 +55,6 @@ android {
         buildConfig = true
         viewBinding = true
     }
-
-    lint {
-        disable.add("ExtraTranslation")
-        disable.add("MissingTranslation")
-    }
 }
 
 kotlin {
@@ -60,10 +62,9 @@ kotlin {
 }
 
 dependencies {
-    compileOnly(project(":common"))
+    implementation(project(":common"))
     runtimeOnly(project(":xposed"))
 
-    implementation("androidx.core:core-ktx:1.18.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.recyclerview:recyclerview:1.4.0")

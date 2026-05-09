@@ -1,35 +1,25 @@
-import com.android.build.gradle.BaseExtension
-
 plugins {
     id("com.android.application") version "9.2.1" apply false
     id("com.android.library") version "9.2.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.3.21" apply false
+    id("org.jetbrains.kotlin.plugin.parcelize") version "2.3.21" apply false
 }
 
-val sdkMinVersion by extra(24)
-val sdkTargetVersion by extra(36)
-
+val minSdkVersion by extra(24)
+val targetSdkVersion by extra(36)
 val appVersionCode by extra(8)
 val appVersionName by extra("1.3")
-
 val projectNamespace by extra("cc.meteormc.yourmiui")
 
 subprojects {
-    plugins.withId("com.android.base") {
-        extensions.configure<BaseExtension> {
-            compileSdkVersion(sdkTargetVersion)
-
-            defaultConfig {
-                minSdk = sdkMinVersion
-                targetSdk = sdkTargetVersion
-                versionCode = appVersionCode
-                versionName = appVersionName
+    plugins.withType<com.android.build.gradle.BasePlugin> {
+        extensions.configure<com.android.build.api.dsl.CommonExtension> {
+            compileSdk {
+                version = release(targetSdkVersion)
             }
 
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_11
-                targetCompatibility = JavaVersion.VERSION_11
-            }
+            defaultConfig.minSdk = minSdkVersion
+            compileOptions.sourceCompatibility = JavaVersion.VERSION_11
+            compileOptions.targetCompatibility = JavaVersion.VERSION_11
         }
     }
 }
