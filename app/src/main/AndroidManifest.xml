@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <permission android:name="cc.meteormc.yourmiui.permission.USE_BRIDGE" />
 
-    <uses-permission android:name="cc.meteormc.yourmiui.permission.USE_BRIDGE"/>
+    <uses-permission android:name="cc.meteormc.yourmiui.permission.USE_BRIDGE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission
-            android:name="android.permission.QUERY_ALL_PACKAGES"
-            tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
 
     <application
-            android:allowBackup="false"
-            android:usesCleartextTraffic="false"
-            android:name=".YourMIUI"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/Theme.YourMIUI"
-            tools:ignore="DataExtractionRules">
+        android:allowBackup="false"
+        android:usesCleartextTraffic="false"
+        android:name=".YourMIUI"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.YourMIUI"
+        tools:ignore="DataExtractionRules">
 
         <activity
-                android:name=".ui.MainActivity"
-                android:exported="true">
+            android:name=".ui.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
@@ -32,10 +31,10 @@
         </activity>
 
         <activity-alias
-                android:name=".LauncherAlias"
-                android:targetActivity=".ui.MainActivity"
-                android:enabled="true"
-                android:exported="true">
+            android:name=".LauncherAlias"
+            android:targetActivity=".ui.MainActivity"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,8 +42,8 @@
         </activity-alias>
 
         <meta-data
-                android:name="xposeddescription"
-                android:value="@string/module_description" />
+            android:name="xposeddescription"
+            android:value="@string/module_description" />
 
     </application>
 

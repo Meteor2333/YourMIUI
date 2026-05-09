@@ -4,14 +4,14 @@
     <application>
 
         <meta-data
-                android:name="xposedmodule"
-                android:value="true" />
+            android:name="xposedmodule"
+            android:value="true" />
         <meta-data
-                android:name="xposedminversion"
-                android:value="93" />
+            android:name="xposedminversion"
+            android:value="93" />
         <meta-data
-                android:name="xposedscope"
-                android:resource="@array/module_scope" />
+            android:name="xposedscope"
+            android:resource="@array/module_scope" />
 
     </application>
 
