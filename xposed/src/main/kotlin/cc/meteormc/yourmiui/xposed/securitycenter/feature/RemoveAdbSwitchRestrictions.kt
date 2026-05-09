@@ -17,7 +17,10 @@ object RemoveAdbSwitchRestrictions : Feature(
 ) {
     override fun onLoadPackage() {
         @Suppress("UNCHECKED_CAST")
-        AlertActivityHelper.disableAlert(classLoader, "com.miui.permcenter.install.AdbInstallVerifyActivity") {
+        AlertActivityHelper.disableAlert(
+            classLoader,
+            "com.miui.permcenter.install.AdbInstallVerifyActivity"
+        ) {
             // name: (obfuscated) | type: (obfuscated)
             val taskField = fields(AsyncTask::class.java).firstOrNull() ?: return@disableAlert false
             operator(taskField.type()) {

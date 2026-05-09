@@ -1,6 +1,10 @@
 package cc.meteormc.yourmiui.common
 
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 
 class Option<T : Any>(
     val key: String,
@@ -18,6 +22,7 @@ class Option<T : Any>(
         @Transient
         var serializer: (T) -> String = serializer
             private set
+
         @Transient
         var deserializer: (String) -> T? = deserializer
             private set

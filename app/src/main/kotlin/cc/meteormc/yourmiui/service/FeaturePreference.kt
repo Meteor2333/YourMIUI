@@ -18,7 +18,10 @@ class FeaturePreference(val prefKey: String) {
                 this.prefs = runCatching {
                     @Suppress("DEPRECATION")
                     @SuppressLint("WorldReadableFiles")
-                    context.getSharedPreferences(Feature.PREFERENCE_TAG, Context.MODE_WORLD_READABLE)
+                    context.getSharedPreferences(
+                        Feature.PREFERENCE_TAG,
+                        Context.MODE_WORLD_READABLE
+                    )
                 }.getOrElse {
                     context.getSharedPreferences(Feature.PREFERENCE_TAG, Context.MODE_PRIVATE)
                 }

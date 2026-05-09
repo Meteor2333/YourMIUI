@@ -67,7 +67,11 @@ object FixSplashScreen : Feature(
         val iconSizeChannel = Channel<Int?>(Channel.BUFFERED)
         val iconDefaultSizeChannel = Channel<Int?>(Channel.BUFFERED)
         val activityInfoChannel = Channel<ActivityInfo?>(Channel.BUFFERED)
-        fun ActivityInfo.loadSplashScreenInfo(context: Context, iconSize: Int, iconDefaultSize: Int): SplashScreenInfo {
+        fun ActivityInfo.loadSplashScreenInfo(
+            context: Context,
+            iconSize: Int,
+            iconDefaultSize: Int
+        ): SplashScreenInfo {
             val configuration = context.resources.configuration
             val isDark = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
@@ -103,7 +107,9 @@ object FixSplashScreen : Feature(
                 updateDensityMethod.call(it.instance)
                 iconSizeChannel.trySend(iconSizeField[it.instance])
                 iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.instance])
-                activityInfoChannel.trySend(targetActivityInfoField[swi] ?: topActivityInfoField[taskInfoField[swi]])
+                activityInfoChannel.trySend(
+                    targetActivityInfoField[swi] ?: topActivityInfoField[taskInfoField[swi]]
+                )
             }
 
             // modifier: public static | signature: getWindowAttrs(Landroid/content/Context;Lcom/android/wm/shell/startingsurface/SplashscreenContentDrawer$SplashScreenWindowAttrs;)V
@@ -114,7 +120,11 @@ object FixSplashScreen : Feature(
                 val context = it.argByGenerics<Context>() ?: return@hookAfter
                 val attrs = it.argByClass(sswaClass.delegate) ?: return@hookAfter
                 val appData by lazy {
-                    currentActivityInfo.loadSplashScreenInfo(context, currentIconSize, currentIconDefaultSize)
+                    currentActivityInfo.loadSplashScreenInfo(
+                        context,
+                        currentIconSize,
+                        currentIconDefaultSize
+                    )
                 }
 
                 if (iconBgColorField.get<Int>(attrs) == 0) {
@@ -164,7 +174,11 @@ object FixSplashScreen : Feature(
 
     private const val MIN_ALPHA = 40
     private const val TARGET_FILL_RATIO = 0.65f
-    private fun Drawable.normalizeIcon(context: Context, iconSize: Int, iconDefaultSize: Int): Drawable {
+    private fun Drawable.normalizeIcon(
+        context: Context,
+        iconSize: Int,
+        iconDefaultSize: Int
+    ): Drawable {
         // AdaptiveIconDrawable会进行自适应 无需手动调整
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && this is AdaptiveIconDrawable) return this
 

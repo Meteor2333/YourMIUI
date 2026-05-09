@@ -36,7 +36,10 @@ abstract class BaseAdapter<T, I>(
 
     override fun getItemCount() = items.size
 
-    protected abstract inner class BaseViewHolder(val binding: T, root: View) : RecyclerView.ViewHolder(root) {
+    protected abstract inner class BaseViewHolder(
+        val binding: T,
+        root: View
+    ) : RecyclerView.ViewHolder(root) {
         open fun onBind(item: I) {
 
         }

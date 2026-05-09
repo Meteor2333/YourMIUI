@@ -15,7 +15,9 @@ class FeatureAdapter(features: List<Feature>) : BaseAdapter<ItemFeatureBinding, 
         return ViewHolder(binding)
     }
 
-    private inner class ViewHolder(binding: ItemFeatureBinding) : BaseAdapter<ItemFeatureBinding, Feature>.BaseViewHolder(binding, binding.root) {
+    private inner class ViewHolder(
+        binding: ItemFeatureBinding
+    ) : BaseAdapter<ItemFeatureBinding, Feature>.BaseViewHolder(binding, binding.root) {
         private lateinit var prefs: FeaturePreference
 
         override fun onBind(item: Feature) {

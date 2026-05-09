@@ -29,12 +29,18 @@ fun Bundle.putObject(name: String, value: Any) {
                 Parcelable::class.java.isAssignableFrom(type) -> {
                     putString($$"$$name$type", "List<Parcelable>")
                     putSerializable($$"$$name$element", type)
-                    putParcelableArrayList(name, (value as Collection<Parcelable>).toCollection(ArrayList()))
+                    putParcelableArrayList(
+                        name,
+                        (value as Collection<Parcelable>).toCollection(ArrayList())
+                    )
                 }
                 Serializable::class.java.isAssignableFrom(type) -> {
                     putString($$"$$name$type", "List<Serializable>")
                     putSerializable($$"$$name$element", type)
-                    putSerializable(name, (value as Collection<Serializable>).toCollection(ArrayList()))
+                    putSerializable(
+                        name,
+                        (value as Collection<Serializable>).toCollection(ArrayList())
+                    )
                 }
                 else -> throw IllegalArgumentException("Unsupported collection element type: $type")
             }
@@ -108,7 +114,10 @@ fun Intent.putExtra(name: String, value: Any) {
                 }
                 Parcelable::class.java.isAssignableFrom(type) -> {
                     putExtra($$"$$name$type", "List<Parcelable>")
-                    putParcelableArrayListExtra(name, (value as Collection<Parcelable>).toCollection(ArrayList()))
+                    putParcelableArrayListExtra(
+                        name,
+                        (value as Collection<Parcelable>).toCollection(ArrayList())
+                    )
                 }
                 Serializable::class.java.isAssignableFrom(type) -> {
                     putExtra($$"$$name$type", "List<Serializable>")

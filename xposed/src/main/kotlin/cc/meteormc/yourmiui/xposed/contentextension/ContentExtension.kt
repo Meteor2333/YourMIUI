@@ -16,6 +16,9 @@ object ContentExtension : Scope(
     }
 
     override fun getRestartMethod() = RestartMethod.ViaComponent(
-        ComponentName("com.miui.contentextension", "com.miui.contentextension.setting.activity.MainSettingsActivity")
+        ComponentName(
+            "com.miui.contentextension",
+            "com.miui.contentextension.setting.activity.MainSettingsActivity"
+        )
     )
 }

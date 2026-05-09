@@ -64,10 +64,11 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             runCatching {
                 it.onInitResources()
             }.onFailure { exception ->
-                XposedBridge.log("[YourMIUI] Failed to initialize resources " +
-                        "for feature '${it.javaClass.simpleName}' " +
-                        "in scope '${this.javaClass.simpleName}':\n" +
-                        Log.getStackTraceString(exception)
+                XposedBridge.log(
+                    "[YourMIUI] Failed to " +
+                            "initialize resources for feature '${it.javaClass.simpleName}' " +
+                            "in scope '${this.javaClass.simpleName}':\n" +
+                            Log.getStackTraceString(exception)
                 )
             }
         }
@@ -89,10 +90,11 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
                 it.onLoadPackage()
             }.onFailure { exception ->
-                XposedBridge.log("[YourMIUI] Failed to " +
-                        "initialize feature '${it.javaClass.simpleName}' " +
-                        "in scope '${this.javaClass.simpleName}':\n" +
-                        Log.getStackTraceString(exception)
+                XposedBridge.log(
+                    "[YourMIUI] Failed to " +
+                            "initialize feature '${it.javaClass.simpleName}' " +
+                            "in scope '${this.javaClass.simpleName}':\n" +
+                            Log.getStackTraceString(exception)
                 )
             }
 

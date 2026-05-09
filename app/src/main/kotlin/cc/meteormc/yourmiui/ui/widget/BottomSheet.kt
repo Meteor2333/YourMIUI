@@ -94,7 +94,10 @@ class BottomSheet(
                 strokeWidth = 1.px2dp()
                 strokeColor = ColorStateList.valueOf(
                     ColorUtils.setAlphaComponent(
-                        MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface),
+                        MaterialColors.getColor(
+                            this,
+                            com.google.android.material.R.attr.colorOnSurface
+                        ),
                         50
                     )
                 )
@@ -165,7 +168,7 @@ class BottomSheet(
         private var negativeButtonText: String? = null
         private var negativeButtonListener: DialogInterface.OnClickListener? = null
         private var positiveButtonText: String? = null
-        private var positiveButtonListener: DialogInterface.OnClickListener? =null
+        private var positiveButtonListener: DialogInterface.OnClickListener? = null
 
         fun setTitle(@StringRes titleId: Int): Builder {
             this.title = context.getString(titleId)
@@ -197,25 +200,37 @@ class BottomSheet(
             return this
         }
 
-        fun setNegativeButton(@StringRes textId: Int, listener: DialogInterface.OnClickListener?): Builder {
+        fun setNegativeButton(
+            @StringRes textId: Int,
+            listener: DialogInterface.OnClickListener?
+        ): Builder {
             this.negativeButtonText = context.getString(textId)
             this.negativeButtonListener = listener
             return this
         }
 
-        fun setNegativeButton(text: CharSequence?, listener: DialogInterface.OnClickListener?): Builder {
+        fun setNegativeButton(
+            text: CharSequence?,
+            listener: DialogInterface.OnClickListener?
+        ): Builder {
             this.negativeButtonText = text?.toString()
             this.negativeButtonListener = listener
             return this
         }
 
-        fun setPositiveButton(@StringRes textId: Int, listener: DialogInterface.OnClickListener?): Builder {
+        fun setPositiveButton(
+            @StringRes textId: Int,
+            listener: DialogInterface.OnClickListener?
+        ): Builder {
             this.positiveButtonText = context.getString(textId)
             this.positiveButtonListener = listener
             return this
         }
 
-        fun setPositiveButton(text: CharSequence?, listener: DialogInterface.OnClickListener?): Builder {
+        fun setPositiveButton(
+            text: CharSequence?,
+            listener: DialogInterface.OnClickListener?
+        ): Builder {
             this.positiveButtonText = text?.toString()
             this.positiveButtonListener = listener
             return this

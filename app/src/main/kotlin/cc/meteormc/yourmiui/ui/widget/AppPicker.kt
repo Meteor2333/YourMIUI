@@ -1,5 +1,6 @@
 package cc.meteormc.yourmiui.ui.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.LinearLayout
@@ -31,12 +32,12 @@ class AppPicker(
     }
 
     private var saveListener: (selected: Set<String>) -> Unit = { }
-    
+
     override fun create(): AlertDialog {
         val pm = context.packageManager
         val installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA).toList()
         val adapter = AppAdapter(installedApps.size, selected.toMutableSet())
-        
+
         val searchView = SearchView(context).apply {
             this.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -118,10 +119,11 @@ class AppPicker(
         return this
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private class AppAdapter(size: Int, val selected: MutableSet<String>) : BaseAdapter<ItemAppBinding, AppInfo?>(
-        arrayOfNulls(size),
-        { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
-    ) {
+            arrayOfNulls(size),
+            { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
+        ) {
         private var index = 0
         lateinit var listView: RecyclerView
         private val apps = mutableListOf<AppInfo>()
@@ -146,7 +148,8 @@ class AppPicker(
 
         fun submit(app: AppInfo, query: String?) {
             fun findInsertIndex(app: AppInfo): Int {
-                for (i in 0 until index) {
+                // STOPSHIP: This is a very naive implementation, but it works well enough for our use case since the number of apps is usually small. If performance becomes an issue, we can implement a more efficient algorithm (e.g., binary search).
+                for (i in 0..index) {
                     val current = items[i] ?: continue
                     if (comparator.compare(app, current) < 0) {
                         return i

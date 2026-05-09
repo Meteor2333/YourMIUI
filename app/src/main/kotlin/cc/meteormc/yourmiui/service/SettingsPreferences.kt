@@ -20,11 +20,21 @@ object SettingsPreferences {
     }
 
     var language: LanguageOption
-        get() = LanguageOption.entries.firstOrNull { it.value == prefs.getString(KEY_LANGUAGE, null) } ?: LanguageOption.FOLLOW_SYSTEM
+        get() = LanguageOption.entries.firstOrNull {
+            it.value == prefs.getString(
+                KEY_LANGUAGE,
+                null
+            )
+        } ?: LanguageOption.FOLLOW_SYSTEM
         set(value) = prefs.edit { putString(KEY_LANGUAGE, value.value) }
 
     var colorMode: ColorModeOption
-        get() = ColorModeOption.entries.firstOrNull { it.value == prefs.getString(KEY_COLOR_MODE, null) } ?: ColorModeOption.FOLLOW_SYSTEM
+        get() = ColorModeOption.entries.firstOrNull {
+            it.value == prefs.getString(
+                KEY_COLOR_MODE,
+                null
+            )
+        } ?: ColorModeOption.FOLLOW_SYSTEM
         set(value) = prefs.edit { putString(KEY_COLOR_MODE, value.value) }
 
     var iconHidden: Boolean

@@ -21,7 +21,10 @@ object DisableAdbInstallAlert : Feature(
             // modifier: public static | signature: asInterface(Landroid/os/IBinder;)Landroid/os/IMessenger;
             method("asInterface")
         } ?: return
-        AlertActivityHelper.disableAlert(classLoader, "com.miui.permcenter.install.AdbInstallActivity") {
+        AlertActivityHelper.disableAlert(
+            classLoader,
+            "com.miui.permcenter.install.AdbInstallActivity"
+        ) {
             // name: (obfuscated) | type: int
             fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
                 field.get<Int>(it) == 0

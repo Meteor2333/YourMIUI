@@ -188,7 +188,11 @@ private fun toCanonicalName(className: String): String {
  * `left`/`right`
  * @return int consistent with `compare` semantics
  */
-fun compareParameterTypes(left: Array<Class<*>>, right: Array<Class<*>>, actual: Array<out Class<*>>): Int {
+fun compareParameterTypes(
+    left: Array<Class<*>>,
+    right: Array<Class<*>>,
+    actual: Array<out Class<*>>
+): Int {
     val leftCost = getTotalTransformationCost(actual, left)
     val rightCost = getTotalTransformationCost(actual, right)
     return if (leftCost < rightCost) -1 else if (rightCost < leftCost) 1 else 0
@@ -201,7 +205,10 @@ fun compareParameterTypes(left: Array<Class<*>>, right: Array<Class<*>>, actual:
  * @param destArgs The destination arguments
  * @return The total transformation cost
  */
-private fun getTotalTransformationCost(srcArgs: Array<out Class<*>>, destArgs: Array<out Class<*>>): Float {
+private fun getTotalTransformationCost(
+    srcArgs: Array<out Class<*>>,
+    destArgs: Array<out Class<*>>
+): Float {
     val size = minOf(srcArgs.size, destArgs.size)
     val extra = abs(srcArgs.size - destArgs.size)
 

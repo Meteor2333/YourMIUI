@@ -15,10 +15,21 @@ class Host(private val context: Context) : BroadcastReceiver() {
 
     fun attach() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(this, filter, Bridge.REQUIRED_PERMISSION, null, Context.RECEIVER_EXPORTED)
+            context.registerReceiver(
+                this,
+                filter,
+                Bridge.REQUIRED_PERMISSION,
+                null,
+                Context.RECEIVER_EXPORTED
+            )
         } else {
             @SuppressLint("UnspecifiedRegisterReceiverFlag")
-            context.registerReceiver(this, filter, Bridge.REQUIRED_PERMISSION, null)
+            context.registerReceiver(
+                this,
+                filter,
+                Bridge.REQUIRED_PERMISSION,
+                null
+            )
         }
     }
 

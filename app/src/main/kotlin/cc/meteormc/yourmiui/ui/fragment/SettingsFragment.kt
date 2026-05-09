@@ -20,7 +20,7 @@ import cc.meteormc.yourmiui.ui.data.SettingGroup
 import cc.meteormc.yourmiui.ui.data.SettingItem
 import cc.meteormc.yourmiui.ui.data.SwitchableSettingItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.*
+import java.util.Locale
 
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, container ->
     FragmentSettingsBinding.inflate(inflater, container, false)

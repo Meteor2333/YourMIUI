@@ -61,7 +61,9 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         }
 
         return runCatching {
-            ConstructorWrapper<T>(delegate.getDeclaredConstructor(*paramTypes)).apply { constructorCache[fullName] = this }
+            ConstructorWrapper<T>(delegate.getDeclaredConstructor(*paramTypes)).apply {
+                constructorCache[fullName] = this
+            }
         }.onFailure {
             XposedBridge.log("[YourMIUI] Constructor not found: $fullName!")
         }.getOrNull()
@@ -72,7 +74,9 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     fun declaredConstructors(): List<ConstructorWrapper<T>> {
-        return (delegate.declaredConstructors as? Array<Constructor<T>>)?.map { ConstructorWrapper(it) } ?: emptyList()
+        return (delegate.declaredConstructors as? Array<Constructor<T>>)?.map {
+            ConstructorWrapper(it)
+        } ?: emptyList()
     }
 
     fun field(name: String): FieldWrapper<T>? {
@@ -120,14 +124,19 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
 
         var result: Method? = null
         findRecursive {
-            runCatching { it.getDeclaredMethod(name, *paramTypes) }.getOrNull()?.let { dm -> return@findRecursive dm }
+            runCatching {
+                it.getDeclaredMethod(name, *paramTypes)
+            }.getOrNull()?.let { dm ->
+                return@findRecursive dm
+            }
             for (method in it.getDeclaredMethods()) {
                 // compare name and parameters
                 if (method.name == name && (result == null || compareParameterTypes(
                         method.parameterTypes,
                         result!!.parameterTypes,
                         paramTypes
-                    ) < 0)) {
+                    ) < 0)
+                ) {
                     result = method
                 }
             }

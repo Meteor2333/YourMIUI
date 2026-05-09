@@ -16,6 +16,9 @@ object Notification : Scope(
     }
 
     override fun getRestartMethod() = RestartMethod.ViaComponent(
-        ComponentName("com.miui.notification", "miui.notification.management.activity.NotificationAppListActivity")
+        ComponentName(
+            "com.miui.notification",
+            "miui.notification.management.activity.NotificationAppListActivity"
+        )
     )
 }

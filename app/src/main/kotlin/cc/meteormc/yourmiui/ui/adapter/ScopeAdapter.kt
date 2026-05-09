@@ -21,7 +21,9 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
         return ViewHolder(binding)
     }
 
-    private inner class ViewHolder(binding: ItemScopeBinding) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>.BaseViewHolder(binding, binding.root) {
+    private inner class ViewHolder(
+        binding: ItemScopeBinding
+    ) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>.BaseViewHolder(binding, binding.root) {
         private var currentIndex = 0
         private val runnable = Runnable { this.next() }
         private val handler = Handler(Looper.getMainLooper())

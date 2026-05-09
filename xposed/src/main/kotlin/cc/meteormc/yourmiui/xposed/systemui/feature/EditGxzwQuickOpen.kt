@@ -94,7 +94,13 @@ object EditGxzwQuickOpen : Feature(
         WECHAT_PAY(8, "wechat_pay", "WechatPayItem"),
         WECHAT_SCAN(9, "wechat_scan", "WechatScanItem"),
         XIAOAI(3, "xiaoai", "XiaoaiItem"),
-        TORCH(7, "torch", null, ExtraQuickOpenItem("Torch", "YourMIUI/Torch", "keyguard_left_view_torchlight_n", "打开手电筒", "") {
+        TORCH(7, "torch", null, ExtraQuickOpenItem(
+            "Torch",
+            "YourMIUI/Torch",
+            "keyguard_left_view_torchlight_n",
+            "打开手电筒",
+            ""
+        ) {
             operator("com.miui.systemui.util.CommonUtil") {
                 method("toggleTorch")?.call(null)
             }
@@ -128,10 +134,18 @@ object EditGxzwQuickOpen : Feature(
                 // name: mPackageName | type: java.lang.String
                 val identifierField = field("mPackageName") ?: return@operator null
                 // modifier: public | signature: <init>(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;)V
-                val instance = constructor(RectF::class.java, Region::class.java, Context::class.java)?.new(*args) ?: return@operator null
+                val instance = constructor(
+                    RectF::class.java,
+                    Region::class.java,
+                    Context::class.java
+                )?.new(*args) ?: return@operator null
                 if (context != null) {
                     @SuppressLint("DiscouragedApi")
-                    val identifier = context.resources.getIdentifier(iconResName, "drawable", "com.android.systemui")
+                    val identifier = context.resources.getIdentifier(
+                        iconResName,
+                        "drawable",
+                        "com.android.systemui"
+                    )
                     viewField.get<ImageView>(instance)?.setImageResource(identifier)
                     identifierField[instance] = identifierOf()
                 }
@@ -145,6 +159,7 @@ object EditGxzwQuickOpen : Feature(
                 // name: mPackageName | type: java.lang.String
                 field("mPackageName")
             } ?: return
+
             fun Any.isExtraClass(): Boolean {
                 if (this.javaClass.name != EXTRA_ITEM_CLASS) return false
                 return identifierField.get<String>(this) == identifierOf()

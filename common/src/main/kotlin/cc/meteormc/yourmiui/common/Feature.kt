@@ -21,6 +21,7 @@ abstract class Feature(
 
     @Transient
     lateinit var resources: Resources
+
     @Transient
     lateinit var classLoader: ClassLoader
 
