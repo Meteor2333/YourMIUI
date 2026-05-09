@@ -13,7 +13,9 @@ import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.common.util.putObject
 import cc.meteormc.yourmiui.databinding.ItemScopeBinding
 
-class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>(
+class ScopeAdapter(
+    scopes: Map<Scope, List<AppInfo>>
+) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>(
     scopes.toList().toTypedArray(),
     { inflater, parent -> ItemScopeBinding.inflate(inflater, parent, false) }
 ) {
@@ -23,7 +25,10 @@ class ScopeAdapter(scopes: Map<Scope, List<AppInfo>>) : BaseAdapter<ItemScopeBin
 
     private inner class ViewHolder(
         binding: ItemScopeBinding
-    ) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>.BaseViewHolder(binding, binding.root) {
+    ) : BaseAdapter<ItemScopeBinding, Pair<Scope, List<AppInfo>>>.BaseViewHolder(
+        binding,
+        binding.root
+    ) {
         private var currentIndex = 0
         private val runnable = Runnable { this.next() }
         private val handler = Handler(Looper.getMainLooper())

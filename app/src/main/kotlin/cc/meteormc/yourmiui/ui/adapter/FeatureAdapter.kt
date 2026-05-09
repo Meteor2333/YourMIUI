@@ -7,7 +7,9 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.databinding.ItemFeatureBinding
 import cc.meteormc.yourmiui.service.FeaturePreference
 
-class FeatureAdapter(features: List<Feature>) : BaseAdapter<ItemFeatureBinding, Feature>(
+class FeatureAdapter(
+    features: List<Feature>
+) : BaseAdapter<ItemFeatureBinding, Feature>(
     features.toTypedArray(),
     { inflater, parent -> ItemFeatureBinding.inflate(inflater, parent, false) }
 ) {
@@ -17,7 +19,10 @@ class FeatureAdapter(features: List<Feature>) : BaseAdapter<ItemFeatureBinding, 
 
     private inner class ViewHolder(
         binding: ItemFeatureBinding
-    ) : BaseAdapter<ItemFeatureBinding, Feature>.BaseViewHolder(binding, binding.root) {
+    ) : BaseAdapter<ItemFeatureBinding, Feature>.BaseViewHolder(
+        binding,
+        binding.root
+    ) {
         private lateinit var prefs: FeaturePreference
 
         override fun onBind(item: Feature) {

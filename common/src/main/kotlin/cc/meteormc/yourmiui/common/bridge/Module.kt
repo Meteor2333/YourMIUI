@@ -10,7 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import cc.meteormc.yourmiui.common.util.getExtra
 import cc.meteormc.yourmiui.common.util.putExtra
-import java.util.*
+import java.util.UUID
 
 class Module(private val context: Context) : BroadcastReceiver() {
     private val pendings = mutableMapOf<UUID, ResponseCallback<Any>>()

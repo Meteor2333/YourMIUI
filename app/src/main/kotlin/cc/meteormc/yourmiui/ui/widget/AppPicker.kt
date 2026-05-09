@@ -120,10 +120,13 @@ class AppPicker(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private class AppAdapter(size: Int, val selected: MutableSet<String>) : BaseAdapter<ItemAppBinding, AppInfo?>(
-            arrayOfNulls(size),
-            { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
-        ) {
+    private class AppAdapter(
+        size: Int,
+        val selected: MutableSet<String>
+    ) : BaseAdapter<ItemAppBinding, AppInfo?>(
+        arrayOfNulls(size),
+        { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
+    ) {
         private var index = 0
         lateinit var listView: RecyclerView
         private val apps = mutableListOf<AppInfo>()

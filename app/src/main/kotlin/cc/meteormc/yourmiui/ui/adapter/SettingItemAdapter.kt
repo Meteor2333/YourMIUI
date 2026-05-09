@@ -5,7 +5,9 @@ import cc.meteormc.yourmiui.databinding.ItemSettingBinding
 import cc.meteormc.yourmiui.ui.data.SettingItem
 import cc.meteormc.yourmiui.ui.data.SwitchableSettingItem
 
-class SettingItemAdapter(items: Array<SettingItem>) : BaseAdapter<ItemSettingBinding, SettingItem>(
+class SettingItemAdapter(
+    items: Array<SettingItem>
+) : BaseAdapter<ItemSettingBinding, SettingItem>(
     items,
     { inflater, parent -> ItemSettingBinding.inflate(inflater, parent, false) }
 ) {

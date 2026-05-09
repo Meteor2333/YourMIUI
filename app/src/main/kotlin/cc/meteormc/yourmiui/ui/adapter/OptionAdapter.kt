@@ -24,7 +24,10 @@ class OptionAdapter(
     private inner class ViewHolder(
         binding: ItemOptionBinding,
         private var prefs: FeaturePreference
-    ) : BaseAdapter<ItemOptionBinding, Option<*>>.BaseViewHolder(binding, binding.root) {
+    ) : BaseAdapter<ItemOptionBinding, Option<*>>.BaseViewHolder(
+        binding,
+        binding.root
+    ) {
         override fun onBind(item: Option<*>) {
             binding.optionName.setText(item.nameRes)
             binding.optionSummary.setText(item.summaryRes)
