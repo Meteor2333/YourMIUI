@@ -14,15 +14,15 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleCollapseMode="scale"
-            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance">
+            app:titleCollapseMode="scale">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@string/title_manager"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:title="@string/title_manager" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -46,9 +46,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginBottom="16dp"
+                android:text="@string/manager_hint"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?android:attr/textColorSecondary"
-                android:text="@string/manager_hint" />
+                android:textColor="?android:attr/textColorSecondary" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -60,18 +60,18 @@
                     android:id="@+id/scope_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
                     tools:listitem="@layout/item_scope" />
 
                 <LinearLayout
                     android:id="@+id/empty_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="150dp"
-                    android:visibility="gone"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingVertical="150dp"
+                    android:visibility="gone">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="96dp"
@@ -83,9 +83,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:text="@string/manager_empty"
                         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:text="@string/manager_empty" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>
 

@@ -14,15 +14,15 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleCollapseMode="scale"
-            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance">
+            app:titleCollapseMode="scale">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@string/title_home"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:title="@string/title_home" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -58,8 +58,8 @@
                         android:id="@+id/status_icon"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:tint="?colorOnPrimary"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        android:tint="?colorOnPrimary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/status_text"
@@ -75,9 +75,9 @@
                         android:id="@+id/status_version"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
                         android:layout_below="@id/status_text"
                         android:layout_alignStart="@id/status_text"
+                        android:layout_marginTop="3dp"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?colorOnPrimary"
                         android:textSize="16sp" />
@@ -86,9 +86,9 @@
                         android:id="@+id/status_api"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
                         android:layout_below="@id/status_version"
                         android:layout_alignStart="@id/status_version"
+                        android:layout_marginTop="3dp"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?colorOnPrimary"
                         android:textSize="12sp" />
@@ -99,11 +99,11 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/update_card"
+                style="@style/Widget.Material3.CardView.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                style="@style/Widget.Material3.CardView.Outlined"
                 app:cardBackgroundColor="?colorSecondaryContainer">
 
                 <RelativeLayout
@@ -124,22 +124,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:layout_toEndOf="@id/update_icon"
+                        android:text="@string/update_title"
                         android:textAppearance="?textAppearanceTitleMedium"
                         android:textColor="?colorOnSecondaryContainer"
-                        android:textSize="16sp"
-                        android:text="@string/update_title" />
+                        android:textSize="16sp" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/update_summary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
                         android:layout_below="@id/update_title"
                         android:layout_alignStart="@id/update_title"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/update_summary"
                         android:textAppearance="?textAppearanceTitleMedium"
                         android:textColor="?colorOnSecondaryContainer"
-                        android:textSize="12sp"
-                        android:text="@string/update_summary" />
+                        android:textSize="12sp" />
 
                 </RelativeLayout>
 
@@ -160,9 +160,9 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/info_device_brand"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:text="@string/info_device_brand" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/info_device_brand"
@@ -174,9 +174,9 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/info_device_model"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:text="@string/info_device_model" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/info_device_model"
@@ -188,9 +188,9 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/info_system_code"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:text="@string/info_system_code" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/info_system_code"
@@ -202,9 +202,9 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/info_android_version"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:text="@string/info_android_version" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/info_android_version"
@@ -216,9 +216,9 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/info_miui_version"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:text="@string/info_miui_version" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/info_miui_version"
@@ -230,9 +230,9 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/info_cpu_abi"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:text="@string/info_cpu_abi" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/info_cpu_abi"

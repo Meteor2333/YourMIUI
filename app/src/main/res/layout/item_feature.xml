@@ -11,10 +11,10 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/option_list"
         app:layout_constraintEnd_toStartOf="@id/feature_switch"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/option_list">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/feature_name"
@@ -35,25 +35,25 @@
             android:id="@+id/feature_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="?attr/colorError" />
+            android:textColor="?attr/colorError"
+            android:visibility="gone" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/feature_test_environment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/feature_original_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -61,9 +61,9 @@
         android:id="@+id/feature_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/option_list"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/option_list" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/option_list"
@@ -71,9 +71,9 @@
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
         android:visibility="gone"
-        tools:listitem="@layout/item_option"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/item_option" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

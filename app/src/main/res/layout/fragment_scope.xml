@@ -14,17 +14,17 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
+            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleCollapseMode="scale"
-            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance">
+            app:titleCollapseMode="scale">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/scope_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_back_24dp"
-                app:navigationIconTint="?attr/colorOnSurface"
-                app:layout_collapseMode="pin" />
+                app:navigationIconTint="?attr/colorOnSurface" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -34,9 +34,9 @@
         android:id="@+id/feature_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false"
         android:paddingHorizontal="20dp"
         android:paddingTop="18dp"
-        android:nestedScrollingEnabled="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_feature" />
 

@@ -11,8 +11,8 @@
         android:id="@+id/scope_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginEnd="20dp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/scope_name"
@@ -29,8 +29,8 @@
         android:id="@+id/arrow_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/ic_arrow_24dp"
         android:tint="@android:color/darker_gray" />
 

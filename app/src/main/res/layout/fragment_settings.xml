@@ -14,15 +14,15 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleCollapseMode="scale"
-            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance">
+            app:titleCollapseMode="scale">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@string/title_settings"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:title="@string/title_settings" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
