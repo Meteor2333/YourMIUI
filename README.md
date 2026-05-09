@@ -9,10 +9,12 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Meteor2333_YourMIUI&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Meteor2333_YourMIUI)
 </div>
 
-## 介绍 
+## 介绍
+
 一款优化 `MIUI` 系统中各种不友好功能的模块
 
 ## 功能列表
+
 - [x] 去除若干开屏广告+软件内广告
 - [x] 阻止结束软件进程
 - [x] 解除关闭通知限制
@@ -32,9 +34,11 @@
 - [x] 系统界面美化
 
 ## 鸣谢
+
 - [mi_water](https://github.com/coderstory/mi_water) 为本项目提供了灵感和基础
 - [NoSwipeToKill](https://github.com/dantmnf/NoSwipeToKill) 为本项目的 `阻止结束进程` 功能提供了技术支持
 - [FuckMarketAds](https://github.com/callng/FuckMarketAds) 为本项目的 `应用商店去广告` 功能提供了基础
 
 ## 许可证
+
 MIT
