@@ -9,7 +9,7 @@ import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.helper.SysVersion
-import cc.meteormc.yourmiui.service.UpdateChecker
+import cc.meteormc.yourmiui.helper.UpdateChecker
 import cc.meteormc.yourmiui.store.HostStore
 import kotlinx.coroutines.launch
 

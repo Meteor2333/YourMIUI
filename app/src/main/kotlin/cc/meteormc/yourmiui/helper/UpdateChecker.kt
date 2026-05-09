@@ -1,9 +1,10 @@
-package cc.meteormc.yourmiui.service
+package cc.meteormc.yourmiui.helper
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import cc.meteormc.yourmiui.BuildConfig
+import cc.meteormc.yourmiui.service.SettingsPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
