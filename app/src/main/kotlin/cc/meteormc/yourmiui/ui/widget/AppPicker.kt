@@ -151,8 +151,7 @@ class AppPicker(
 
         fun submit(app: AppInfo, query: String?) {
             fun findInsertIndex(app: AppInfo): Int {
-                // STOPSHIP: This is a very naive implementation, but it works well enough for our use case since the number of apps is usually small. If performance becomes an issue, we can implement a more efficient algorithm (e.g., binary search).
-                for (i in 0..index) {
+                for (i in 0 until index) {
                     val current = items[i] ?: continue
                     if (comparator.compare(app, current) < 0) {
                         return i
