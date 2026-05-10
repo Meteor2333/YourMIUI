@@ -52,4 +52,13 @@
     <string name="settings_basic_hideicon_notice">To restore it, open this app in your Xposed manager.</string>
     <string name="settings_basic_checkupdate_title">Check updates</string>
     <string name="settings_basic_checkupdate_summary">Get the latest version as soon as it’s available</string>
+    <string name="settings_misc">Misc</string>
+    <string name="settings_misc_export_title">Export preferences</string>
+    <string name="settings_misc_export_summary">Export preferences as a file</string>
+    <string name="settings_misc_export_success">Export successful!</string>
+    <string name="settings_misc_export_failure">Export failed!\nPlease try again</string>
+    <string name="settings_misc_import_title">Import preferences</string>
+    <string name="settings_misc_import_summary">Import preferences from file</string>
+    <string name="settings_misc_import_success">Import successful!</string>
+    <string name="settings_misc_import_failure">Import failed!\nPlease check the preferences file and try again</string>
 </resources>
