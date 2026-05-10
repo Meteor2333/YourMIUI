@@ -6,11 +6,16 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.ActivityMainBinding
+import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import cc.meteormc.yourmiui.store.HostStore
+import cc.meteormc.yourmiui.ui.controller.LanguageController
+import cc.meteormc.yourmiui.ui.controller.ThemeController
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LanguageController.apply(SettingsPreferences.language)
+        ThemeController.apply(SettingsPreferences.colorMode)
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

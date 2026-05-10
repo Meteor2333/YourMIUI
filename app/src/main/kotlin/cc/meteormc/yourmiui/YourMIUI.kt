@@ -3,10 +3,8 @@ package cc.meteormc.yourmiui
 import android.app.Application
 import cc.meteormc.yourmiui.common.bridge.Module
 import cc.meteormc.yourmiui.helper.SysVersion
-import cc.meteormc.yourmiui.service.FeaturePreference
-import cc.meteormc.yourmiui.service.SettingsPreferences
-import cc.meteormc.yourmiui.ui.controller.LanguageController
-import cc.meteormc.yourmiui.ui.controller.ThemeController
+import cc.meteormc.yourmiui.preferences.FeaturePreferences
+import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.system.exitProcess
 
@@ -26,10 +24,8 @@ class YourMIUI : Application() {
     override fun onCreate() {
         super.onCreate()
         checkSystem()
-        FeaturePreference.init(this)
+        FeaturePreferences.init(this)
         SettingsPreferences.init(this)
-        LanguageController.apply(SettingsPreferences.language)
-        ThemeController.apply(SettingsPreferences.colorMode)
         initModuleBridge()
     }
 

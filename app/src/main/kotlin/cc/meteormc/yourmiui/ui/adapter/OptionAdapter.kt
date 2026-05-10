@@ -5,14 +5,14 @@ import android.view.View
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
-import cc.meteormc.yourmiui.service.FeaturePreference
+import cc.meteormc.yourmiui.preferences.FeaturePreferences
 import cc.meteormc.yourmiui.ui.widget.AppPicker
 import cc.meteormc.yourmiui.ui.widget.SwitchMenu
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class OptionAdapter(
     options: List<Option<*>>,
-    private var prefs: FeaturePreference
+    private var prefs: FeaturePreferences
 ) : BaseAdapter<ItemOptionBinding, Option<*>>(
     options.toTypedArray(),
     { inflater, parent -> ItemOptionBinding.inflate(inflater, parent, false) }
@@ -23,7 +23,7 @@ class OptionAdapter(
 
     private inner class ViewHolder(
         binding: ItemOptionBinding,
-        private var prefs: FeaturePreference
+        private var prefs: FeaturePreferences
     ) : BaseAdapter<ItemOptionBinding, Option<*>>.BaseViewHolder(
         binding,
         binding.root

@@ -51,7 +51,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
         )
     }
     private val prefs by lazy {
-        XSharedPreferences("cc.meteormc.yourmiui", Feature.PREFERENCE_TAG).apply {
+        XSharedPreferences("cc.meteormc.yourmiui", Feature.PREFERENCES_NAME).apply {
             makeWorldReadable()
             reload()
         }

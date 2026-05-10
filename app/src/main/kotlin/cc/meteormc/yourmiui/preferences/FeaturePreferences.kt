@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.service
+package cc.meteormc.yourmiui.preferences
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import cc.meteormc.yourmiui.common.Feature
 
-class FeaturePreference(val prefKey: String) {
+class FeaturePreferences(val prefKey: String) {
     companion object {
         private lateinit var prefs: SharedPreferences
 
@@ -19,16 +19,19 @@ class FeaturePreference(val prefKey: String) {
                     @Suppress("DEPRECATION")
                     @SuppressLint("WorldReadableFiles")
                     context.getSharedPreferences(
-                        Feature.PREFERENCE_TAG,
+                        Feature.PREFERENCES_NAME,
                         Context.MODE_WORLD_READABLE
                     )
                 }.getOrElse {
-                    context.getSharedPreferences(Feature.PREFERENCE_TAG, Context.MODE_PRIVATE)
+                    context.getSharedPreferences(
+                        Feature.PREFERENCES_NAME,
+                        Context.MODE_PRIVATE
+                    )
                 }
             }
         }
 
-        fun getPreference(prefKey: String) = FeaturePreference(prefKey)
+        fun getPreference(prefKey: String) = FeaturePreferences(prefKey)
     }
 
     var enabled: Boolean

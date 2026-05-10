@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.databinding.ItemFeatureBinding
-import cc.meteormc.yourmiui.service.FeaturePreference
+import cc.meteormc.yourmiui.preferences.FeaturePreferences
 
 class FeatureAdapter(
     features: List<Feature>
@@ -23,10 +23,10 @@ class FeatureAdapter(
         binding,
         binding.root
     ) {
-        private lateinit var prefs: FeaturePreference
+        private lateinit var prefs: FeaturePreferences
 
         override fun onBind(item: Feature) {
-            this.prefs = FeaturePreference.getPreference(item.key)
+            this.prefs = FeaturePreferences.getPreference(item.key)
             binding.featureName.setText(item.nameRes)
             binding.featureDescription.setText(item.descriptionRes)
             item.warningRes?.let {

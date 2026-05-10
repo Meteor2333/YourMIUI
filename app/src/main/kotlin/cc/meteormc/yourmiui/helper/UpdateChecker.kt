@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import cc.meteormc.yourmiui.BuildConfig
-import cc.meteormc.yourmiui.service.SettingsPreferences
+import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject

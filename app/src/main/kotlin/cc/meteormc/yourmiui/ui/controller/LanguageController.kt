@@ -2,7 +2,7 @@ package cc.meteormc.yourmiui.ui.controller
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import cc.meteormc.yourmiui.service.SettingsPreferences
+import cc.meteormc.yourmiui.preferences.SettingsPreferences
 
 object LanguageController {
     fun apply(option: SettingsPreferences.LanguageOption) {

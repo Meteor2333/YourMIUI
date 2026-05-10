@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.service
+package cc.meteormc.yourmiui.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,6 +6,8 @@ import androidx.core.content.edit
 import cc.meteormc.yourmiui.R
 
 object SettingsPreferences {
+    const val PREFERENCES_NAME = "settings"
+
     private const val KEY_LANGUAGE = "language"
     private const val KEY_COLOR_MODE = "color_mode"
     private const val KEY_HIDE_ICON = "hide_icon"
@@ -15,7 +17,7 @@ object SettingsPreferences {
 
     fun init(context: Context) {
         if (!::prefs.isInitialized) {
-            this.prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            this.prefs = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
         }
     }
 

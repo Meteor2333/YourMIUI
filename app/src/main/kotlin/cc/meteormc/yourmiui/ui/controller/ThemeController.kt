@@ -1,7 +1,7 @@
 package cc.meteormc.yourmiui.ui.controller
 
 import androidx.appcompat.app.AppCompatDelegate
-import cc.meteormc.yourmiui.service.SettingsPreferences
+import cc.meteormc.yourmiui.preferences.SettingsPreferences
 
 object ThemeController {
     fun apply(option: SettingsPreferences.ColorModeOption) {

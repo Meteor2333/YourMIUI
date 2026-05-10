@@ -53,7 +53,6 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
                     val selected = SettingsPreferences.LanguageOption.entries[which]
                     if (selected != SettingsPreferences.language) {
                         SettingsPreferences.language = selected
-                        LanguageController.apply(selected)
                         requireActivity().recreate()
                     }
                 }
@@ -85,7 +84,6 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
                     val selected = SettingsPreferences.ColorModeOption.entries[which]
                     if (selected != SettingsPreferences.colorMode) {
                         SettingsPreferences.colorMode = selected
-                        ThemeController.apply(selected)
                         requireActivity().recreate()
                     }
                 }

@@ -12,7 +12,7 @@ abstract class Feature(
     val originalAuthor: String? = null
 ) : Serializable {
     companion object {
-        const val PREFERENCE_TAG = "features"
+        const val PREFERENCES_NAME = "features"
 
         fun enabledKeyOf(featureKey: String) = "pref_${featureKey}_enabled"
 
