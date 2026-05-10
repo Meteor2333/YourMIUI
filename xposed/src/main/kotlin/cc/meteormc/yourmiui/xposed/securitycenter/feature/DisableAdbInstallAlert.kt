@@ -1,6 +1,9 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
+import android.app.KeyguardManager
+import android.content.Context
 import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
@@ -11,6 +14,8 @@ object DisableAdbInstallAlert : Feature(
     descriptionRes = R.string.feature_securitycenter_disable_adb_install_alert_description,
     testEnvironmentRes = R.string.feature_securitycenter_disable_adb_install_alert_test_environment
 ) {
+    private var requireUnlock = false
+
     override fun onLoadPackage() {
         val messagerClass = operator("android.os.IMessenger")?.delegate ?: return
         val getBinderMethod = operator("com.miui.permcenter.compact.IntentCompat") {
@@ -25,18 +30,33 @@ object DisableAdbInstallAlert : Feature(
             classLoader,
             "com.miui.permcenter.install.AdbInstallActivity"
         ) {
-            // name: (obfuscated) | type: int
-            fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                field.get<Int>(it) == 0
-            }?.set(it, -1)
-
             val binder = getBinderMethod.call(null, it.intent, "observer")
             val messenger = asInterfaceMethod.call(null, binder)
             // name: (obfuscated) | type: android.os.IMessenger
             fields(messagerClass).firstOrNull()?.set(it, messenger)
 
+            val km = it.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager?
+            if (!requireUnlock || (km != null && !km.isKeyguardLocked)) {
+                // name: (obfuscated) | type: int
+                fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
+                    field.get<Int>(it) == 0
+                }?.set(it, -1)
+            }
+
             it.finish()
             true
         }
+    }
+
+    override fun getOptions(): List<Option<*>> {
+        return listOf(
+            Option(
+                "require_unlock",
+                R.string.option_securitycenter_disable_adb_install_alert_require_unlock_name,
+                R.string.option_securitycenter_disable_adb_install_alert_require_unlock_summary,
+                Option.Type.Switch(),
+                true
+            ) { requireUnlock = it }
+        )
     }
 }

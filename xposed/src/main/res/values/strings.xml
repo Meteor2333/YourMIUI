@@ -65,6 +65,8 @@
     <string name="feature_securitycenter_disable_adb_install_alert_name">禁用ADB安装弹窗</string>
     <string name="feature_securitycenter_disable_adb_install_alert_description">禁用ADB安装时的确认弹窗</string>
     <string name="feature_securitycenter_disable_adb_install_alert_test_environment">7.5.4–230317.0.2版本</string>
+    <string name="option_securitycenter_disable_adb_install_alert_require_unlock_name">需要解锁</string>
+    <string name="option_securitycenter_disable_adb_install_alert_require_unlock_summary">安装时需要解锁才能进行</string>
 
     <string name="feature_securitycenter_disable_countdown_dialog_name">取消倒计时对话框</string>
     <string name="feature_securitycenter_disable_countdown_dialog_description">取消更改危险设置时的对话框确定倒计时</string>
