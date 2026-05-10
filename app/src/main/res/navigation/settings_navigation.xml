@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_navigation"
+    app:startDestination="@id/navigation_settings">
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="cc.meteormc.yourmiui.ui.fragment.SettingsFragment"
+        android:label="settings"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>

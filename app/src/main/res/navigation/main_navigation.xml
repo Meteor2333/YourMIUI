@@ -1,38 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/home_navigation">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="cc.meteormc.yourmiui.ui.fragment.HomeFragment"
-        android:label="home"
-        tools:layout="@layout/fragment_home" />
-
-    <action
-        android:id="@+id/action_to_home"
-        app:destination="@id/navigation_home"
-        app:enterAnim="@anim/enter"
-        app:exitAnim="@anim/exit"
-        app:popEnterAnim="@anim/pop_enter"
-        app:popExitAnim="@anim/pop_exit" />
+    <include app:graph="@navigation/home_navigation" />
 
     <include app:graph="@navigation/manager_navigation" />
 
-    <fragment
-        android:id="@+id/navigation_settings"
-        android:name="cc.meteormc.yourmiui.ui.fragment.SettingsFragment"
-        android:label="settings"
-        tools:layout="@layout/fragment_settings" />
-
-    <action
-        android:id="@+id/action_to_settings"
-        app:destination="@id/navigation_settings"
-        app:enterAnim="@anim/enter"
-        app:exitAnim="@anim/exit"
-        app:popEnterAnim="@anim/pop_enter"
-        app:popExitAnim="@anim/pop_exit" />
+    <include app:graph="@navigation/settings_navigation" />
 
 </navigation>

@@ -47,7 +47,7 @@ class ScopeAdapter(
                 bundle.putString("name", name)
                 bundle.putObject("scope", scope)
                 bundle.putObject("apps", apps)
-                it.findNavController().navigate(R.id.action_to_scope, bundle)
+                it.findNavController().navigate(R.id.action_manager_to_scope, bundle)
             }
 
             binding.scopeName.text = name

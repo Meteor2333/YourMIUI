@@ -9,15 +9,17 @@
         android:id="@+id/navigation_manager"
         android:name="cc.meteormc.yourmiui.ui.fragment.ManagerFragment"
         android:label="manager"
-        tools:layout="@layout/fragment_manager" />
+        tools:layout="@layout/fragment_manager">
 
-    <action
-        android:id="@+id/action_to_manager"
-        app:destination="@id/navigation_manager"
-        app:enterAnim="@anim/enter"
-        app:exitAnim="@anim/exit"
-        app:popEnterAnim="@anim/pop_enter"
-        app:popExitAnim="@anim/pop_exit" />
+        <action
+            android:id="@+id/action_manager_to_scope"
+            app:destination="@id/navigation_scope"
+            app:enterAnim="@anim/scale_in_expand"
+            app:exitAnim="@anim/scale_out_expand"
+            app:popEnterAnim="@anim/scale_in_shrink"
+            app:popExitAnim="@anim/scale_out_shrink" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_scope"
@@ -25,11 +27,4 @@
         android:label="scope"
         tools:layout="@layout/fragment_scope" />
 
-    <action
-        android:id="@+id/action_to_scope"
-        app:destination="@id/navigation_scope"
-        app:enterAnim="@anim/enter"
-        app:exitAnim="@anim/exit"
-        app:popEnterAnim="@anim/pop_enter"
-        app:popExitAnim="@anim/pop_exit" />
 </navigation>
