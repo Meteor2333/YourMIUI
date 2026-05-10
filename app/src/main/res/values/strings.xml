@@ -76,4 +76,8 @@
     <string name="settings_misc_import_summary">从文件导入首选项</string>
     <string name="settings_misc_import_success">导入成功！</string>
     <string name="settings_misc_import_failure">导入失败！\n请检查首选项文件后重试</string>
+    <string name="settings_misc_troubleshooter_title">疑难解答</string>
+    <string name="settings_misc_troubleshooter_summary">轻松修复遇到的模块问题</string>
+    <string name="settings_misc_troubleshooter_github_app">Github App暂不支持问题模板\n请选择其他打开方式</string>
+    <string name="settings_misc_troubleshooter_no_browser">未找到其他打开方式 :)\n请手动在Github提交issue</string>
 </resources>

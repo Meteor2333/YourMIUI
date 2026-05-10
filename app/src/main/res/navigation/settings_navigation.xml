@@ -10,6 +10,22 @@
         android:id="@+id/navigation_settings"
         android:name="cc.meteormc.yourmiui.ui.fragment.SettingsFragment"
         android:label="settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+
+        <action
+            android:id="@+id/action_settings_to_troubleshooter"
+            app:destination="@id/navigation_troubleshooter"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_troubleshooter"
+        android:name="cc.meteormc.yourmiui.ui.fragment.TroubleshooterFragment"
+        android:label="troubleshooter"
+        tools:layout="@layout/fragment_troubleshooter" />
 
 </navigation>
