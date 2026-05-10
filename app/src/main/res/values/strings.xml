@@ -66,4 +66,14 @@
     <string name="settings_basic_hideicon_notice">如需恢复 请在你所使用的Xposed管理器中进入本软件</string>
     <string name="settings_basic_checkupdate_title">检查更新</string>
     <string name="settings_basic_checkupdate_summary">在第一时间获取到最新版本</string>
+
+    <string name="settings_misc">杂项</string>
+    <string name="settings_misc_export_title">导出</string>
+    <string name="settings_misc_export_summary">将首选项导出为文件</string>
+    <string name="settings_misc_export_success">导出成功！</string>
+    <string name="settings_misc_export_failure">导出失败！\n请重试</string>
+    <string name="settings_misc_import_title">导入</string>
+    <string name="settings_misc_import_summary">从文件导入首选项</string>
+    <string name="settings_misc_import_success">导入成功！</string>
+    <string name="settings_misc_import_failure">导入失败！\n请检查首选项文件后重试</string>
 </resources>

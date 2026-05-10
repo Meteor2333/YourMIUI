@@ -7,24 +7,61 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.FragmentSettingsBinding
-import cc.meteormc.yourmiui.service.SettingsPreferences
+import cc.meteormc.yourmiui.helper.PreferencesIO
+import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import cc.meteormc.yourmiui.ui.adapter.SettingGroupAdapter
-import cc.meteormc.yourmiui.ui.controller.LanguageController
-import cc.meteormc.yourmiui.ui.controller.ThemeController
 import cc.meteormc.yourmiui.ui.data.SettingGroup
 import cc.meteormc.yourmiui.ui.data.SettingItem
 import cc.meteormc.yourmiui.ui.data.SwitchableSettingItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, container ->
     FragmentSettingsBinding.inflate(inflater, container, false)
 }) {
+    private val exportPrefsLauncher = registerForActivityResult(
+        CreateDocument(PreferencesIO.MINE_TYPE)
+    ) {
+        if (it == null) return@registerForActivityResult
+        val context = requireContext()
+        CoroutineScope(Dispatchers.Main).launch {
+            val successd = PreferencesIO.export(context, it)
+            Toast.makeText(
+                context,
+                if (successd) R.string.settings_misc_export_success else R.string.settings_misc_export_failure,
+                if (successd) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+    private val importPrefsLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) {
+        if (it == null) return@registerForActivityResult
+        val context = requireContext()
+        CoroutineScope(Dispatchers.Main).launch {
+            val successd = PreferencesIO.import(context, it)
+            Toast.makeText(
+                context,
+                if (successd) R.string.settings_misc_import_success else R.string.settings_misc_import_failure,
+                if (successd) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+            ).show()
+            if (successd) {
+                requireActivity().recreate()
+            }
+        }
+    }
     private val settingGroups = arrayOf(
         SettingGroup(
             R.string.settings_language,
@@ -118,7 +155,28 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
                 R.string.settings_basic_checkupdate_title,
                 R.string.settings_basic_checkupdate_summary,
                 SettingsPreferences.updateCheckEnabled
-            ) { SettingsPreferences.updateCheckEnabled = it }
+            ) {
+                SettingsPreferences.updateCheckEnabled = it
+            }
+        ),
+        SettingGroup(
+            R.string.settings_misc,
+            SettingItem(
+                R.drawable.ic_export_24dp,
+                R.string.settings_misc_export_title,
+                R.string.settings_misc_export_summary
+            ) {
+                val appName = getString(R.string.app_name)
+                val time = SimpleDateFormat("yyyyMMdd+HHmmss", Locale.getDefault()).format(Date())
+                exportPrefsLauncher.launch("$appName-Preferences_$time.json")
+            },
+            SettingItem(
+                R.drawable.ic_import_24dp,
+                R.string.settings_misc_import_title,
+                R.string.settings_misc_import_summary
+            ) {
+                importPrefsLauncher.launch(PreferencesIO.MINE_TYPE)
+            }
         )
     )
 
