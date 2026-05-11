@@ -11,6 +11,8 @@ abstract class Feature(
     val testEnvironmentRes: Int? = null,
     val originalAuthor: String? = null
 ) : Serializable {
+    val id: String = this.javaClass.simpleName
+
     companion object {
         const val PREFERENCES_NAME = "features"
 

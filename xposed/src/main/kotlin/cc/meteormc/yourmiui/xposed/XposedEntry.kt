@@ -6,6 +6,7 @@ import android.os.Process
 import android.util.Log
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
 import cc.meteormc.yourmiui.common.util.getClass
@@ -58,16 +59,16 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
     }
 
     override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam) {
-        initFeatures(resparam.packageName) {
-            it.resources = resparam.res
+        initFeatures(resparam.packageName) { scope, feature ->
+            feature.resources = resparam.res
 
             runCatching {
-                it.onInitResources()
+                feature.onInitResources()
             }.onFailure { exception ->
                 XposedBridge.log(
                     "[YourMIUI] Failed to " +
-                            "initialize resources for feature '${it.javaClass.simpleName}' " +
-                            "in scope '${this.javaClass.simpleName}':\n" +
+                            "initialize resources for feature '${feature.id}' " +
+                            "in scope '${scope.id}':\n" +
                             Log.getStackTraceString(exception)
                 )
             }
@@ -76,24 +77,24 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
     @Suppress("UNCHECKED_CAST")
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        initFeatures(lpparam.packageName) {
-            it.classLoader = lpparam.classLoader
+        initFeatures(lpparam.packageName) { scope, feature ->
+            feature.classLoader = lpparam.classLoader
 
             runCatching {
-                it.getOptions().forEach { option ->
-                    val key = Feature.optionKeyOf(it.key, option.key)
+                feature.getOptions().forEach { option ->
+                    val key = Feature.optionKeyOf(feature.key, option.key)
                     val value = prefs.getString(key, null)?.let { preference ->
                         option.type.deserializer(preference)
                     } ?: option.defaultValue
                     (option as Option<Any>).onValueInit(value)
                 }
 
-                it.onLoadPackage()
+                feature.onLoadPackage()
             }.onFailure { exception ->
                 XposedBridge.log(
                     "[YourMIUI] Failed to " +
-                            "initialize feature '${it.javaClass.simpleName}' " +
-                            "in scope '${this.javaClass.simpleName}':\n" +
+                            "initialize feature '${feature.id}' " +
+                            "in scope '${scope.id}':\n" +
                             Log.getStackTraceString(exception)
                 )
             }
@@ -131,12 +132,12 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
         }
     }
 
-    private fun initFeatures(packageName: String, initializer: (feature: Feature) -> Unit) {
-        this.scopes.firstOrNull {
+    private fun initFeatures(packageName: String, initializer: (scope: Scope, feature: Feature) -> Unit) {
+        val scope = this.scopes.firstOrNull {
             it.packages.contains(packageName)
-        }?.getFeatures()?.forEach {
-            if (!prefs.getBoolean(Feature.enabledKeyOf(it.key), false)) return@forEach
-            initializer(it)
-        }
+        } ?: return
+        scope.getFeatures()
+            .filter { prefs.getBoolean(Feature.enabledKeyOf(it.key), false) }
+            .forEach { initializer(scope, it) }
     }
 }

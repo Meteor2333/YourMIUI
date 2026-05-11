@@ -7,6 +7,8 @@ abstract class Scope(
     val nameRes: Int?,
     val packages: Array<out String>
 ) : Serializable {
+    val id: String = this.javaClass.simpleName
+
     constructor(
         vararg packages: String,
         nameRes: Int? = null
