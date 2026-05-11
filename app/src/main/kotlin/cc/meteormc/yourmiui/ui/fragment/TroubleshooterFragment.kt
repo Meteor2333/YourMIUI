@@ -30,7 +30,7 @@ class TroubleshooterFragment : BaseFragment<FragmentTroubleshooterBinding>({ inf
             BuildConfig.VERSION_NAME
         )
         lifecycleScope.launch {
-            template.open(requireContext(), requireView())
+            GithubIssue.open(requireContext(), template)
         }
     }
 }
