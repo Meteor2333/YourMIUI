@@ -23,6 +23,8 @@ class TroubleshooterFragment : BaseFragment<FragmentTroubleshooterBinding>({ inf
         val template = GithubIssue.BugReport(
             "[Bug] test",
             "test\ntest\ntest",
+            null,
+            null,
             "${Build.BRAND} ${Build.MODEL}",
             SysVersion.getCurrent().fullName,
             BuildConfig.VERSION_NAME
