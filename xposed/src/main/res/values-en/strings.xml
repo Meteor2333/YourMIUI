@@ -53,6 +53,8 @@
     <string name="feature_securitycenter_disable_adb_install_alert_name">Disable ADB Install Alert</string>
     <string name="feature_securitycenter_disable_adb_install_alert_description">Disable the alert popup installing via ADB</string>
     <string name="feature_securitycenter_disable_adb_install_alert_test_environment">Version 7.5.4–230317.0.2</string>
+    <string name="option_securitycenter_disable_adb_install_alert_require_unlock_name">Require Unlock</string>
+    <string name="option_securitycenter_disable_adb_install_alert_require_unlock_summary">Unlocking is required for installation</string>
     <string name="feature_securitycenter_disable_countdown_dialog_name">Disable Countdown Dialog</string>
     <string name="feature_securitycenter_disable_countdown_dialog_description">Remove the confirmation countdown for changing sensitive settings</string>
     <string name="feature_securitycenter_disable_countdown_dialog_test_environment">Version 7.5.4–230317.0.2</string>
