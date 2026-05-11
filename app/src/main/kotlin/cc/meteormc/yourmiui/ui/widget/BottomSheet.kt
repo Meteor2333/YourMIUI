@@ -32,7 +32,7 @@ class BottomSheet(
         super.onCreate(savedInstanceState)
 
         val container = LinearLayout(context).apply {
-            setPadding(18.px2dp(), 36.px2dp(), 18.px2dp(), 36.px2dp())
+            setPadding(18.dp2px(), 36.dp2px(), 18.dp2px(), 36.dp2px())
             gravity = Gravity.CENTER_HORIZONTAL
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -60,15 +60,15 @@ class BottomSheet(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                params.topMargin = 16.px2dp()
-                params.bottomMargin = 24.px2dp()
+                params.topMargin = 16.dp2px()
+                params.bottomMargin = 24.dp2px()
                 layoutParams = params
             }
             container.addView(view)
         }
 
         val buttons = LinearLayout(context).apply {
-            setPadding(12.px2dp(), 0, 12.px2dp(), 0)
+            setPadding(12.dp2px(), 0, 12.dp2px(), 0)
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -91,7 +91,7 @@ class BottomSheet(
 
                 setBackgroundColor(Color.TRANSPARENT)
                 setTextColor(MaterialColors.getColor(this, android.R.attr.colorPrimary))
-                strokeWidth = 1.px2dp()
+                strokeWidth = 1.dp2px()
                 strokeColor = ColorStateList.valueOf(
                     ColorUtils.setAlphaComponent(
                         MaterialColors.getColor(
@@ -107,7 +107,7 @@ class BottomSheet(
 
         if (negativeButtonText != null && positiveButtonText != null) {
             val spacer = View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(16.px2dp(), 0)
+                layoutParams = LinearLayout.LayoutParams(16.dp2px(), 0)
             }
             buttons.addView(spacer)
         }
@@ -156,10 +156,10 @@ class BottomSheet(
                 com.google.android.material.R.attr.colorSurfaceContainerHigh
             )
         )
-        sheet.background = InsetDrawable(background, 16.px2dp())
+        sheet.background = InsetDrawable(background, 16.dp2px())
     }
 
-    private fun Int.px2dp() = (this * context.resources.displayMetrics.density).toInt()
+    private fun Int.dp2px() = (this * context.resources.displayMetrics.density).toInt()
 
     @Suppress("unused")
     class Builder(val context: Context) {
