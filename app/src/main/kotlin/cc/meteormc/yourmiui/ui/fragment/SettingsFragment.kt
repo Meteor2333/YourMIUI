@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.core.net.toUri
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
@@ -162,13 +161,6 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
         ),
         SettingGroup(
             R.string.settings_misc,
-            SettingItem(
-                R.drawable.ic_troubleshooter_24dp,
-                R.string.settings_misc_troubleshooter_title,
-                R.string.settings_misc_troubleshooter_summary
-            ) {
-                findNavController().navigate(R.id.action_settings_to_troubleshooter)
-            },
             SettingItem(
                 R.drawable.ic_export_24dp,
                 R.string.settings_misc_export_title,
