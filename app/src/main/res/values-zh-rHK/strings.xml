@@ -61,8 +61,4 @@
     <string name="settings_misc_import_summary">從檔案導入首選項</string>
     <string name="settings_misc_import_success">匯入成功！</string>
     <string name="settings_misc_import_failure">匯入失敗！\n請檢查首選項檔後重試</string>
-    <string name="settings_misc_troubleshooter_title">疑難解答</string>
-    <string name="settings_misc_troubleshooter_summary">輕鬆修復遇到的模組問題</string>
-    <string name="settings_misc_troubleshooter_github_app">Github App暫不支持問題範本\n請選擇其他打開方式</string>
-    <string name="settings_misc_troubleshooter_no_browser">找不到其他開啟方式 :)\n請手動在Github提交issue</string>
 </resources>
