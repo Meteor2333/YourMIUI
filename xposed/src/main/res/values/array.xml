@@ -3,6 +3,7 @@
     <string-array name="module_scope">
         <item>android</item>
         <item>com.miui.contentextension</item>
+        <item>com.miui.home</item>
         <item>com.xiaomi.market</item>
         <item>com.xiaomi.mirror</item>
         <item>com.android.mms</item>
