@@ -2,8 +2,11 @@ package cc.meteormc.yourmiui.xposed
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Resources
+import android.os.Build
 import android.os.Process
 import android.util.Log
+import androidx.annotation.RequiresApi
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Scope
@@ -30,8 +33,11 @@ import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import io.github.libxposed.api.XposedInterface
+import io.github.libxposed.api.XposedModule
+import io.github.libxposed.api.XposedModuleInterface
 
-class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
+object XposedEntry {
     private lateinit var hostBridge: Host
     private val scopes by lazy {
         listOf(
@@ -58,27 +64,41 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
         }
     }
 
-    override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam) {
-        initFeatures(resparam.packageName) { scope, feature ->
-            feature.resources = resparam.res
+    class Rovo89 : IXposedHookLoadPackage, IXposedHookInitPackageResources {
+        override fun handleLoadPackage(resparam: XC_LoadPackage.LoadPackageParam) {
+            onLoadPackage(resparam.packageName, resparam.classLoader)
+        }
 
-            runCatching {
-                feature.onInitResources()
-            }.onFailure { exception ->
-                XposedBridge.log(
-                    "[YourMIUI] Failed to " +
-                            "initialize resources for feature '${feature.id}' " +
-                            "in scope '${scope.id}':\n" +
-                            Log.getStackTraceString(exception)
-                )
-            }
+        override fun handleInitPackageResources(lpparam: XC_InitPackageResources.InitPackageResourcesParam) {
+            onInitResources(lpparam.packageName, lpparam.res)
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        initFeatures(lpparam.packageName) { scope, feature ->
-            feature.classLoader = lpparam.classLoader
+    @Suppress("unused")
+    class LSPosed : XposedModule {
+        constructor() : super()
+
+        constructor(
+            base: XposedInterface,
+            param: XposedModuleInterface.ModuleLoadedParam
+        ) : super(base, param) {
+            onModuleLoaded(param)
+        }
+
+        override fun onModuleLoaded(param: XposedModuleInterface.ModuleLoadedParam) {
+            Log.d("YourMIUI", "[YourMIUI] Module loaded: ${param.processName}")
+        }
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        override fun onPackageLoaded(param: XposedModuleInterface.PackageLoadedParam) {
+            Log.d("YourMIUI", "[YourMIUI] Loaded in package: ${param.packageName}")
+            onLoadPackage(param.packageName, param.defaultClassLoader)
+        }
+    }
+
+    internal fun onLoadPackage(packageName: String, classLoader: ClassLoader) {
+        initFeatures(packageName) { scope, feature ->
+            feature.classLoader = classLoader
 
             runCatching {
                 feature.getOptions().forEach { option ->
@@ -86,6 +106,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
                     val value = prefs.getString(key, null)?.let { preference ->
                         option.type.deserializer(preference)
                     } ?: option.defaultValue
+                    @Suppress("UNCHECKED_CAST")
                     (option as Option<Any>).onValueInit(value)
                 }
 
@@ -103,7 +124,24 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
 
         operator(Application::class.java) {
             method("attach")?.hookAfter {
-                initHostBridge(lpparam.classLoader, it.instance())
+                initHostBridge(classLoader, it.instance())
+            }
+        }
+    }
+
+    internal fun onInitResources(packageName: String, resources: Resources) {
+        initFeatures(packageName) { scope, feature ->
+            feature.resources = resources
+
+            runCatching {
+                feature.onInitResources()
+            }.onFailure { exception ->
+                XposedBridge.log(
+                    "[YourMIUI] Failed to " +
+                            "initialize resources for feature '${feature.id}' " +
+                            "in scope '${scope.id}':\n" +
+                            Log.getStackTraceString(exception)
+                )
             }
         }
     }

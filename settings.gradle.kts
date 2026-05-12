@@ -15,6 +15,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
+        mavenLocal()
         mavenCentral()
         maven("https://api.xposed.info")
     }
@@ -24,5 +25,6 @@ rootProject.name = "YourMIUI"
 include(
     ":app",
     ":common",
-    ":xposed"
+    ":xposed",
+    ":lsposed-api"
 )

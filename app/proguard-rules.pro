@@ -4,4 +4,5 @@
 -dontwarn android.content.res.XModuleResources
 -dontwarn android.content.res.XResForwarder
 -dontwarn android.content.res.XResources
+-dontwarn io.github.libxposed.**
 -keep class cc.meteormc.yourmiui.** { *; }

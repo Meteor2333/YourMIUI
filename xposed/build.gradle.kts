@@ -14,5 +14,6 @@ kotlin {
 
 dependencies {
     implementation(project(":common"))
+    compileOnly(project(":lsposed-api"))
     compileOnly("de.robv.android.xposed:api:82")
 }
