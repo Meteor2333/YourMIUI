@@ -61,8 +61,4 @@
     <string name="settings_misc_import_summary">Import preferences from file</string>
     <string name="settings_misc_import_success">Import successful!</string>
     <string name="settings_misc_import_failure">Import failed!\nPlease check the preferences file and try again</string>
-    <string name="settings_misc_troubleshooter_title">Troubleshooter</string>
-    <string name="settings_misc_troubleshooter_summary">Quickly fix module problems</string>
-    <string name="settings_misc_troubleshooter_github_app">GitHub App can’t open issue templates\nPlease choose another way</string>
-    <string name="settings_misc_troubleshooter_no_browser">No other method found :)\nPlease create the issue manually</string>
 </resources>
