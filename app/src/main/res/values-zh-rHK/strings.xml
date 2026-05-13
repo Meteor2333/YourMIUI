@@ -32,6 +32,8 @@
     <string name="app_picker_hint">搜索應用名稱或包名</string>
     <string name="switch_menu_enable">開啟</string>
     <string name="switch_menu_disable">關閉</string>
+    <string name="github_issue_found_app">Github App暫不支持問題範本\n請選擇其他打開方式</string>
+    <string name="github_issue_no_browser">找不到其他開啟方式 :)\n請手動在Github提交issue</string>
     <string name="restart_scope_title">重啟作用域</string>
     <string name="restart_scope_content">此操作將重啟以下套件以套用變更：\n%s\n\n是否繼續？</string>
     <string name="restart_scope_success">重啟成功！</string>
