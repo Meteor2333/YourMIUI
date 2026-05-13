@@ -2,7 +2,6 @@ package cc.meteormc.yourmiui.xposed
 
 import android.app.Application
 import android.content.Context
-import android.content.res.Resources
 import android.os.Build
 import android.os.Process
 import android.util.Log
@@ -27,11 +26,9 @@ import cc.meteormc.yourmiui.xposed.settings.Settings
 import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
 import cc.meteormc.yourmiui.xposed.systemadsolution.SystemAdSolution
 import cc.meteormc.yourmiui.xposed.systemui.SystemUI
-import de.robv.android.xposed.IXposedHookInitPackageResources
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
@@ -64,13 +61,9 @@ object XposedEntry {
         }
     }
 
-    class Rovo89 : IXposedHookLoadPackage, IXposedHookInitPackageResources {
-        override fun handleLoadPackage(resparam: XC_LoadPackage.LoadPackageParam) {
-            onLoadPackage(resparam.packageName, resparam.classLoader)
-        }
-
-        override fun handleInitPackageResources(lpparam: XC_InitPackageResources.InitPackageResourcesParam) {
-            onInitResources(lpparam.packageName, lpparam.res)
+    class Rovo89 : IXposedHookLoadPackage {
+        override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
+            onLoadPackage(lpparam.packageName, lpparam.classLoader)
         }
     }
 
@@ -96,7 +89,7 @@ object XposedEntry {
         }
     }
 
-    internal fun onLoadPackage(packageName: String, classLoader: ClassLoader) {
+    private fun onLoadPackage(packageName: String, classLoader: ClassLoader) {
         initFeatures(packageName) { scope, feature ->
             feature.classLoader = classLoader
 
@@ -125,23 +118,6 @@ object XposedEntry {
         operator(Application::class.java) {
             method("attach")?.hookAfter {
                 initHostBridge(classLoader, it.instance())
-            }
-        }
-    }
-
-    internal fun onInitResources(packageName: String, resources: Resources) {
-        initFeatures(packageName) { scope, feature ->
-            feature.resources = resources
-
-            runCatching {
-                feature.onInitResources()
-            }.onFailure { exception ->
-                XposedBridge.log(
-                    "[YourMIUI] Failed to " +
-                            "initialize resources for feature '${feature.id}' " +
-                            "in scope '${scope.id}':\n" +
-                            Log.getStackTraceString(exception)
-                )
             }
         }
     }

@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.common
 
-import android.content.res.Resources
 import java.io.Serializable
 
 abstract class Feature(
@@ -22,14 +21,7 @@ abstract class Feature(
     }
 
     @Transient
-    lateinit var resources: Resources
-
-    @Transient
     lateinit var classLoader: ClassLoader
-
-    open fun onInitResources() {
-
-    }
 
     open fun onLoadPackage() {
 
