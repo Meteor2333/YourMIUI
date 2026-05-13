@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import cc.meteormc.yourmiui.common.bridge.Module
+import cc.meteormc.yourmiui.helper.HostManager
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.preferences.FeaturePreferences
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
@@ -28,6 +29,7 @@ class YourMIUI : Application() {
         FeaturePreferences.init(this)
         SettingsPreferences.init(this)
         initModuleBridge()
+        HostManager.fetchScopes()
     }
 
     private fun checkSystem() {

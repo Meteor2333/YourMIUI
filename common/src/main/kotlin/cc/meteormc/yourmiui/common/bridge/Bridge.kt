@@ -9,8 +9,8 @@ object Bridge {
     val GET_SCOPES_CHANNEL = Channel<Unit, ArrayList<Scope>>("cc.meteormc.yourmiui.ACTION_GET_SCOPES")
     val RESTART_SCOPE_CHANNEL = Channel<Unit, Unit>("cc.meteormc.yourmiui.ACTION_RESTART_SCOPE")
 
-    var apiName: String? = null
-        private set
     var apiVersion: Int? = null
+        private set
+    var frameworkName: String? = null
         private set
 }

@@ -8,9 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
+import cc.meteormc.yourmiui.helper.HostManager
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.helper.UpdateChecker
-import cc.meteormc.yourmiui.store.HostStore
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
@@ -24,26 +24,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
     }
 
     private fun bindModuleStatus() {
-        HostStore.isActivated.observe(viewLifecycleOwner) {
-            binding.statusIcon.setImageResource(
-                if (it) R.drawable.ic_check_24dp
-                else R.drawable.ic_cross_24dp
-            )
+        binding.statusIcon.setImageResource(
+            if (HostManager.activated) R.drawable.ic_check_24dp
+            else R.drawable.ic_cross_24dp
+        )
 
-            binding.statusText.setText(
-                if (it) R.string.status_active
-                else R.string.status_inactive
-            )
+        binding.statusText.setText(
+            if (HostManager.activated) R.string.status_active
+            else R.string.status_inactive
+        )
 
-            binding.statusVersion.text = getString(
-                R.string.status_version,
-                "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
-            )
+        binding.statusVersion.text = getString(
+            R.string.status_version,
+            "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
+        )
 
-            binding.statusApi.text = if (it) {
-                "Activated by ${HostStore.apiName.value} (API ${HostStore.apiVersion.value})"
-            } else "Not activated"
-        }
+        binding.statusApi.text = if (!HostManager.activated) "Not activated"
+        else "Activated by ${HostManager.frameworkName} (API ${HostManager.apiVersion})"
     }
 
     private fun bindModuleUpdate() {

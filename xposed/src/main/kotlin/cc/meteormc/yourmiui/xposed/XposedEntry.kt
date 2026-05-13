@@ -1,7 +1,9 @@
 package cc.meteormc.yourmiui.xposed
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Process
 import android.util.Log
@@ -54,16 +56,17 @@ object XposedEntry {
             SystemUI
         )
     }
-    private val prefs by lazy {
-        XSharedPreferences("cc.meteormc.yourmiui", Feature.PREFERENCES_NAME).apply {
-            makeWorldReadable()
-            reload()
-        }
-    }
 
     class Rovo89 : IXposedHookLoadPackage {
-        override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-            onLoadPackage(lpparam.packageName, lpparam.classLoader)
+        override fun handleLoadPackage(resparam: XC_LoadPackage.LoadPackageParam) {
+            onLoadPackage(
+                resparam.packageName,
+                resparam.classLoader,
+                XSharedPreferences("cc.meteormc.yourmiui", Feature.PREFERENCES_NAME).apply {
+                    makeWorldReadable()
+                    reload()
+                }
+            )
         }
     }
 
@@ -74,35 +77,39 @@ object XposedEntry {
         constructor(
             base: XposedInterface,
             param: XposedModuleInterface.ModuleLoadedParam
-        ) : super(base, param) {
-            onModuleLoaded(param)
-        }
-
-        override fun onModuleLoaded(param: XposedModuleInterface.ModuleLoadedParam) {
-            Log.d("YourMIUI", "[YourMIUI] Module loaded: ${param.processName}")
-        }
+        ) : super(base, param)
 
         @RequiresApi(Build.VERSION_CODES.Q)
         override fun onPackageLoaded(param: XposedModuleInterface.PackageLoadedParam) {
-            Log.d("YourMIUI", "[YourMIUI] Loaded in package: ${param.packageName}")
-            onLoadPackage(param.packageName, param.defaultClassLoader)
+            onLoadPackage(
+                param.packageName,
+                param.defaultClassLoader,
+                runCatching {
+                    getRemotePreferences(Feature.PREFERENCES_NAME)
+                }.recoverCatching {
+                    @Suppress("DEPRECATION")
+                    @SuppressLint("WorldReadableFiles")
+                    getSharedPreferences(Feature.PREFERENCES_NAME, Context.MODE_WORLD_READABLE)
+                }.getOrNull() ?: return
+            )
         }
     }
 
-    private fun onLoadPackage(packageName: String, classLoader: ClassLoader) {
-        initFeatures(packageName) { scope, feature ->
+    private fun onLoadPackage(packageName: String, classLoader: ClassLoader, preferences: SharedPreferences) {
+        initFeatures(packageName, preferences) { scope, feature ->
             feature.classLoader = classLoader
 
             runCatching {
                 feature.getOptions().forEach { option ->
                     val key = Feature.optionKeyOf(feature.key, option.key)
-                    val value = prefs.getString(key, null)?.let { preference ->
+                    val value = preferences.getString(key, null)?.let { preference ->
                         option.type.deserializer(preference)
                     } ?: option.defaultValue
                     @Suppress("UNCHECKED_CAST")
                     (option as Option<Any>).onValueInit(value)
                 }
 
+                XposedBridge.log("[YourMIUI] Initializing feature '${feature.id}' in scope '${scope.id}'")
                 feature.onLoadPackage()
             }.onFailure { exception ->
                 XposedBridge.log(
@@ -136,17 +143,21 @@ object XposedEntry {
         val bridgeClass = getClass(classLoader, Bridge::class.java.name, true)
         if (bridgeClass != null) {
             operator(bridgeClass) {
-                val apiName = ReflectOperator(XposedBridge::class.java).run {
+                val apiVersion = XposedBridge.getXposedVersion()
+                val frameworkName = ReflectOperator(XposedBridge::class.java).run {
                     field("TAG")?.get(null)
                 } ?: "Unknown"
-                val apiVersion = XposedBridge.getXposedVersion()
-                field("apiName")?.set(null, apiName)
                 field("apiVersion")?.set(null, apiVersion)
+                field("frameworkName")?.set(null, frameworkName)
             }
         }
     }
 
-    private fun initFeatures(packageName: String, initializer: (scope: Scope, feature: Feature) -> Unit) {
+    private fun initFeatures(
+        packageName: String,
+        prefs: SharedPreferences,
+        initializer: (scope: Scope, feature: Feature) -> Unit
+    ) {
         val scope = this.scopes.firstOrNull {
             it.packages.contains(packageName)
         } ?: return

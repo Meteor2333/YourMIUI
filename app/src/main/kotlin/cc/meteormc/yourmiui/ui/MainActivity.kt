@@ -7,7 +7,6 @@ import androidx.navigation.ui.setupWithNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.ActivityMainBinding
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
-import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.controller.LanguageController
 import cc.meteormc.yourmiui.ui.controller.ThemeController
 
@@ -23,7 +22,5 @@ class MainActivity : AppCompatActivity() {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val controller = (fragment as NavHostFragment).navController
         binding.nav.setupWithNavController(controller)
-
-        HostStore.init()
     }
 }
