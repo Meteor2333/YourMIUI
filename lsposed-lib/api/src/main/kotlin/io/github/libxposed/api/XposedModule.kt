@@ -1,8 +1,5 @@
 package io.github.libxposed.api
 
-import io.github.libxposed.api.XposedModuleInterface.ModuleLoadedParam
-import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam
-
 /**
  * Super class which all Xposed module entry classes should extend.<br></br>
  * Entry classes will be instantiated exactly once for each process.
@@ -21,7 +18,7 @@ abstract class XposedModule : XposedInterfaceWrapper, XposedModuleInterface {
      * @param param Information about the process in which the module is loaded
      */
     @Suppress("unused")
-    constructor(base: XposedInterface, param: ModuleLoadedParam)
+    constructor(base: XposedInterface, param: XposedModuleInterface.ModuleLoadedParam)
 
     /**
      * Gets notified when the module is loaded into the target process.<br></br>
@@ -30,7 +27,7 @@ abstract class XposedModule : XposedInterfaceWrapper, XposedModuleInterface {
      * @param param Information about the process in which the module is loaded
      * @throws RuntimeException Everything the callback throws is caught and logged.
      */
-    open fun onModuleLoaded(param: ModuleLoadedParam) {
+    open fun onModuleLoaded(param: XposedModuleInterface.ModuleLoadedParam) {
     }
 
     /**
@@ -46,6 +43,6 @@ abstract class XposedModule : XposedInterfaceWrapper, XposedModuleInterface {
      * @param param Information about the package being loaded
      * @throws RuntimeException Everything the callback throws is caught and logged.
      */
-    open fun onPackageLoaded(param: PackageLoadedParam) {
+    open fun onPackageLoaded(param: XposedModuleInterface.PackageLoadedParam) {
     }
 }

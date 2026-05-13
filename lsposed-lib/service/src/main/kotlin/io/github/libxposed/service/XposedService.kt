@@ -1,13 +1,20 @@
 package io.github.libxposed.service
 
+import android.content.SharedPreferences
+import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcel
+import android.os.ParcelFileDescriptor
+import io.github.libxposed.service.callback.ScopeEventCallback
 
+@Suppress("unused")
 object XposedService {
     const val SEND_BINDER_METHOD = "SendBinder"
     const val AIDL_SERVICE_DESCRIPTOR = "io.github.libxposed.service.IXposedService"
+    const val AIDL_SCOPE_CALLBACK_DESCRIPTOR = "io.github.libxposed.service.IXposedScopeCallback"
 
     internal lateinit var binder: IBinder
+    private val mRemotePrefs = mutableMapOf<String, RemotePreferences?>()
 
     val activated
         get() = ::binder.isInitialized
@@ -24,22 +31,82 @@ object XposedService {
     val frameworkVersionCode
         get() = callService(4) { readLong() }
 
-    val frameworkProperties
-        get() = callService(5) {
-            // API100及以下为Int类型
-            // API101及以上为Long类型
-            // 所以先试读Int，如果还有数据再读Long
-            val low = readInt()
-            if (dataAvail() <= 0) {
-                low.toLong()
-            } else {
-                val high = readInt()
-                (high.toLong() shl 32) or (low.toLong() and 0xFFFFFFFFL)
-            }
-        }
-
     val scopes
         get() = callService(10) { createStringArrayList() }
+
+    fun requestScope(vararg packages: String, callback: ScopeEventCallback) {
+        callService<Unit>(
+            11,
+            IBinder.FLAG_ONEWAY,
+            writer = {
+                writeStringList(packages.toList())
+                writeStrongInterface(callback)
+            }
+        )
+    }
+
+    fun removeScope(vararg packages: String) {
+        callService<Unit>(
+            12,
+            writer = { writeStringList(packages.toList()) }
+        )
+    }
+
+    fun getRemotePreferences(group: String): SharedPreferences? {
+        return mRemotePrefs.computeIfAbsent(group) {
+            val bundle = callService(
+                20,
+                writer = { writeString(group) },
+                reader = { readTypedObject(Bundle.CREATOR) }
+            ) ?: return@computeIfAbsent null
+
+            @Suppress("DEPRECATION", "UNCHECKED_CAST")
+            val map = bundle.getSerializable("map") as Map<String, Any?>?
+            RemotePreferences(group, map ?: emptyMap())
+        }
+    }
+
+    fun updateRemotePreferences(group: String, editor: SharedPreferences.Editor) {
+        if (editor !is RemotePreferences.Editor) return
+        val bundle = Bundle()
+        bundle.putSerializable("delete", editor.delete.toHashSet())
+        bundle.putSerializable("put", editor.put.toMap(HashMap()))
+        callService<Unit>(
+            21,
+            writer = {
+                writeString(group)
+                writeTypedObject(bundle, 0)
+            }
+        )
+    }
+
+    fun deleteRemotePreferences(group: String) {
+        mRemotePrefs.remove(group)
+        callService<Unit>(
+            22,
+            writer = { writeString(group) }
+        )
+    }
+
+    fun getRemoteFiles(): Array<String> {
+        return callService(30) { createStringArray() } ?: emptyArray()
+    }
+
+    fun getRemoteFileDescriptor(name: String): ParcelFileDescriptor? {
+        return callService(
+            31,
+            writer = { writeString(name) },
+            reader = { readTypedObject(ParcelFileDescriptor.CREATOR) }
+        )
+    }
+
+    fun deleteRemoteFile(name: String): Boolean {
+        return callService(
+            32,
+            writer = { writeString(name) },
+            reader = { readInt() != 0 }
+        ) ?: false
+    }
 
     private fun <T : Any> callService(
         vararg transactionCodes: Int,
