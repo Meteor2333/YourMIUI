@@ -1,12 +1,13 @@
 package cc.meteormc.yourmiui
 
+import android.app.Activity
 import android.app.Application
+import android.os.Bundle
 import cc.meteormc.yourmiui.common.bridge.Module
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.preferences.FeaturePreferences
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlin.system.exitProcess
 
 class YourMIUI : Application() {
     companion object {
@@ -37,13 +38,26 @@ class YourMIUI : Application() {
             else -> return
         }
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.syscheck_title)
-            .setMessage(check)
-            .setCancelable(false)
-            .setPositiveButton(R.string.syscheck_exit) { _, _ -> exitProcess(0) }
-            .setNegativeButton(R.string.syscheck_ignore, null)
-            .show()
+        registerActivityLifecycleCallbacks(
+            object : ActivityLifecycleCallbacks {
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                    MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.syscheck_title)
+                        .setMessage(check)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.syscheck_exit) { _, _ -> activity.finishAffinity() }
+                        .setNegativeButton(R.string.syscheck_ignore, null)
+                        .show()
+                }
+
+                override fun onActivityDestroyed(activity: Activity) { }
+                override fun onActivityPaused(activity: Activity) { }
+                override fun onActivityResumed(activity: Activity) { }
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) { }
+                override fun onActivityStarted(activity: Activity) { }
+                override fun onActivityStopped(activity: Activity) { }
+            }
+        )
     }
 
     private fun initModuleBridge() {
