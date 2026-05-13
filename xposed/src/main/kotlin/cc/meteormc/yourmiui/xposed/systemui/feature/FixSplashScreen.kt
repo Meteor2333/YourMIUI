@@ -99,6 +99,7 @@ object FixSplashScreen : Feature(
             val iconDefaultSizeField = field("mDefaultIconSize") ?: return@operator
             // modifier: public final | signature: updateDensity()V
             val updateDensityMethod = method("updateDensity") ?: return@operator
+            // modifier: public final | signature: makeSplashScreenContentView(Landroid/content/Context;Landroid/window/StartingWindowInfo;ILjava/util/function/Consumer;)Landroid/window/SplashScreenView;
             method("makeSplashScreenContentView")?.hookBefore {
                 val swi = it.argByClass(swiClass.delegate) ?: return@hookBefore
                 if (launchPackageNameField.get<String>(swi) != ALLOW_LAUNCH_PACKAGE) return@hookBefore

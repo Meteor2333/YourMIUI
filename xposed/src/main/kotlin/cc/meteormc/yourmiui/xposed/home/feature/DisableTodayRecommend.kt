@@ -12,11 +12,14 @@ object DisableTodayRecommend : Feature(
 ) {
     override fun onLoadPackage() {
         operator("com.miui.home.launcher.Folder") {
+            // modifier: public | signature: showRecommendAppsSwitch(ZZ)V
             method("showRecommendAppsSwitch")?.hookDoNothing()
         }
 
         operator("com.miui.home.launcher.commercial.recommend.RecommendController") {
+            // modifier: public | signature: canRecommendScreenShow()Z
             method("canRecommendScreenShow")?.hookResult(false)
+
         }
     }
 }
