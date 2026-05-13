@@ -1,7 +1,5 @@
 package cc.meteormc.yourmiui.common.util
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -9,13 +7,6 @@ import android.os.Parcelable
 import java.io.Serializable
 
 object Unsafe {
-    @Suppress("DEPRECATION")
-    @SuppressLint("WorldReadableFiles")
-    const val CONTEXT_MODE_WORLD_READABLE = Context.MODE_WORLD_READABLE
-    @Suppress("DEPRECATION")
-    @SuppressLint("WorldWriteableFiles")
-    const val CONTEXT_MODE_WORLD_WRITEABLE = Context.MODE_WORLD_WRITEABLE
-
     fun <T> Any?.cast(): T {
         @Suppress("UNCHECKED_CAST")
         return this as T

@@ -12,7 +12,6 @@ import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
-import cc.meteormc.yourmiui.common.util.Unsafe
 import cc.meteormc.yourmiui.common.util.Unsafe.cast
 import cc.meteormc.yourmiui.common.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
@@ -87,7 +86,7 @@ object XposedEntry {
                 runCatching {
                     getRemotePreferences(Feature.PREFERENCES_NAME)
                 }.recoverCatching {
-                    getSharedPreferences(Feature.PREFERENCES_NAME, Unsafe.CONTEXT_MODE_WORLD_READABLE)
+                    getSharedPreferences(Feature.PREFERENCES_NAME, Context.MODE_PRIVATE)
                 }.getOrNull() ?: return
             )
         }
