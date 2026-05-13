@@ -9,11 +9,11 @@ import android.os.Build
 import cc.meteormc.yourmiui.common.util.getExtra
 import cc.meteormc.yourmiui.common.util.putExtra
 
-class Host(private val context: Context) : BroadcastReceiver() {
+class Host : BroadcastReceiver() {
     private val filter = IntentFilter()
     private val handlers = mutableMapOf<String, ChannelHandler<Any, Any>>()
 
-    fun attach() {
+    fun attach(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(
                 this,
@@ -36,10 +36,8 @@ class Host(private val context: Context) : BroadcastReceiver() {
     @Suppress("UNCHECKED_CAST")
     fun <REQ : Any, RES : Any> register(
         channel: Channel<REQ, RES>,
-        vararg packages: String = arrayOf(context.packageName),
         handler: ChannelHandler<REQ, RES>
     ): Host {
-        if (!packages.contains(context.packageName)) return this
         val action = channel.action
         filter.addAction(action)
         handlers[action] = handler as ChannelHandler<Any, Any>

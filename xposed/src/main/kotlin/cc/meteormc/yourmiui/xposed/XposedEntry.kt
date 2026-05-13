@@ -130,7 +130,7 @@ object XposedEntry {
     }
 
     private fun initHostBridge(classLoader: ClassLoader, context: Context) {
-        hostBridge = Host(context)
+        hostBridge = Host()
         hostBridge.register(Bridge.GET_SCOPES_CHANNEL) {
             scopes.toCollection(ArrayList())
         }.register(Bridge.RESTART_SCOPE_CHANNEL) {
@@ -138,8 +138,9 @@ object XposedEntry {
                 Thread.sleep(300)
                 Process.killProcess(Process.myPid())
             }.start()
-        }.attach()
+        }.attach(context)
 
+        // 仅Hook模块App
         val bridgeClass = getClass(classLoader, Bridge::class.java.name, true)
         if (bridgeClass != null) {
             operator(bridgeClass) {
