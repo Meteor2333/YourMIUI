@@ -41,6 +41,7 @@ class YourMIUI : Application() {
         registerActivityLifecycleCallbacks(
             object : ActivityLifecycleCallbacks {
                 override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                    unregisterActivityLifecycleCallbacks(this)
                     MaterialAlertDialogBuilder(activity)
                         .setTitle(R.string.syscheck_title)
                         .setMessage(check)
