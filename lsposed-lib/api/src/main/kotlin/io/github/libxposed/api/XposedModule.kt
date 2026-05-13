@@ -7,7 +7,7 @@ import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam
  * Super class which all Xposed module entry classes should extend.<br></br>
  * Entry classes will be instantiated exactly once for each process.
  */
-abstract class XposedModule : XposedInterface, XposedModuleInterface {
+abstract class XposedModule : XposedInterfaceWrapper, XposedModuleInterface {
     /**
      * Instantiates a new Xposed module.
      */
