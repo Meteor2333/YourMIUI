@@ -176,6 +176,12 @@ object RemoveAds : Feature(
             method("parseRecommendGroupResult")?.hookResult(null)
         }
 
+        // 应用升级页推荐广告
+        operator("com.xiaomi.market.ui.UpdateListRvAdapter") {
+            // modifier: private final | signature: generateRecommendGroupItems(Ljava/util/ArrayList;I)Z
+            method("generateRecommendGroupItems")?.hookResult(null)
+        }
+
         // 应用详情页推荐广告
         operator($$"com.xiaomi.market.business_ui.detail.DetailType$Companion") {
             method(
