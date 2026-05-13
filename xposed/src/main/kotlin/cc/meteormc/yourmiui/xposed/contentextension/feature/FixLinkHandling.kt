@@ -16,7 +16,7 @@ object FixLinkHandling : Feature(
         operator("com.miui.contentextension.utils.AppsUtils") {
             // modifier: private static | signature: getIntentWithBrowser(Ljava/lang/String;)Landroid/content/Intent;
             method("getIntentWithBrowser")?.hookAfter {
-                it.result<Intent>()?.apply {
+                it.result<Intent>().apply {
                     data = it.stringArg()?.toUri()
                 }
             }

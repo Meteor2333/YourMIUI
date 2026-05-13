@@ -34,7 +34,7 @@ object RemoveAds : Feature(
             val tabInfo = TabInfoWrapper()
             // modifier: public static | signature: fromJSON(Lorg/json/JSONArray;)Ljava/util/List;
             method("fromJSON", JSONArray::class.java)?.hookAfter {
-                it.result<MutableList<Any>>()?.removeIf { tab ->
+                it.result<MutableList<Any>>().removeIf { tab ->
                     tabInfo.from(tab)
                     hiddenTags.contains(tabInfo.tag)
                 }
@@ -78,7 +78,7 @@ object RemoveAds : Feature(
         operator("com.xiaomi.market.business_ui.base.NativeFeedFragment") {
             // modifier: protected | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List;
             method("parseResponseData")?.hookAfter {
-                it.result<MutableList<Any>>()?.removeIf { component ->
+                it.result<MutableList<Any>>().removeIf { component ->
                     adComponents.contains(component.javaClass.name)
                 }
             }
