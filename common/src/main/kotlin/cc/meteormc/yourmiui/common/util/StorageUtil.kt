@@ -1,13 +1,18 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package cc.meteormc.yourmiui.common.util
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
 import android.util.Log
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
+import cc.meteormc.yourmiui.common.util.Unsafe.getParcelableArrayListCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.getParcelableArrayListExtraCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.getParcelableCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.getParcelableExtraCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.getSerializableCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.getSerializableExtraCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import java.io.Serializable
 
 fun Bundle.putObject(name: String, value: Any) {
@@ -19,7 +24,6 @@ fun Bundle.putObject(name: String, value: Any) {
         }
         is List<*> -> {
             val type = value.firstOrNull()?.javaClass
-            @Suppress("UNCHECKED_CAST")
             when {
                 type == null -> {
                     putString($$"$$name$type", "List<Void>")
@@ -31,7 +35,7 @@ fun Bundle.putObject(name: String, value: Any) {
                     putSerializable($$"$$name$element", type)
                     putParcelableArrayList(
                         name,
-                        (value as Collection<Parcelable>).toCollection(ArrayList())
+                        value.cast<Collection<Parcelable>>().toCollection(ArrayList())
                     )
                 }
                 Serializable::class.java.isAssignableFrom(type) -> {
@@ -39,7 +43,7 @@ fun Bundle.putObject(name: String, value: Any) {
                     putSerializable($$"$$name$element", type)
                     putSerializable(
                         name,
-                        (value as Collection<Serializable>).toCollection(ArrayList())
+                        value.cast<Collection<Serializable>>().toCollection(ArrayList())
                     )
                 }
                 else -> throw IllegalArgumentException("Unsupported collection element type: $type")
@@ -67,33 +71,19 @@ fun Bundle.putObject(name: String, value: Any) {
 }
 
 fun <T : Any> Bundle.getObject(name: String): T? {
-    @Suppress("DEPRECATION")
     return when (getString($$"$$name$type")) {
         "Unit" -> Unit
         "List<Empty>" -> {
             val size = getInt($$"$$name$size")
             arrayListOf<Any?>().apply { repeat(size) { add(null) } }
         }
-        "List<Parcelable>" -> getParcelableArrayList<Parcelable>(name)
-        "List<Serializable>" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializable(name, ArrayList::class.java)
-        } else {
-            getSerializable(name)
-        }
+        "List<Parcelable>" -> getParcelableArrayListCompat<Parcelable>(name)
+        "List<Serializable>" -> getSerializableCompat(name, ArrayList::class.java)
         "Bundle" -> getBundle(name)
-        "Parcelable" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getParcelable(name, Parcelable::class.java)
-        } else {
-            getParcelable(name)
-        }
-        "Serializable" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializable(name, Serializable::class.java)
-        } else {
-            getSerializable(name)
-        }
-
+        "Parcelable" -> getParcelableCompat(name)
+        "Serializable" -> getSerializableCompat(name)
         else -> null
-    } as? T
+    }.safeCast()
 }
 
 fun Intent.putExtra(name: String, value: Any) {
@@ -105,7 +95,6 @@ fun Intent.putExtra(name: String, value: Any) {
         }
         is List<*> -> {
             val type = value.firstOrNull()?.javaClass
-            @Suppress("UNCHECKED_CAST")
             when {
                 type == null -> {
                     putExtra($$"$$name$type", "List<Void>")
@@ -116,12 +105,12 @@ fun Intent.putExtra(name: String, value: Any) {
                     putExtra($$"$$name$type", "List<Parcelable>")
                     putParcelableArrayListExtra(
                         name,
-                        (value as Collection<Parcelable>).toCollection(ArrayList())
+                        value.cast<Collection<Parcelable>>().toCollection(ArrayList())
                     )
                 }
                 Serializable::class.java.isAssignableFrom(type) -> {
                     putExtra($$"$$name$type", "List<Serializable>")
-                    putExtra(name, (value as Collection<Serializable>).toCollection(ArrayList()))
+                    putExtra(name, value.cast<Collection<Serializable>>().toCollection(ArrayList()))
                 }
                 else -> throw IllegalArgumentException("Unsupported collection element type: $type")
             }
@@ -144,31 +133,17 @@ fun Intent.putExtra(name: String, value: Any) {
 }
 
 fun <T : Any> Intent.getExtra(name: String): T? {
-    @Suppress("DEPRECATION")
     return when (getStringExtra($$"$$name$type")) {
         "Unit" -> Unit
         "List<Empty>" -> {
             val size = getIntExtra($$"$$name$size", 0)
             arrayListOf<Any?>().apply { repeat(size) { add(null) } }
         }
-        "List<Parcelable>" -> getParcelableArrayListExtra<Parcelable>(name)
-        "List<Serializable>" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializableExtra(name, ArrayList::class.java)
-        } else {
-            getSerializableExtra(name)
-        }
+        "List<Parcelable>" -> getParcelableArrayListExtraCompat<Parcelable>(name)
+        "List<Serializable>" -> getSerializableExtraCompat(name, ArrayList::class.java)
         "Bundle" -> getBundleExtra(name)
-        "Parcelable" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getParcelableExtra(name, Parcelable::class.java)
-        } else {
-            getParcelableExtra(name)
-        }
-        "Serializable" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializableExtra(name, Serializable::class.java)
-        } else {
-            getSerializableExtra(name)
-        }
-
+        "Parcelable" -> getParcelableExtraCompat(name)
+        "Serializable" -> getSerializableExtraCompat(name)
         else -> null
-    } as T?
+    }.safeCast()
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
 import cc.meteormc.yourmiui.databinding.ActivityMainBinding
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import cc.meteormc.yourmiui.ui.controller.LanguageController
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        val controller = (fragment as NavHostFragment).navController
+        val controller = fragment.cast<NavHostFragment>().navController
         binding.nav.setupWithNavController(controller)
     }
 }

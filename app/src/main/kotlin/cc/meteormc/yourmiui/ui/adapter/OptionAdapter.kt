@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import cc.meteormc.yourmiui.databinding.ItemOptionBinding
 import cc.meteormc.yourmiui.preferences.FeaturePreferences
 import cc.meteormc.yourmiui.ui.widget.AppPicker
@@ -38,24 +39,23 @@ class OptionAdapter(
                     val deserializer = type.deserializer(preference)
                     deserializer
                 } ?: item.defaultValue
-                @Suppress("UNCHECKED_CAST")
                 when (type) {
                     is Type.App -> TODO("Not yet implemented")
                     is Type.AppList -> onClickAppListOption(
                         context, item, type,
-                        untypedValue as? Set<String> ?: return@setOnClickListener
+                        untypedValue.safeCast() ?: return@setOnClickListener
                     )
                     is Type.SingleChoiceList -> onClickSingleChoiceListOption(
                         context, item, type,
-                        untypedValue as? String ?: return@setOnClickListener
+                        untypedValue.safeCast() ?: return@setOnClickListener
                     )
                     is Type.MultiChoiceList -> onClickMultiChoiceListOption(
                         context, item, type,
-                        untypedValue as? Set<String> ?: return@setOnClickListener
+                        untypedValue.safeCast() ?: return@setOnClickListener
                     )
                     is Type.Switch -> onClickSwitchOption(
                         context, item, type,
-                        untypedValue as? Boolean ?: return@setOnClickListener,
+                        untypedValue.safeCast() ?: return@setOnClickListener,
                         view
                     )
                     is Type.Text -> TODO("Not yet implemented")

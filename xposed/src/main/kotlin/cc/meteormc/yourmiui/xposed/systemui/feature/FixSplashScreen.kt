@@ -10,7 +10,6 @@ import android.graphics.Rect
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.withScale
@@ -180,7 +179,7 @@ object FixSplashScreen : Feature(
         iconDefaultSize: Int
     ): Drawable {
         // AdaptiveIconDrawable会进行自适应 无需手动调整
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && this is AdaptiveIconDrawable) return this
+        if (this is AdaptiveIconDrawable) return this
 
         val bitmap = createBitmap(iconSize, iconSize)
         val pixels = bitmap.getPixels(iconSize)
@@ -230,11 +229,7 @@ object FixSplashScreen : Feature(
         bounds = oldBounds
 
         val normalized = bitmap.toDrawable(context.resources)
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            AdaptiveIconDrawable(normalized, null)
-        } else {
-            normalized
-        }
+        return AdaptiveIconDrawable(normalized, null)
     }
 
     private fun Drawable.getThemeColor(isDark: Boolean): Int {
@@ -258,7 +253,7 @@ object FixSplashScreen : Feature(
             return lowRatio > 0.75f && highRatio < 0.1f
         }
 
-        val source = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && this is AdaptiveIconDrawable) {
+        val source = if (this is AdaptiveIconDrawable) {
             val background = background.toBitmap()
             val backgroundIsMono = background.isMonoColor()
             val foreground = foreground.toBitmap()

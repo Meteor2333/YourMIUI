@@ -7,7 +7,6 @@ import android.os.Parcel
 import android.os.ParcelFileDescriptor
 import io.github.libxposed.service.callback.ScopeEventCallback
 
-@Suppress("unused")
 object XposedService {
     const val SEND_BINDER_METHOD = "SendBinder"
     const val AIDL_SERVICE_DESCRIPTOR = "io.github.libxposed.service.IXposedService"
@@ -61,8 +60,8 @@ object XposedService {
             ) ?: return@computeIfAbsent null
 
             @Suppress("DEPRECATION", "UNCHECKED_CAST")
-            val map = bundle.getSerializable("map") as Map<String, Any?>?
-            RemotePreferences(group, map ?: emptyMap())
+            val map = bundle.getSerializable("map") as Map<String, *>? ?: emptyMap<String, Any?>()
+            RemotePreferences(group, map)
         }
     }
 

@@ -1,5 +1,3 @@
-@file:Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-
 package cc.meteormc.yourmiui.common.util
 
 import kotlin.math.abs
@@ -36,9 +34,9 @@ private val abbreviationMap = mapOf(
 private val primitiveWrapperMap = mapOf(
     Boolean::class.javaPrimitiveType to Boolean::class.javaObjectType,
     Byte::class.javaPrimitiveType to Byte::class.javaObjectType,
-    Character::class.javaPrimitiveType to Character::class.javaObjectType,
+    Char::class.javaPrimitiveType to Char::class.javaObjectType,
     Short::class.javaPrimitiveType to Short::class.javaObjectType,
-    Integer::class.javaPrimitiveType to Integer::class.javaObjectType,
+    Int::class.javaPrimitiveType to Int::class.javaObjectType,
     Long::class.javaPrimitiveType to Long::class.javaObjectType,
     Double::class.javaPrimitiveType to Double::class.javaObjectType,
     Float::class.javaPrimitiveType to Float::class.javaObjectType,
@@ -51,9 +49,9 @@ private val primitiveWrapperMap = mapOf(
 private val wrapperPrimitiveMap = mapOf(
     Boolean::class.javaObjectType to Boolean::class.javaPrimitiveType,
     Byte::class.javaObjectType to Byte::class.javaPrimitiveType,
-    Character::class.javaObjectType to Character::class.javaPrimitiveType,
+    Char::class.javaObjectType to Char::class.javaPrimitiveType,
     Short::class.javaObjectType to Short::class.javaPrimitiveType,
-    Integer::class.javaObjectType to Integer::class.javaPrimitiveType,
+    Int::class.javaObjectType to Int::class.javaPrimitiveType,
     Long::class.javaObjectType to Long::class.javaPrimitiveType,
     Double::class.javaObjectType to Double::class.javaPrimitiveType,
     Float::class.javaObjectType to Float::class.javaPrimitiveType,
@@ -123,7 +121,7 @@ private val cache = mutableMapOf<String, Class<*>>()
  * @param initialize  whether the class must be initialized
  * @return the class represented by `className` using the `classLoader`
  */
-fun getClass(classLoader: ClassLoader? = null, className: String, initialize: Boolean): Class<*>? {
+fun getClass(classLoader: ClassLoader?, className: String, initialize: Boolean): Class<*>? {
     fun forName(name: String): Class<*> {
         return if (classLoader == null) Class.forName(name)
         else Class.forName(name, initialize, classLoader)

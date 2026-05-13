@@ -4,6 +4,7 @@ import android.app.KeyguardManager
 import android.content.Context
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
@@ -35,7 +36,7 @@ object DisableAdbInstallAlert : Feature(
             // name: (obfuscated) | type: android.os.IMessenger
             fields(messagerClass).firstOrNull()?.set(it, messenger)
 
-            val km = it.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager?
+            val km = it.getSystemService(Context.KEYGUARD_SERVICE).safeCast<KeyguardManager?>()
             if (!requireUnlock || (km != null && !km.isKeyguardLocked)) {
                 // name: (obfuscated) | type: int
                 fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->

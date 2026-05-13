@@ -1,5 +1,7 @@
 package cc.meteormc.yourmiui.common
 
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
@@ -71,7 +73,6 @@ class Option<T : Any>(
                 "Text" to Text()
             )
 
-            @Suppress("UNCHECKED_CAST")
             fun <T> getTypeByObject(obj: Any?): Type<T>? {
                 val type = when (obj) {
                     is Type<*> -> obj
@@ -86,10 +87,10 @@ class Option<T : Any>(
                         }
                     }
                     else -> null
-                } as? Type<T>? ?: return null
+                }.safeCast<Type<T>>() ?: return null
                 val lookupType = lookupTypes[type.javaClass.simpleName] ?: return null
-                type.serializer = lookupType.serializer as (T) -> String
-                type.deserializer = lookupType.deserializer as (String) -> T?
+                type.serializer = lookupType.serializer.cast()
+                type.deserializer = lookupType.deserializer.cast()
                 return type
             }
 

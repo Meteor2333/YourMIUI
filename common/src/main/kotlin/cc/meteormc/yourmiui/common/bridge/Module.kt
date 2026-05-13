@@ -1,13 +1,14 @@
 package cc.meteormc.yourmiui.common.bridge
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import androidx.core.content.ContextCompat
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
+import cc.meteormc.yourmiui.common.util.Unsafe.getSerializableExtraCompat
 import cc.meteormc.yourmiui.common.util.getExtra
 import cc.meteormc.yourmiui.common.util.putExtra
 import java.util.UUID
@@ -18,24 +19,21 @@ class Module(private val context: Context) : BroadcastReceiver() {
 
     fun attach() {
         val filter = IntentFilter().apply { addAction(Bridge.RESPONSE_ACTION) }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED)
-        } else {
-            @SuppressLint("UnspecifiedRegisterReceiverFlag")
-            context.registerReceiver(this, filter)
-        }
+        ContextCompat.registerReceiver(
+            context, this,
+            filter, ContextCompat.RECEIVER_EXPORTED
+        )
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun <REQ : Any, RES : Any> request(
         channel: Channel<REQ, RES>,
         packageName: String,
         onResponse: ResponseCallback<RES>,
         timeout: Long = 1000L,
-        body: REQ = Unit as REQ
+        body: REQ = Unit.cast()
     ) {
         val id = UUID.randomUUID()
-        pendings[id] = onResponse as ResponseCallback<Any>
+        pendings[id] = onResponse.cast()
         timeoutHandler.postDelayed({ pendings.remove(id)?.onFailure() }, timeout)
 
         val request = Intent(channel.action)
@@ -46,9 +44,8 @@ class Module(private val context: Context) : BroadcastReceiver() {
         context.sendBroadcast(request)
     }
 
-    @Suppress("DEPRECATION")
     override fun onReceive(context: Context, intent: Intent) {
-        val id = intent.getSerializableExtra("id") ?: return
+        val id = intent.getSerializableExtraCompat("id", UUID::class.java) ?: return
         val callback = pendings.remove(id) ?: return
         intent.getExtra<Any>("body")?.let { callback.onSuccess(it) }
     }

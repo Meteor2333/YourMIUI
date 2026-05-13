@@ -1,8 +1,8 @@
 package cc.meteormc.yourmiui.common.data
 
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
 import java.lang.reflect.Member
 
-@Suppress("unused", "UNCHECKED_CAST")
 data class HookParam(
     val member: Member,
     val instance: Any?,
@@ -24,7 +24,7 @@ data class HookParam(
             throwableChanged = true
         }
 
-    fun <T> instance() = this.instance as T
+    fun <T> instance() = this.instance.cast<T>()
 
     fun booleanArg(index: Int = 0) = argByGenerics<Boolean>(index)
     fun byteArg(index: Int = 0) = argByGenerics<Byte>(index)
@@ -59,26 +59,26 @@ data class HookParam(
         ?.let { args[it] = value }
 
     val booleanResult
-        get() = this.result as Boolean
+        get() = this.result.cast<Boolean>()
     val byteResult
-        get() = this.result as Byte
+        get() = this.result.cast<Byte>()
     val charResult
-        get() = this.result as Char
+        get() = this.result.cast<Char>()
     val doubleResult
-        get() = this.result as Double
+        get() = this.result.cast<Double>()
     val floatResult
-        get() = this.result as Float
+        get() = this.result.cast<Float>()
     val intResult
-        get() = this.result as Int
+        get() = this.result.cast<Int>()
     val longResult
-        get() = this.result as Long
+        get() = this.result.cast<Long>()
     val shortResult
-        get() = this.result as Short
+        get() = this.result.cast<Short>()
     val stringResult
-        get() = this.result as String
-    fun <T> result() = this.result as T?
+        get() = this.result.cast<String>()
+    fun <T> result() = this.result.cast<T>()
 
-    fun <T : Throwable> throwable() = this.throwable as T?
+    fun <T : Throwable> throwable() = this.throwable.cast<T>()
 
     fun callSuper() = this.onCallSuper(this)
 

@@ -17,7 +17,6 @@ abstract class XposedModule : XposedInterfaceWrapper, XposedModuleInterface {
      * @param base  The base context provided by the framework, should not be used by the module
      * @param param Information about the process in which the module is loaded
      */
-    @Suppress("unused")
     constructor(base: XposedInterface, param: XposedModuleInterface.ModuleLoadedParam)
 
     /**

@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.xposed
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -13,6 +12,8 @@ import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
+import cc.meteormc.yourmiui.common.util.Unsafe
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
 import cc.meteormc.yourmiui.common.util.getClass
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
@@ -70,7 +71,6 @@ object XposedEntry {
         }
     }
 
-    @Suppress("unused")
     class LSPosed : XposedModule {
         constructor() : super()
 
@@ -87,9 +87,7 @@ object XposedEntry {
                 runCatching {
                     getRemotePreferences(Feature.PREFERENCES_NAME)
                 }.recoverCatching {
-                    @Suppress("DEPRECATION")
-                    @SuppressLint("WorldReadableFiles")
-                    getSharedPreferences(Feature.PREFERENCES_NAME, Context.MODE_WORLD_READABLE)
+                    getSharedPreferences(Feature.PREFERENCES_NAME, Unsafe.CONTEXT_MODE_WORLD_READABLE)
                 }.getOrNull() ?: return
             )
         }
@@ -105,8 +103,7 @@ object XposedEntry {
                     val value = preferences.getString(key, null)?.let { preference ->
                         option.type.deserializer(preference)
                     } ?: option.defaultValue
-                    @Suppress("UNCHECKED_CAST")
-                    (option as Option<Any>).onValueInit(value)
+                    option.cast<Option<Any>>().onValueInit(value)
                 }
 
                 XposedBridge.log("[YourMIUI] Initializing feature '${feature.id}' in scope '${scope.id}'")

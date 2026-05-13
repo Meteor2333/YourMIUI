@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.common.data.AppInfo
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import cc.meteormc.yourmiui.databinding.ItemAppBinding
 import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -93,7 +94,7 @@ class AppPicker(
         if (appCache.isNotEmpty()) {
             adapter.submitAll(appCache)
         } else {
-            (context as LifecycleOwner).lifecycleScope.launch {
+            context.safeCast<LifecycleOwner>()?.lifecycleScope?.launch {
                 val cache = mutableListOf<AppInfo>()
                 loadAppInfos()
                     .flowOn(Dispatchers.IO)
@@ -119,7 +120,6 @@ class AppPicker(
         return this
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private class AppAdapter(
         size: Int,
         val selected: MutableSet<String>
@@ -146,7 +146,7 @@ class AppPicker(
                 }
             }
 
-            notifyDataSetChanged()
+            notifyChange()
         }
 
         fun submit(app: AppInfo, query: String?) {
@@ -188,6 +188,11 @@ class AppPicker(
                 this.apps.add(app)
             }
 
+            notifyChange()
+        }
+
+        private fun notifyChange() {
+            @SuppressLint("NotifyDataSetChanged")
             notifyDataSetChanged()
         }
 

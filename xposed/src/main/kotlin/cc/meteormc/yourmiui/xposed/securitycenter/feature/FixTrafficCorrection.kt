@@ -2,6 +2,7 @@ package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.Looper
 import cc.meteormc.yourmiui.common.Feature
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
@@ -22,7 +23,7 @@ object FixTrafficCorrection : Feature(
                 // 导致运营商的响应短信被过滤掉 (打印日志为`onProcessSms 解析失败 need block sms`)
                 // 所以我们来帮他手动校正
                 repeat(3) { _ ->
-                    val result = refreshMethod.call(it.instance, it.intArg()) as? List<*>
+                    val result = refreshMethod.call(it.instance, it.intArg()).safeCast<List<*>>()
                     if (!result.isNullOrEmpty()) return@hookBefore
                     if (!Looper.getMainLooper().isCurrentThread) {
                         // 刷新有时会失败 多尝试几次

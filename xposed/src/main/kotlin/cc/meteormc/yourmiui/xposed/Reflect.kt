@@ -1,9 +1,9 @@
-@file:Suppress("unused")
-
 package cc.meteormc.yourmiui.xposed
 
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.data.HookParam
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
+import cc.meteormc.yourmiui.common.util.Unsafe.safeCast
 import cc.meteormc.yourmiui.common.util.compareParameterTypes
 import cc.meteormc.yourmiui.common.util.getClass
 import de.robv.android.xposed.XC_MethodHook
@@ -22,8 +22,7 @@ fun <T : Any> operator(clazz: Class<T>): ReflectOperator<T> {
 fun operator(classLoader: ClassLoader, className: String): ReflectOperator<Any>? {
     val clazz = getClass(classLoader, className, false)
     return if (clazz != null) {
-        @Suppress("UNCHECKED_CAST")
-        ReflectOperator(clazz as Class<Any>)
+        ReflectOperator(clazz.cast())
     } else {
         XposedBridge.log("[YourMIUI] Class not found: $className!")
         null
@@ -46,7 +45,6 @@ fun <R> Feature.operator(className: String, operator: ReflectOperator<Any>.() ->
     return operator(className)?.run(operator)
 }
 
-@Suppress("UNCHECKED_CAST")
 class ReflectOperator<T : Any>(val delegate: Class<T>) {
     companion object {
         private val constructorCache = mutableMapOf<String, ConstructorWrapper<*>>()
@@ -57,7 +55,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     fun constructor(vararg paramTypes: Class<*>): ConstructorWrapper<T>? {
         val fullName = "${delegate.getName()}(${getParametersString(*paramTypes)})"
         if (constructorCache.containsKey(fullName)) {
-            return constructorCache[fullName] as? ConstructorWrapper<T>
+            return constructorCache[fullName].safeCast()
         }
 
         return runCatching {
@@ -74,7 +72,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 
     fun declaredConstructors(): List<ConstructorWrapper<T>> {
-        return (delegate.declaredConstructors as? Array<Constructor<T>>)?.map {
+        return (delegate.declaredConstructors.safeCast<Array<Constructor<T>>>())?.map {
             ConstructorWrapper(it)
         } ?: emptyList()
     }
@@ -82,7 +80,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     fun field(name: String): FieldWrapper<T>? {
         val fullName = "${delegate.getName()}#$name"
         if (fieldCache.containsKey(fullName)) {
-            return fieldCache[fullName] as? FieldWrapper<T>
+            return fieldCache[fullName].safeCast()
         }
 
         val field = findRecursive {
@@ -119,7 +117,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     fun method(name: String, vararg paramTypes: Class<*>): MethodWrapper<T>? {
         val fullName = "${delegate.getName()}#$name(${getParametersString(*paramTypes)})"
         if (methodCache.containsKey(fullName)) {
-            return methodCache[fullName] as? MethodWrapper<T>
+            return methodCache[fullName].safeCast()
         }
 
         var result: Method? = null
@@ -235,7 +233,6 @@ abstract class HookableWrapper(private val member: Member) {
     }
 
     private fun MethodHookParam.toInternal(): HookParam {
-        @Suppress("UNCHECKED_CAST")
         return HookParam(
             this.method,
             this.thisObject,
@@ -262,14 +259,13 @@ class ConstructorWrapper<T : Any>(private val delegate: Constructor<T>) : Hookab
     }
 }
 
-@Suppress("UNCHECKED_CAST")
 class FieldWrapper<T : Any>(private val delegate: Field) {
     fun name(): String = delegate.name
 
     fun type(): Class<*> = delegate.type
 
     operator fun <R : Any> get(obj: T?): R? {
-        return delegate.apply { isAccessible = true }[obj] as? R?
+        return delegate.apply { isAccessible = true }[obj].safeCast()
     }
 
     operator fun set(obj: T?, value: Any?): FieldWrapper<T> {

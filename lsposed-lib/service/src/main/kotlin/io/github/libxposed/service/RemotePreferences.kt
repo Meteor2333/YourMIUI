@@ -7,9 +7,10 @@ import java.util.TreeMap
 import java.util.WeakHashMap
 import java.util.concurrent.Executors
 
+@Suppress("UNCHECKED_CAST")
 internal class RemotePreferences(
     private val group: String,
-    private var map: Map<String, Any?>
+    private var map: Map<String, *>
 ) : SharedPreferences {
     private val listeners = Collections.newSetFromMap(
         WeakHashMap<OnSharedPreferenceChangeListener, Boolean>()
@@ -44,7 +45,6 @@ internal class RemotePreferences(
     }
 
     override fun getStringSet(key: String, defValues: Set<String>?): Set<String>? {
-        @Suppress("UNCHECKED_CAST")
         return map.getOrDefault(key, defValues) as Set<String>?
     }
 

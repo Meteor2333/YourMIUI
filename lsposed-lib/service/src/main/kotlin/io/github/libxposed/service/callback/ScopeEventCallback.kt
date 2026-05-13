@@ -11,7 +11,6 @@ private const val TRANSACTION_DENIED100 = 3 + 1
 private const val TRANSACTION_TIMEOUT100 = 4 + 1
 private const val TRANSACTION_FAILED100 = 5 + 1
 
-@Suppress("unused")
 class ScopeEventCallback : IInterface {
     private val binder = object : Binder() {
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {

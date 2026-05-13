@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.graphics.ColorUtils
+import cc.meteormc.yourmiui.common.util.Unsafe.cast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
@@ -144,7 +145,7 @@ class BottomSheet(
     private fun drawRounded() {
         val sheetField = BottomSheetDialog::class.java.getDeclaredField("bottomSheet")
         sheetField.isAccessible = true
-        val sheet = sheetField.get(this) as FrameLayout
+        val sheet = sheetField.get(this).cast<FrameLayout>()
         val model = ShapeAppearanceModel.builder(
             context, 0,
             com.google.android.material.R.style.ShapeAppearanceOverlay_MaterialAlertDialog_Material3
@@ -161,7 +162,6 @@ class BottomSheet(
 
     private fun Int.dp2px() = (this * context.resources.displayMetrics.density).toInt()
 
-    @Suppress("unused")
     class Builder(val context: Context) {
         private var title: String? = null
         private var content: String? = null
