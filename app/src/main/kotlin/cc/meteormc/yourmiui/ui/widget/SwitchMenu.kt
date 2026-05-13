@@ -5,14 +5,16 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import cc.meteormc.yourmiui.R
 
-private const val ENABLE_BOTTON_ID = 0x0
-private const val DISABLE_BOTTON_ID = 0x1
-
 class SwitchMenu(
     context: Context,
     anchor: View,
     private val initial: Boolean
 ) : PopupMenu(context, anchor) {
+    companion object {
+        private const val ENABLE_BOTTON_ID = 0x0
+        private const val DISABLE_BOTTON_ID = 0x1
+    }
+
     private var changeListener: (selected: Boolean) -> Unit = { }
 
     override fun show() {
