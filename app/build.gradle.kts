@@ -63,6 +63,7 @@ kotlin {
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":lsposed-lib:service"))
     runtimeOnly(project(":xposed"))
 
     implementation("androidx.appcompat:appcompat:1.7.1")

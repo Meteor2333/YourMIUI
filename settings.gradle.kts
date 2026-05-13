@@ -26,5 +26,6 @@ include(
     ":app",
     ":common",
     ":xposed",
-    ":lsposed-api"
+    ":lsposed-lib:api",
+    ":lsposed-lib:service"
 )
