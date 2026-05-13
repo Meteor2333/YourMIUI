@@ -32,6 +32,7 @@ object RemoveAds : Feature(
     override fun onLoadPackage() {
         operator("com.xiaomi.market.model.TabInfo") {
             val tabInfo = TabInfoWrapper()
+            // modifier: public static | signature: fromJSON(Lorg/json/JSONArray;)Ljava/util/List;
             method("fromJSON", JSONArray::class.java)?.hookAfter {
                 it.result<MutableList<Any>>()?.removeIf { tab ->
                     tabInfo.from(tab)
@@ -41,6 +42,7 @@ object RemoveAds : Feature(
         }
 
         operator("com.xiaomi.market.ui.PagerTabsInfo") {
+            // modifier: public | signature: fromNativeTabs(Ljava/util/List;)Lcom/xiaomi/market/ui/PagerTabsInfo;
             method("fromNativeTabs")?.hookBefore {
                 it.argByGenerics<MutableList<Any>>()?.removeIf { tab ->
                     val wrapper = NativeTabInfoWrapper()
@@ -54,6 +56,7 @@ object RemoveAds : Feature(
             val emptyTabInfo by lazy {
                 TabInfoWrapper().new(classLoader)!!
             }
+            // modifier: public static | signature: fromTabInfo(Lcom/xiaomi/market/model/TabInfo;)Lcom/xiaomi/market/ui/PagerTabsInfo;
             method("fromTabInfo")?.hookBefore {
                 val tabInfoClass = operator(tabInfo.className)?.delegate ?: return@hookBefore
                 val arg = it.argByClass(tabInfoClass) ?: return@hookBefore
@@ -73,6 +76,7 @@ object RemoveAds : Feature(
         }
 
         operator("com.xiaomi.market.business_ui.base.NativeFeedFragment") {
+            // modifier: protected | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List;
             method("parseResponseData")?.hookAfter {
                 it.result<MutableList<Any>>()?.removeIf { component ->
                     adComponents.contains(component.javaClass.name)
@@ -130,6 +134,7 @@ object RemoveAds : Feature(
             val keptComponentClass = operator(
                 "com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent"
             )?.delegate ?: return@operator
+            // modifier: private final | signature: modifySearchSugData(Lcom/xiaomi/market/common/component/base/INativeFragmentContext;Ljava/util/List;)V
             method("modifySearchSugData")?.hookBefore {
                 val components = it.argByGenerics<MutableList<Any>>() ?: return@hookBefore
                 val keptComponents = components.filter { component -> keptComponentClass.isInstance(component) }
@@ -141,6 +146,7 @@ object RemoveAds : Feature(
 
         // 软件页轮播广告
         operator("com.xiaomi.market.common.webview.WebEvent") {
+            // modifier: public | signature: sendDataToCallback(Ljava/lang/String;Ljava/lang/String;)V
             method("sendDataToCallback")?.hookBefore {
                 val callback = it.stringArg(0) ?: return@hookBefore
                 val data = it.stringArg(1) ?: return@hookBefore
@@ -167,6 +173,7 @@ object RemoveAds : Feature(
 
         // 个人页横幅广告
         operator("com.xiaomi.market.business_ui.main.mine.NativeMinePagerFragment") {
+            // modifier: private final | signature: parseMenuData(Lorg/json/JSONArray;)Ljava/util/Map;
             method("parseMenuData")?.hookResult(emptyMap<Any, Any>())
         }
 
@@ -184,6 +191,7 @@ object RemoveAds : Feature(
 
         // 应用详情页推荐广告
         operator($$"com.xiaomi.market.business_ui.detail.DetailType$Companion") {
+            // modifier: public final | signature: getDetailType(Landroid/content/Intent;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/xiaomi/market/business_ui/detail/DetailType;
             method(
                 "getDetailType",
                 Intent::class.java,
