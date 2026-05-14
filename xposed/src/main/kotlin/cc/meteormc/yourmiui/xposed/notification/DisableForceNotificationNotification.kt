@@ -1,15 +1,9 @@
 package cc.meteormc.yourmiui.xposed.notification
 
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisableForceNotificationNotification : Feature(
-    key = "disable_force_notification",
-    nameRes = R.string.feature_notification_disable_force_notification_name,
-    descriptionRes = R.string.feature_notification_disable_force_notification_description,
-    testEnvironmentRes = R.string.feature_notification_disable_force_notification_test_environment
-) {
+object DisableForceNotificationNotification : Feature() {
     override fun onLoadPackage() {
         operator("miui.util.NotificationFilterHelper") {
             // modifier: public static | signature: isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z

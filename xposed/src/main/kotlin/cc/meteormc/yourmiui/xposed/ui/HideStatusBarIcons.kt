@@ -5,12 +5,7 @@ import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object HideStatusBarIcons : Feature(
-    key = "hide_status_bar_icons",
-    nameRes = R.string.feature_systemui_hide_status_bar_icons_name,
-    descriptionRes = R.string.feature_systemui_hide_status_bar_icons_description,
-    testEnvironmentRes = R.string.feature_systemui_hide_status_bar_icons_test_environment
-) {
+object HideStatusBarIcons : Feature() {
     private lateinit var hiddenIcons: Set<String>
 
     override fun onLoadPackage() {

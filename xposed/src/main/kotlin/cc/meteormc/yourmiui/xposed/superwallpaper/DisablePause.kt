@@ -1,16 +1,9 @@
 package cc.meteormc.yourmiui.xposed.superwallpaper
 
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisablePause : Feature(
-    key = "disable_superwallpaper_pause",
-    nameRes = R.string.feature_superwallpaper_disable_pause_name,
-    descriptionRes = R.string.feature_superwallpaper_disable_pause_description,
-    warningRes = R.string.feature_superwallpaper_disable_pause_warning,
-    testEnvironmentRes = R.string.feature_superwallpaper_disable_pause_test_environment
-) {
+object DisablePause : Feature() {
     override fun onLoadPackage() {
         operator("com.miui.miwallpaper.basesuperwallpaper.SuperWallpaper") {
             // modifier: protected | signature: getDeskPauseDelay()I

@@ -3,16 +3,10 @@ package cc.meteormc.yourmiui.xposed.settings
 import android.os.Handler
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.data.HookParam
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.ReflectOperator
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisableCountdownDialog : Feature(
-    key = "disable_countdown_dialog",
-    nameRes = R.string.feature_securitycenter_disable_countdown_dialog_name,
-    descriptionRes = R.string.feature_securitycenter_disable_countdown_dialog_description,
-    testEnvironmentRes = R.string.feature_securitycenter_disable_countdown_dialog_test_environment
-) {
+object DisableCountdownDialog : Feature() {
     override fun onLoadPackage() {
         operator("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V

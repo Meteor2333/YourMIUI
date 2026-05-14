@@ -1,15 +1,9 @@
 package cc.meteormc.yourmiui.xposed.mms
 
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveAds : Feature(
-    key = "remove_mms_ads",
-    nameRes = R.string.feature_mms_remove_ads_name,
-    descriptionRes = R.string.feature_mms_remove_ads_description,
-    testEnvironmentRes = R.string.feature_mms_remove_ads_test_environment
-) {
+object RemoveAds : Feature() {
     override fun onLoadPackage() {
         operator("com.miui.smsextra.ui.UnderstandButton") {
             // modifier: private | signature: needRequestAD(Ljava/lang/Object;Lcom/miui/smsextra/sdk/ItemExtra;Lcom/miui/smsextra/ui/UnderstandButton$ADCallback;)Z

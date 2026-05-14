@@ -2,15 +2,9 @@ package cc.meteormc.yourmiui.xposed.securitycenter
 
 import android.os.Looper
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object FixTrafficCorrection : Feature(
-    key = "fix_traffic_correction",
-    nameRes = R.string.feature_securitycenter_fix_traffic_correction_name,
-    descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,
-    testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment
-) {
+object FixTrafficCorrection : Feature() {
     override fun onLoadPackage() {
         operator("com.miui.sdk.tc.TcManager") {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;

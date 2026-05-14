@@ -2,15 +2,9 @@ package cc.meteormc.yourmiui.xposed.notification
 
 import android.content.pm.PermissionInfo
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object DisableForceNotificationAndroid : Feature(
-    key = "disable_force_notification",
-    nameRes = R.string.feature_android_disable_force_notification_name,
-    descriptionRes = R.string.feature_android_disable_force_notification_description,
-    testEnvironmentRes = R.string.feature_android_disable_force_notification_test_environment
-) {
+object DisableForceNotificationAndroid : Feature() {
     private const val NOTIFICATION_PERMISSION = "android.permission.POST_NOTIFICATIONS"
     private const val FLAG_PERMISSION_POLICY_FIXED = 1 shl 2
     private const val FLAG_PERMISSION_SYSTEM_FIXED = 1 shl 4

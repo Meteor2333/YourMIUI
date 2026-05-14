@@ -12,12 +12,7 @@ import cc.meteormc.yourmiui.xposed.ConstructorWrapper
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object EditGxzwQuickOpen : Feature(
-    key = "edit_gxzw_quick_open",
-    nameRes = R.string.feature_systemui_edit_gxzw_quick_open_name,
-    descriptionRes = R.string.feature_systemui_edit_gxzw_quick_open_description,
-    testEnvironmentRes = R.string.feature_systemui_edit_gxzw_quick_open_test_environment
-) {
+object EditGxzwQuickOpen : Feature() {
     private lateinit var reservedItems: Set<QuickOpenItem>
 
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"

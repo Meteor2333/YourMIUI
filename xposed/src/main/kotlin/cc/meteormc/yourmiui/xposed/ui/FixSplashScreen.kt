@@ -21,12 +21,7 @@ import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
-object FixSplashScreen : Feature(
-    key = "fix_splash_screen",
-    nameRes = R.string.feature_systemui_fix_splash_screen_name,
-    descriptionRes = R.string.feature_systemui_fix_splash_screen_description,
-    testEnvironmentRes = R.string.feature_systemui_fix_splash_screen_test_environment
-) {
+object FixSplashScreen : Feature() {
     private const val ALLOW_LAUNCH_PACKAGE = "com.miui.home"
 
     private var replaceBackgroundColor: Boolean = true

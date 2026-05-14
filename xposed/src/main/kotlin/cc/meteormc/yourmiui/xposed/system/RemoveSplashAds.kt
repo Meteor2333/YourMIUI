@@ -2,15 +2,9 @@ package cc.meteormc.yourmiui.xposed.system
 
 import android.os.Binder
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveSplashAds : Feature(
-    key = "remove_splash_ads",
-    nameRes = R.string.feature_systemadsolution_remove_splash_ads_name,
-    descriptionRes = R.string.feature_systemadsolution_remove_splash_ads_description,
-    testEnvironmentRes = R.string.feature_systemadsolution_remove_splash_ads_test_environment
-) {
+object RemoveSplashAds : Feature() {
     private val emptyBinder = Binder()
 
     override fun onLoadPackage() {

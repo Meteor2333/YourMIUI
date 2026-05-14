@@ -2,16 +2,9 @@ package cc.meteormc.yourmiui.xposed.nfc
 
 import android.os.Message
 import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object AllowLockedAccess : Feature(
-    key = "nfc_allow_locked_access",
-    nameRes = R.string.feature_nfc_allow_locked_access_name,
-    descriptionRes = R.string.feature_nfc_allow_locked_access_description,
-    warningRes = R.string.feature_nfc_allow_locked_access_warning,
-    testEnvironmentRes = R.string.feature_nfc_allow_locked_access_test_environment
-) {
+object AllowLockedAccess : Feature() {
     private const val SCREEN_STATE_ON_UNLOCKED = 8
     private const val MSG_APPLY_SCREEN_STATE = 16
 

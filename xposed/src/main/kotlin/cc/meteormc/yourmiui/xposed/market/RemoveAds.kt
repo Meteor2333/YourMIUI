@@ -5,18 +5,11 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.market.wrapper.NativeTabInfoWrapper
-import cc.meteormc.yourmiui.xposed.market.wrapper.TabInfoWrapper
 import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONArray
 import org.json.JSONObject
 
-object RemoveAds : Feature(
-    key = "remove_market_ads",
-    nameRes = R.string.feature_market_remove_ads_name,
-    descriptionRes = R.string.feature_market_remove_ads_description,
-    testEnvironmentRes = R.string.feature_market_remove_ads_test_environment
-) {
+object RemoveAds : Feature() {
     private lateinit var hiddenTags: Set<String>
 
     private val adTags = setOf(
@@ -231,5 +224,50 @@ object RemoveAds : Feature(
                 )
             ) { hiddenTags = it }
         )
+    }
+
+    abstract class Wrapper(val className: String) {
+        lateinit var wrapped: Any
+
+        fun from(instance: Any) {
+            wrapped = instance
+        }
+
+        fun new(classLoader: ClassLoader) = operator(classLoader, className) outer@{
+            val newInstance = constructor()!!.new()
+            operator(this@Wrapper.javaClass) {
+                declaredFields().map {
+                    this@outer.field(it.name()) to it.get<Any>(this@Wrapper)
+                }.forEach { (field, value) ->
+                    field?.set(newInstance, value)
+                }
+
+                newInstance
+            }
+        }
+
+        protected fun <T : Any> getField(name: String) = operator(wrapped.javaClass) {
+            field(name)?.get<T>(wrapped)
+        }
+
+        protected fun <T : Any> updateField(name: String, value: T?) = operator(wrapped.javaClass) {
+            field(name)?.set(wrapped, value)
+            Unit
+        }
+    }
+
+    class TabInfoWrapper : Wrapper("com.xiaomi.market.model.TabInfo") {
+        var tag: String?
+            get() = getField("tag")
+            set(value) = updateField("tag", value)
+        var subTabs: List<Any>
+            get() = getField("subTabs") ?: emptyList()
+            set(value) = updateField("subTabs", value)
+    }
+
+    class NativeTabInfoWrapper : Wrapper("com.xiaomi.market.common.network.retrofit.response.bean.NativeTabInfo") {
+        var tag: String?
+            get() = getField("tag")
+            set(value) = updateField("tag", value)
     }
 }

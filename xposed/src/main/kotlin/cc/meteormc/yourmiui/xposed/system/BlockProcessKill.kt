@@ -8,13 +8,7 @@ import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object BlockProcessKill : Feature(
-    key = "block_process_kill",
-    nameRes = R.string.feature_android_block_process_kill_name,
-    descriptionRes = R.string.feature_android_block_process_kill_description,
-    testEnvironmentRes = R.string.feature_android_block_process_kill_test_environment,
-    originalAuthor = "dantmnf"
-) {
+object BlockProcessKill : Feature() {
     private lateinit var blockedPackages: Set<String>
 
     override fun onLoadPackage() {

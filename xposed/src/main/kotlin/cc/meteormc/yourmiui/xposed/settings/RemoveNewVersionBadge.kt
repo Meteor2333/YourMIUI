@@ -7,12 +7,7 @@ import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
-object RemoveNewVersionBadge : Feature(
-    key = "remove_new_version_badge",
-    nameRes = R.string.feature_settings_remove_new_version_badge_name,
-    descriptionRes = R.string.feature_settings_remove_new_version_badge_description,
-    testEnvironmentRes = R.string.feature_settings_remove_new_version_badge_test_environment
-) {
+object RemoveNewVersionBadge : Feature() {
     private const val PROPERTY_MIUI_NEW_VERSION = "miui_new_version"
 
     private var modifyProperty = false

@@ -3,14 +3,7 @@ package cc.meteormc.yourmiui.common
 import android.content.res.Resources
 import java.io.Serializable
 
-abstract class Feature(
-    val key: String,
-    val nameRes: Int,
-    val descriptionRes: Int,
-    val warningRes: Int? = null,
-    val testEnvironmentRes: Int? = null,
-    val originalAuthor: String? = null
-) : Serializable {
+abstract class Feature : Serializable {
     val id: String = this.javaClass.simpleName
 
     companion object {
