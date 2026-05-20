@@ -50,7 +50,6 @@
 
     <string name="feature_settings_remove_header_tips_name">移除页眉提醒</string>
     <string name="feature_settings_remove_header_tips_description">移除设置中页眉出现的提醒横幅（如推荐开启小米云）</string>
-    <string name="feature_settings_remove_header_tips_test_environment">Android13版本</string>
 
     <string name="feature_settings_remove_new_version_badge_name">清除新版本标记</string>
     <string name="feature_settings_remove_new_version_badge_description">清除设置中的系统新版本标记（不会阻止系统进行更新）</string>

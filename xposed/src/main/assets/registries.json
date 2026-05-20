@@ -216,6 +216,15 @@
             "source": ".settings.RemoveAdbSwitchRestrictions"
         },
         {
+            "id": "settings:remove_header_tips",
+            "name": "@string/feature_settings_remove_header_tips_name",
+            "description": "@string/feature_settings_remove_header_tips_description",
+            "scopes": [
+                "com.android.settings"
+            ],
+            "source": ".settings.RemoveHeaderTips"
+        },
+        {
             "id": "settings:remove_new_version_badge",
             "name": "@string/feature_settings_remove_new_version_badge_name",
             "description": "@string/feature_settings_remove_new_version_badge_description",
