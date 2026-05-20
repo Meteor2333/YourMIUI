@@ -12,6 +12,7 @@ object RemoveHeaderTips : Feature(
 ) {
     override fun onLoadPackage() {
         operator("com.android.settings.SettingsFragment") {
+            // modifier: private | signature: updateTips(ZLjava/lang/String;IIILandroid/view/View$OnClickListener;)V
             method("updateTips")?.hookDoNothing()
         }
     }
