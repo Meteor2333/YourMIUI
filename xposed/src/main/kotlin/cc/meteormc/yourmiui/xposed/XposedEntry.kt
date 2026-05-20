@@ -18,24 +18,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
     private lateinit var hostBridge: Host
-    private val scopes by lazy {
-        listOf(
-            Android,
-            ContentExtension,
-            Home,
-            Market,
-            Mirror,
-            MMS,
-            NFC,
-            Notification,
-            PackageInstaller,
-            SecurityCenter,
-            Settings,
-            SuperWallpaper,
-            SystemAdSolution,
-            SystemUI
-        )
-    }
     private val prefs by lazy {
         XSharedPreferences("cc.meteormc.yourmiui", Feature.PREFERENCES_NAME).apply {
             makeWorldReadable()
