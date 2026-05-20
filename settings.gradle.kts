@@ -25,7 +25,5 @@ rootProject.name = "YourMIUI"
 include(
     ":app",
     ":common",
-    ":xposed",
-    ":lsposed-lib:api",
-    ":lsposed-lib:service"
+    ":xposed"
 )

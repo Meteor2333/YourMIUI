@@ -23,7 +23,7 @@ object HostManager {
                 override fun onSuccess(data: ArrayList<Scope>) {
                     fetchedScopes.value = data.associateWith {
                         // 获取目标应用的名称和图标
-                        val pm = YourMIUI.Companion.get().packageManager
+                        val pm = YourMIUI.get().packageManager
                         it.packages.mapNotNull { pkg ->
                             val info = runCatching {
                                 pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
@@ -47,28 +47,37 @@ object HostManager {
     }
 
     val activated
-        get() = XposedService.activated || Bridge.apiVersion != null || Bridge.frameworkName != null
+        get() = XposedService.isAvailable() || Bridge.apiVersion != null || Bridge.frameworkName != null
 
     val apiVersion
-        get() = XposedService.apiVersion ?: Bridge.apiVersion ?: -1
+        get() = runCatching { XposedService.getApiVersion() }.getOrElse { Bridge.apiVersion ?: -1 }
 
     val frameworkName
-        get() = XposedService.frameworkName ?: Bridge.frameworkName ?: "Unknown"
+        get() = runCatching { XposedService.getFrameworkName() }.getOrElse { Bridge.frameworkName ?: "Unknown" }
+
+    val frameworkVersion
+        get() = runCatching { XposedService.getFrameworkVersion() }.getOrNull()
+
+    val frameworkVersionCode
+        get() = runCatching { XposedService.getFrameworkVersionCode() }.getOrNull()
 
     val scopes: LiveData<Map<Scope, List<AppInfo>>>
         get() {
-            val enabledScope = XposedService.scopes
-            return MutableLiveData<Map<Scope, List<AppInfo>>>().apply {
-                fun filterScope(scopes: Map<Scope, List<AppInfo>>) = scopes.filter { scope ->
-                    if (enabledScope == null) return@filter true
-                    scope.value
-                        .map { it.packageName }
-                        .any { it in enabledScope }
-                }
+            return runCatching {
+                val enabledScope = XposedService.getScopes()
+                MutableLiveData<Map<Scope, List<AppInfo>>>().apply {
+                    fun filterScopes(scopes: Map<Scope, List<AppInfo>>) = scopes.filter { scope ->
+                        scope.value
+                            .map { it.packageName }
+                            .any { it in enabledScope }
+                    }
 
-                fetchedScopes.observeForever {
-                    value = filterScope(it)
+                    fetchedScopes.observeForever {
+                        value = filterScopes(it)
+                    }
                 }
+            }.getOrElse {
+                fetchedScopes
             }
         }
 }

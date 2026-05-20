@@ -63,8 +63,8 @@ kotlin {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":lsposed-lib:service"))
     runtimeOnly(project(":xposed"))
+    implementation("cc.meteormc:lsposed-service:compat-1.0")
 
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")

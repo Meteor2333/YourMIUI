@@ -3,10 +3,8 @@ package cc.meteormc.yourmiui.xposed
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Process
 import android.util.Log
-import androidx.annotation.RequiresApi
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Scope
@@ -73,21 +71,19 @@ object XposedEntry {
     class LSPosed : XposedModule {
         constructor() : super()
 
-        constructor(
-            base: XposedInterface,
-            param: XposedModuleInterface.ModuleLoadedParam
-        ) : super(base, param)
+        constructor(base: XposedInterface, param: XposedModuleInterface.ModuleLoadedParam) : super(base, param) {
+            onModuleLoaded(param)
+        }
 
-        @RequiresApi(Build.VERSION_CODES.Q)
+        override fun onModuleLoaded(param: XposedModuleInterface.ModuleLoadedParam) {
+            
+        }
+
         override fun onPackageLoaded(param: XposedModuleInterface.PackageLoadedParam) {
             onLoadPackage(
                 param.packageName,
                 param.defaultClassLoader,
-                runCatching {
-                    getRemotePreferences(Feature.PREFERENCES_NAME)
-                }.recoverCatching {
-                    getSharedPreferences(Feature.PREFERENCES_NAME, Context.MODE_PRIVATE)
-                }.getOrNull() ?: return
+                getRemotePreferences(Feature.PREFERENCES_NAME)
             )
         }
     }
