@@ -54,6 +54,7 @@
             "id": "content_extension:fix_link_handling",
             "name": "@string/feature_content_extension_fix_link_handling_name",
             "description": "@string/feature_content_extension_fix_link_handling_description",
+            "author": "dantmnf",
             "scopes": [
                 "com.miui.contentextension"
             ],
