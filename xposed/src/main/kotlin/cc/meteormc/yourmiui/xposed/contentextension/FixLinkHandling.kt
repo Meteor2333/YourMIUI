@@ -6,7 +6,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.operator
 
 object FixLinkHandling : Feature() {
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.miui.contentextension.utils.AppsUtils") {
             // modifier: private static | signature: getIntentWithBrowser(Ljava/lang/String;)Landroid/content/Intent;
             method("getIntentWithBrowser")?.hookAfter {

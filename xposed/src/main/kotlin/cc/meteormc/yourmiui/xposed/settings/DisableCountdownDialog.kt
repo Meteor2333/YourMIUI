@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.ReflectOperator
 import cc.meteormc.yourmiui.xposed.operator
 
 object DisableCountdownDialog : Feature() {
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {

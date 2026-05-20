@@ -4,7 +4,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.operator
 
 object DisablePause : Feature() {
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.miui.miwallpaper.basesuperwallpaper.SuperWallpaper") {
             // modifier: protected | signature: getDeskPauseDelay()I
             method("getDeskPauseDelay")?.hookResult(Int.MAX_VALUE)

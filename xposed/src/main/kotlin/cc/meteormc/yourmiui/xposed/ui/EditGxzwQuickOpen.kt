@@ -18,7 +18,7 @@ object EditGxzwQuickOpen : Feature() {
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"
     private const val EXTRA_ITEM_IDENTIFIER = "cc.meteormc.yourmiui.xposed.EditGxzwQuickOpen#ExtraQuickOpenItem"
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         QuickOpenItem.entries.forEach { it.extra?.init() }
 
         operator("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {

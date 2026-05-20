@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.operator
 
 object FixTrafficCorrection : Feature() {
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.miui.sdk.tc.TcManager") {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;
             val refreshMethod = method("getAllInstructions") ?: return@operator

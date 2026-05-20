@@ -11,7 +11,7 @@ import cc.meteormc.yourmiui.xposed.operator
 object BlockProcessKill : Feature() {
     private lateinit var blockedPackages: Set<String>
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         // 从 /system_ext/framework/miui-services.jar 提取
         operator("com.android.server.am.ProcessCleanerBase") {
             // 从 /system/framework/services.jar 提取

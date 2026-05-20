@@ -12,7 +12,7 @@ object RemoveNewVersionBadge : Feature() {
 
     private var modifyProperty = false
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.android.settings.device.MiuiAboutPhoneUtils") {
             // modifier: public static | signature: getUpdateInfo(Landroid/content/Context;)Ljava/lang/String;
             method("getUpdateInfo")?.hookBefore {

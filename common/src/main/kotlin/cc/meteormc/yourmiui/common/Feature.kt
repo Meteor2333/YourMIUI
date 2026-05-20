@@ -24,7 +24,7 @@ abstract class Feature : Serializable {
 
     }
 
-    open fun onLoadPackage() {
+    open fun onLoadPackage(packageName: String) {
 
     }
 

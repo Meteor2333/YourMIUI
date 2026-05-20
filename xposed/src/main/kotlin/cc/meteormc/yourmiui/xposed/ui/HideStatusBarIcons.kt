@@ -8,7 +8,7 @@ import cc.meteormc.yourmiui.xposed.operator
 object HideStatusBarIcons : Feature() {
     private lateinit var hiddenIcons: Set<String>
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         setOf(
             "StatusBarIconControllerImpl",
             "MiuiDripLeftStatusBarIconControllerImpl"

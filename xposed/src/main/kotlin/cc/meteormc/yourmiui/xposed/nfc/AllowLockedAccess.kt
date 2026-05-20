@@ -8,7 +8,7 @@ object AllowLockedAccess : Feature() {
     private const val SCREEN_STATE_ON_UNLOCKED = 8
     private const val MSG_APPLY_SCREEN_STATE = 16
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator($$"com.android.nfc.NfcService$NfcServiceHandler") {
             // modifier: public | signature: handleMessage(Landroid/os/Message;)V
             method("handleMessage")?.hookDoNothing {

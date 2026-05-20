@@ -37,7 +37,7 @@ object FixSplashScreen : Feature() {
         val background: Int
     )
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         val swiClass = operator("android.window.StartingWindowInfo") ?: return
         // name: targetActivityInfo | type: android.content.pm.ActivityInfo
         val targetActivityInfoField = swiClass.field("targetActivityInfo") ?: return

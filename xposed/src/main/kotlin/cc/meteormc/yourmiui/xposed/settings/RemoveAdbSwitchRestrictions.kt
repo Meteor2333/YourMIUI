@@ -8,7 +8,7 @@ import cc.meteormc.yourmiui.xposed.operator
 
 object RemoveAdbSwitchRestrictions : Feature() {
     @Suppress("UNCHECKED_CAST")
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator(classLoader, "com.miui.common.base.AlertActivity") outer@{
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookDoNothing {

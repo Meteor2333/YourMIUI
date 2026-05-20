@@ -7,7 +7,7 @@ import cc.meteormc.yourmiui.xposed.operator
 object RemoveSplashAds : Feature() {
     private val emptyBinder = Binder()
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         setOf(
             "com.miui.systemAdSolution.splashAd.SystemSplashAdService",
             "com.miui.systemAdSolution.splashscreen.SplashScreenService",

@@ -11,7 +11,7 @@ import cc.meteormc.yourmiui.xposed.operator
 object DisableAdbInstallAlert : Feature() {
     private var requireUnlock = false
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         val messagerClass = operator("android.os.IMessenger")?.delegate ?: return
         val getBinderMethod = operator("com.miui.permcenter.compact.IntentCompat") {
             // modifier: public static | signature: getIBinderExtra(Landroid/content/Intent;Ljava/lang/String;)Landroid/os/IBinder;

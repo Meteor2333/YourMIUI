@@ -11,7 +11,7 @@ object DisableUnnecessaryScans : Feature() {
         "com.miui.securityscan.model.system.UsbModel"
     )
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         for (scan in unnecessaryScans) {
             operator(scan) {
                 // modifier: public | signature: scan()V

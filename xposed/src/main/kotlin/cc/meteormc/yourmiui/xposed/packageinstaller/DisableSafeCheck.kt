@@ -4,7 +4,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.operator
 
 object DisableSafeCheck : Feature() {
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.miui.packageInstaller.model.ApkInfo") {
             val operator = operator("com.miui.packageInstaller.model.CloudParams") ?: return@operator
             val storeListedField = operator.field("storeListed") ?: return@operator

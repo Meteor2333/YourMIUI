@@ -22,7 +22,7 @@ object RemoveAds : Feature() {
         "com.xiaomi.market.common.component.componentbeans.RecommendCollectionComponent"
     )
 
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.xiaomi.market.model.TabInfo") {
             val tabInfo = TabInfoWrapper()
             // modifier: public static | signature: fromJSON(Lorg/json/JSONArray;)Ljava/util/List;

@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.operator
 
 object HideFolderScrollBar : Feature() {
-    override fun onLoadPackage() {
+    override fun onLoadPackage(packageName: String) {
         operator("com.miui.home.launcher.FolderGridView") {
             // modifier: public | signature: <init>(Landroid/content/Context;Landroid/util/AttributeSet;)V
             declaredConstructors().forEach {
