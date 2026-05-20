@@ -11,13 +11,8 @@ object RemoveHeaderTips : Feature(
     testEnvironmentRes = R.string.feature_settings_remove_header_tips_test_environment
 ) {
     override fun onLoadPackage() {
-        operator("com.android.settings.BaseSettingsController") {
-            constructor(Context::class.java, TextView::class.java)?.hookAfter {
-                val context = it.argByGenerics<Context>() ?: return@hookAfter
-                val preferences = context.getSharedPreferences("${context.packageName}_preferences", 0)
-                val log = preferences.all.map { entry -> "${entry.key}=${entry.value}" }.joinToString("\n", "\n")
-                XposedBridge.log("RemoveMiCloudHeader: $log")
-            }
+        operator("com.android.settings.SettingsFragment") {
+            method("updateTips")?.hookDoNothing()
         }
     }
 }
