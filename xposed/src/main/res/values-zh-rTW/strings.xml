@@ -70,6 +70,9 @@
     <string name="feature_settings_disable_force_notification_name">禁用強制通知</string>
     <string name="feature_settings_disable_force_notification_description">解除系統應用不允許關閉通知的限制</string>
     <string name="feature_settings_disable_force_notification_test_environment">Android13版本</string>
+    <string name="feature_settings_remove_header_tips_name">移除页眉提醒</string>
+    <string name="feature_settings_remove_header_tips_description">移除设置中页眉出现的提醒横幅（如推荐开启小米云）</string>
+    <string name="feature_settings_remove_header_tips_test_environment">Android13版本</string>
     <string name="feature_settings_remove_new_version_badge_name">清除新版本標記</string>
     <string name="feature_settings_remove_new_version_badge_description">清除設定中的系統新版本標記（不會阻止系統進行更新）</string>
     <string name="feature_settings_remove_new_version_badge_test_environment">Android13版本</string>
