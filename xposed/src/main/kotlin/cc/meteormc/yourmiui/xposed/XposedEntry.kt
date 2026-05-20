@@ -6,7 +6,6 @@ import android.os.Process
 import android.util.Log
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
 import cc.meteormc.yourmiui.common.util.getClass

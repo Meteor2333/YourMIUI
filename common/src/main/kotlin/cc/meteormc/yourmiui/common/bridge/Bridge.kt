@@ -1,7 +1,5 @@
 package cc.meteormc.yourmiui.common.bridge
 
-import cc.meteormc.yourmiui.common.Scope
-
 object Bridge {
     internal const val RESPONSE_ACTION = "cc.meteormc.yourmiui.ACTION_RESPONSE"
     internal const val REQUIRED_PERMISSION = "cc.meteormc.yourmiui.permission.USE_BRIDGE"

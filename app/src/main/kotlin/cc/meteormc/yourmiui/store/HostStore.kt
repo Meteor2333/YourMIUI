@@ -5,7 +5,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.MutableLiveData
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.YourMIUI
-import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.common.data.AppInfo
