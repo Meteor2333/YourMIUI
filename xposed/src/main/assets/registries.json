@@ -1,0 +1,475 @@
+{
+    "categories": [
+        {
+            "id": "system",
+            "name": "@string/category_system"
+        },
+        {
+            "id": "ui",
+            "name": "@string/category_ui"
+        },
+        {
+            "id": "content_extension",
+            "name": "@string/category_content_extension"
+        },
+        {
+            "id": "market",
+            "name": "@string/category_market"
+        },
+        {
+            "id": "miui_plus",
+            "name": "@string/category_miui_plus"
+        },
+        {
+            "id": "mms",
+            "name": "@string/category_mms"
+        },
+        {
+            "id": "nfc",
+            "name": "@string/category_nfc"
+        },
+        {
+            "id": "notification",
+            "name": "@string/category_notification"
+        },
+        {
+            "id": "package_installer",
+            "name": "@string/category_package_installer"
+        },
+        {
+            "id": "security_center",
+            "name": "@string/category_security_center"
+        },
+        {
+            "id": "settings",
+            "name": "@string/category_settings"
+        },
+        {
+            "id": "super_wallpaper",
+            "name": "@string/category_super_wallpaper"
+        }
+    ],
+    "features": [
+        {
+            "id": "content_extension:fix_link_handling",
+            "name": "@string/feature_content_extension_fix_link_handling_name",
+            "description": "@string/feature_content_extension_fix_link_handling_description",
+            "author": "dantmnf",
+            "scopes": [
+                "com.miui.contentextension"
+            ],
+            "source": ".contentextension.FixLinkHandling"
+        },
+        {
+            "id": "market:disable_notification_recall",
+            "name": "@string/feature_market_disable_notification_recall_name",
+            "description": "@string/feature_market_disable_notification_recall_description",
+            "scopes": [
+                "com.xiaomi.market"
+            ],
+            "source": ".market.DisableNotificationRecall"
+        },
+        {
+            "id": "market:remove_ads",
+            "name": "@string/feature_market_remove_ads_name",
+            "description": "@string/feature_market_remove_ads_description",
+            "scopes": [
+                "com.xiaomi.market"
+            ],
+            "options": [
+                {
+                    "id": "hidden_tags",
+                    "name": "@string/option_market_remove_ads_hidden_tags_name",
+                    "summary": "@string/option_market_remove_ads_hidden_tags_summary",
+                    "type": "selector",
+                    "multi_select": true,
+                    "default": [
+                        "video",
+                        "agent",
+                        "assemble",
+                        "game",
+                        "rank"
+                    ],
+                    "items": [
+                        {
+                            "id": "home",
+                            "name": "@string/option_market_remove_ads_hidden_tags_home"
+                        },
+                        {
+                            "id": "video",
+                            "name": "@string/option_market_remove_ads_hidden_tags_video"
+                        },
+                        {
+                            "id": "agent",
+                            "name": "@string/option_market_remove_ads_hidden_tags_agent"
+                        },
+                        {
+                            "id": "assemble",
+                            "name": "@string/option_market_remove_ads_hidden_tags_assemble"
+                        },
+                        {
+                            "id": "game",
+                            "name": "@string/option_market_remove_ads_hidden_tags_game"
+                        },
+                        {
+                            "id": "rank",
+                            "name": "@string/option_market_remove_ads_hidden_tags_rank"
+                        },
+                        {
+                            "id": "software",
+                            "name": "@string/option_market_remove_ads_hidden_tags_software"
+                        },
+                        {
+                            "id": "mine",
+                            "name": "@string/option_market_remove_ads_hidden_tags_mine"
+                        }
+                    ]
+                }
+            ],
+            "source": ".market.RemoveAds"
+        },
+        {
+            "id": "miui_plus:disable_clip_tip",
+            "name": "@string/feature_miui_plus_disable_clip_tip_name",
+            "description": "@string/feature_miui_plus_disable_clip_tip_description",
+            "scopes": [
+                "com.xiaomi.mirror"
+            ],
+            "source": ".miuiplus.DisableClipTip"
+        },
+        {
+            "id": "mms:remove_ads",
+            "name": "@string/feature_mms_remove_ads_name",
+            "description": "@string/feature_mms_remove_ads_description",
+            "scopes": [
+                "com.android.mms"
+            ],
+            "source": ".mms.RemoveAds"
+        },
+        {
+            "id": "nfc:allow_locked_access",
+            "name": "@string/feature_nfc_allow_locked_access_name",
+            "description": "@string/feature_nfc_allow_locked_access_description",
+            "scopes": [
+                "com.android.nfc"
+            ],
+            "warning": "@string/feature_nfc_allow_locked_access_warning",
+            "source": ".nfc.AllowLockedAccess"
+        },
+        {
+            "id": "notification:disable_force_notification",
+            "name": "@string/feature_notification_disable_force_notification_name",
+            "description": "@string/feature_notification_disable_force_notification_description",
+            "scopes": [
+                "android",
+                "system",
+                "com.miui.notification",
+                "com.android.settings",
+                "com.android.systemui"
+            ],
+            "source": ".notification.DisableForceNotification"
+        },
+        {
+            "id": "package_installer:disable_safe_check",
+            "name": "@string/feature_package_installer_disable_safe_check_name",
+            "description": "@string/feature_package_installer_disable_safe_check_description",
+            "scopes": [
+                "com.miui.packageinstaller"
+            ],
+            "warning": "@string/feature_packageinstaller_disable_safe_check_warning",
+            "source": ".packageinstaller.DisableSafeCheck"
+        },
+        {
+            "id": "security_center:disable_unnecessary_scans",
+            "name": "@string/feature_security_center_disable_unnecessary_scans_name",
+            "description": "@string/feature_security_center_disable_unnecessary_scans_description",
+            "scopes": [
+                "com.miui.securitycenter"
+            ],
+            "source": ".securitycenter.DisableUnnecessaryScans"
+        },
+        {
+            "id": "security_center:fix_traffic_correction",
+            "name": "@string/feature_security_center_fix_traffic_correction_name",
+            "description": "@string/feature_security_center_fix_traffic_correction_description",
+            "scopes": [
+                "com.miui.securitycenter"
+            ],
+            "source": ".securitycenter.FixTrafficCorrection"
+        },
+        {
+            "id": "settings:disable_countdown_dialog",
+            "name": "@string/feature_settings_disable_countdown_dialog_name",
+            "description": "@string/feature_settings_disable_countdown_dialog_description",
+            "scopes": [
+                "com.android.settings"
+            ],
+            "source": ".settings.DisableCountdownDialog"
+        },
+        {
+            "id": "settings:remove_adb_switch_restrictions",
+            "name": "@string/feature_settings_remove_adb_switch_restrictions_name",
+            "description": "@string/feature_settings_remove_adb_switch_restrictions_description",
+            "scopes": [
+                "com.android.settings"
+            ],
+            "source": ".settings.RemoveAdbSwitchRestrictions"
+        },
+        {
+            "id": "settings:remove_header_tips",
+            "name": "@string/feature_settings_remove_header_tips_name",
+            "description": "@string/feature_settings_remove_header_tips_description",
+            "scopes": [
+                "com.android.settings"
+            ],
+            "source": ".settings.RemoveHeaderTips"
+        },
+        {
+            "id": "settings:remove_new_version_badge",
+            "name": "@string/feature_settings_remove_new_version_badge_name",
+            "description": "@string/feature_settings_remove_new_version_badge_description",
+            "scopes": [
+                "com.android.settings"
+            ],
+            "options": [
+                {
+                    "id": "modify_property",
+                    "name": "@string/option_settings_remove_new_version_badge_modify_property_name",
+                    "summary": "@string/option_settings_remove_new_version_badge_modify_property_summary",
+                    "type": "switch",
+                    "default": false
+                }
+            ],
+            "source": ".settings.RemoveNewVersionBadge"
+        },
+        {
+            "id": "super_wallpaper:disable_pause",
+            "name": "@string/feature_super_wallpaper_disable_pause_name",
+            "description": "@string/feature_super_wallpaper_disable_pause_description",
+            "scopes": [
+                "com.miui.miwallpaper.earth",
+                "com.miui.miwallpaper.geometry",
+                "com.miui.miwallpaper.mars",
+                "com.miui.miwallpaper.saturn",
+                "com.miui.miwallpaper.snowmountain"
+            ],
+            "warning": "@string/feature_superwallpaper_disable_pause_warning",
+            "source": ".superwallpaper.DisablePause"
+        },
+        {
+            "id": "system:block_process_kill",
+            "name": "@string/feature_system_block_process_kill_name",
+            "description": "@string/feature_system_block_process_kill_description",
+            "scopes": [
+                "android"
+            ],
+            "options": [
+                {
+                    "id": "blocked_packages",
+                    "name": "@string/option_system_block_process_kill_blocked_packages_name",
+                    "summary": "@string/option_system_block_process_kill_blocked_packages_summary",
+                    "type": "app_picker",
+                    "multi_select": true
+                }
+            ],
+            "source": ".system.BlockProcessKill"
+        },
+        {
+            "id": "system:disable_adb_install_alert",
+            "name": "@string/feature_system_disable_adb_install_alert_name",
+            "description": "@string/feature_system_disable_adb_install_alert_description",
+            "scopes": [
+                "com.miui.securitycenter"
+            ],
+            "options": [
+                {
+                    "id": "require_unlock",
+                    "name": "@string/option_system_disable_adb_install_alert_require_unlock_name",
+                    "summary": "@string/option_system_disable_adb_install_alert_require_unlock_summary",
+                    "type": "switch",
+                    "default": true
+                }
+            ],
+            "source": ".system.DisableAdbInstallAlert"
+        },
+        {
+            "id": "system:remove_splash_ads",
+            "name": "@string/feature_system_remove_splash_ads_name",
+            "description": "@string/feature_system_remove_splash_ads_description",
+            "scopes": [
+                "com.miui.systemAdSolution"
+            ],
+            "source": ".system.RemoveSplashAds"
+        },
+        {
+            "id": "ui:disable_today_recommend",
+            "name": "@string/feature_ui_disable_today_recommend_name",
+            "description": "@string/feature_ui_disable_today_recommend_description",
+            "scopes": [
+                "com.miui.home"
+            ],
+            "source": ".ui.DisableTodayRecommend"
+        },
+        {
+            "id": "ui:edit_gxzw_quick_open",
+            "name": "@string/feature_ui_edit_gxzw_quick_open_name",
+            "description": "@string/feature_ui_edit_gxzw_quick_open_description",
+            "scopes": [
+                "com.android.systemui"
+            ],
+            "options": [
+                {
+                    "id": "reserved_items",
+                    "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_name",
+                    "summary": "@string/option_ui_edit_gxzw_quick_open_reserved_items_summary",
+                    "type": "selector",
+                    "multi_select": true,
+                    "default": [
+                        "alipay_pay",
+                        "alipay_scan",
+                        "wechat_pay",
+                        "wechat_scan",
+                        "xiaoai"
+                    ],
+                    "items": [
+                        {
+                            "id": "event",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_event"
+                        },
+                        {
+                            "id": "qr_code",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_qr_code"
+                        },
+                        {
+                            "id": "search",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_search"
+                        },
+                        {
+                            "id": "alipay_pay",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_alipay_pay"
+                        },
+                        {
+                            "id": "alipay_scan",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_alipay_scan"
+                        },
+                        {
+                            "id": "wechat_pay",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_wechat_pay"
+                        },
+                        {
+                            "id": "wechat_scan",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_wechat_scan"
+                        },
+                        {
+                            "id": "xiaoai",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_xiaoai"
+                        },
+                        {
+                            "id": "torch",
+                            "name": "@string/option_ui_edit_gxzw_quick_open_reserved_items_torch"
+                        }
+                    ]
+                }
+            ],
+            "source": ".ui.EditGxzwQuickOpen"
+        },
+        {
+            "id": "ui:fix_splash_screen",
+            "name": "@string/feature_ui_fix_splash_screen_name",
+            "description": "@string/feature_ui_fix_splash_screen_description",
+            "scopes": [
+                "com.android.systemui"
+            ],
+            "options": [
+                {
+                    "id": "replace_background_color",
+                    "name": "@string/option_ui_fix_splash_screen_replace_background_color_name",
+                    "summary": "@string/option_ui_fix_splash_screen_replace_background_color_summary",
+                    "type": "switch",
+                    "default": true
+                }
+            ],
+            "source": ".ui.FixSplashScreen"
+        },
+        {
+            "id": "ui:hide_folder_scroll_bar",
+            "name": "@string/feature_ui_hide_folder_scroll_bar_name",
+            "description": "@string/feature_ui_hide_folder_scroll_bar_description",
+            "scopes": [
+                "com.miui.home"
+            ],
+            "source": ".ui.HideFolderScrollBar"
+        },
+        {
+            "id": "ui:hide_status_bar_icons",
+            "name": "@string/feature_ui_hide_status_bar_icons_name",
+            "description": "@string/feature_ui_hide_status_bar_icons_description",
+            "scopes": [
+                "com.android.systemui"
+            ],
+            "options": [
+                {
+                    "id": "hidden_icons",
+                    "name": "@string/option_i_hide_status_bar_icons_hidden_icons_name",
+                    "summary": "@string/option_ui_hide_status_bar_icons_hidden_icons_summary",
+                    "type": "selector",
+                    "multi_select": true,
+                    "items": [
+                        {
+                            "id": "privacy",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_privacy"
+                        },
+                        {
+                            "id": "nfc",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_nfc"
+                        },
+                        {
+                            "id": "zen",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_zen"
+                        },
+                        {
+                            "id": "cast",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_cast"
+                        },
+                        {
+                            "id": "bluetooth",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_bluetooth"
+                        },
+                        {
+                            "id": "bluetooth_battery",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_bluetooth_battery"
+                        },
+                        {
+                            "id": "stealth",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_stealth"
+                        },
+                        {
+                            "id": "volume",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_volume"
+                        },
+                        {
+                            "id": "alarm_clock",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_alarm_clock"
+                        },
+                        {
+                            "id": "vpn",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_vpn"
+                        },
+                        {
+                            "id": "airplane",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_airplane"
+                        },
+                        {
+                            "id": "hotspot",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_hotspot"
+                        },
+                        {
+                            "id": "wifi",
+                            "name": "@string/option_ui_hide_status_bar_icons_hidden_icons_wifi"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
