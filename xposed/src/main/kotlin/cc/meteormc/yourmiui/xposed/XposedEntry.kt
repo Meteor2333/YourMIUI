@@ -10,20 +10,6 @@ import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
 import cc.meteormc.yourmiui.common.util.Unsafe.cast
 import cc.meteormc.yourmiui.common.util.getClass
-import cc.meteormc.yourmiui.xposed.android.Android
-import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
-import cc.meteormc.yourmiui.xposed.home.Home
-import cc.meteormc.yourmiui.xposed.market.Market
-import cc.meteormc.yourmiui.xposed.mirror.Mirror
-import cc.meteormc.yourmiui.xposed.mms.MMS
-import cc.meteormc.yourmiui.xposed.nfc.NFC
-import cc.meteormc.yourmiui.xposed.notification.Notification
-import cc.meteormc.yourmiui.xposed.packageinstaller.PackageInstaller
-import cc.meteormc.yourmiui.xposed.securitycenter.SecurityCenter
-import cc.meteormc.yourmiui.xposed.settings.Settings
-import cc.meteormc.yourmiui.xposed.superwallpaper.SuperWallpaper
-import cc.meteormc.yourmiui.xposed.systemadsolution.SystemAdSolution
-import cc.meteormc.yourmiui.xposed.systemui.SystemUI
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedBridge
@@ -34,24 +20,6 @@ import io.github.libxposed.api.XposedModuleInterface
 
 object XposedEntry {
     private val hostBridge = Host()
-    private val scopes by lazy {
-        listOf(
-            Android,
-            ContentExtension,
-            Home,
-            Market,
-            Mirror,
-            MMS,
-            NFC,
-            Notification,
-            PackageInstaller,
-            SecurityCenter,
-            Settings,
-            SuperWallpaper,
-            SystemAdSolution,
-            SystemUI
-        )
-    }
 
     class Rovo89 : IXposedHookLoadPackage {
         override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
