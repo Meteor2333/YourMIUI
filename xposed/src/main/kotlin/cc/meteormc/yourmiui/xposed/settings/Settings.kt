@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.data.RestartMethod
 import cc.meteormc.yourmiui.xposed.settings.feature.DisableForceNotification
-import cc.meteormc.yourmiui.xposed.settings.feature.RemoveMiCloudHeader
+import cc.meteormc.yourmiui.xposed.settings.feature.RemoveHeaderTips
 import cc.meteormc.yourmiui.xposed.settings.feature.RemoveNewVersionBadge
 
 object Settings : Scope(
@@ -14,7 +14,7 @@ object Settings : Scope(
     override fun getFeatures(): List<Feature> {
         return listOf(
             DisableForceNotification,
-            RemoveMiCloudHeader,
+            RemoveHeaderTips,
             RemoveNewVersionBadge
         )
     }
