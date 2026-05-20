@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.toList
 import kotlin.time.Duration.Companion.milliseconds
 
-@Suppress("unused")
 object GithubIssue {
     private const val GITHUB_APP_PACKAGE = "com.github.android"
     private const val NEW_ISSUE_URL = "https://github.com/Meteor2333/YourMIUI/issues/new"
@@ -55,7 +54,7 @@ object GithubIssue {
             if (packageName == GITHUB_APP_PACKAGE) {
                 Toast.makeText(
                     context,
-                    R.string.settings_misc_troubleshooter_github_app,
+                    R.string.github_issue_found_app,
                     Toast.LENGTH_SHORT
                 ).show()
                 delay(2500.milliseconds)
@@ -69,7 +68,7 @@ object GithubIssue {
         }.onEmpty {
             Toast.makeText(
                 context,
-                R.string.settings_misc_troubleshooter_no_browser,
+                R.string.github_issue_no_browser,
                 Toast.LENGTH_LONG
             ).show()
         }.toList()

@@ -13,6 +13,7 @@ object HideFolderScrollBar : Feature(
 ) {
     override fun onLoadPackage() {
         operator("com.miui.home.launcher.FolderGridView") {
+            // modifier: public | signature: <init>(Landroid/content/Context;Landroid/util/AttributeSet;)V
             declaredConstructors().forEach {
                 it.hookAfter { param ->
                     val view = param.instance<GridView>()

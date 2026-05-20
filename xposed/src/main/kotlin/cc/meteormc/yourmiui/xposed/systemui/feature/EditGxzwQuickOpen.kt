@@ -102,6 +102,7 @@ object EditGxzwQuickOpen : Feature(
             ""
         ) {
             operator("com.miui.systemui.util.CommonUtil") {
+                // modifier: public static | signature: toggleTorch()Z
                 method("toggleTorch")?.call(null)
             }
             return@ExtraQuickOpenItem true

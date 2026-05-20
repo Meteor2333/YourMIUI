@@ -43,6 +43,9 @@
     <string name="switch_menu_enable">开启</string>
     <string name="switch_menu_disable">关闭</string>
 
+    <string name="github_issue_found_app">Github App暂不支持问题模板\n请选择其他打开方式</string>
+    <string name="github_issue_no_browser">未找到其他打开方式 :)\n请手动在Github提交issue</string>
+
     <string name="restart_scope_title">重启作用域</string>
     <string name="restart_scope_content">此操作将重启以下软件包以应用更改:\n%s\n\n是否继续？</string>
     <string name="restart_scope_success">重启成功！</string>
@@ -76,8 +79,4 @@
     <string name="settings_misc_import_summary">从文件导入首选项</string>
     <string name="settings_misc_import_success">导入成功！</string>
     <string name="settings_misc_import_failure">导入失败！\n请检查首选项文件后重试</string>
-    <string name="settings_misc_troubleshooter_title">疑难解答</string>
-    <string name="settings_misc_troubleshooter_summary">轻松修复遇到的模块问题</string>
-    <string name="settings_misc_troubleshooter_github_app">Github App暂不支持问题模板\n请选择其他打开方式</string>
-    <string name="settings_misc_troubleshooter_no_browser">未找到其他打开方式 :)\n请手动在Github提交issue</string>
 </resources>
