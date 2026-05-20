@@ -48,6 +48,10 @@
     <string name="feature_settings_remove_adb_switch_restrictions_name">移除ADB开关限制</string>
     <string name="feature_settings_remove_adb_switch_restrictions_description">移除设置中ADB的开关限制（如要求联网、插入SIM卡、登录小米账号）</string>
 
+    <string name="feature_settings_remove_header_tips_name">移除页眉提醒</string>
+    <string name="feature_settings_remove_header_tips_description">移除设置中页眉出现的提醒横幅（如推荐开启小米云）</string>
+    <string name="feature_settings_remove_header_tips_test_environment">Android13版本</string>
+
     <string name="feature_settings_remove_new_version_badge_name">清除新版本标记</string>
     <string name="feature_settings_remove_new_version_badge_description">清除设置中的系统新版本标记（不会阻止系统进行更新）</string>
     <string name="option_settings_remove_new_version_badge_modify_property_name">系统属性修改</string>
