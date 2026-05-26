@@ -9,7 +9,7 @@ import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
-import cc.meteormc.yourmiui.common.util.getClass
+import cc.meteormc.yourmiui.common.util.ClassUtil
 import cc.meteormc.yourmiui.xposed.android.Android
 import cc.meteormc.yourmiui.xposed.contentextension.ContentExtension
 import cc.meteormc.yourmiui.xposed.home.Home
@@ -119,7 +119,7 @@ class XposedEntry : IXposedHookInitPackageResources, IXposedHookLoadPackage {
             }.start()
         }.attach()
 
-        val bridgeClass = getClass(classLoader, Bridge::class.java.name, true)
+        val bridgeClass = ClassUtil.getClass(classLoader, Bridge::class.java.name, true)
         if (bridgeClass != null) {
             operator(bridgeClass) {
                 val apiName = ReflectOperator(XposedBridge::class.java).run {

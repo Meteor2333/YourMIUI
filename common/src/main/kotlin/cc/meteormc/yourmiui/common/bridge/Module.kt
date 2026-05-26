@@ -8,8 +8,8 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import cc.meteormc.yourmiui.common.util.getExtra
-import cc.meteormc.yourmiui.common.util.putExtra
+import cc.meteormc.yourmiui.common.util.StorageUtil.getExtra
+import cc.meteormc.yourmiui.common.util.StorageUtil.putExtra
 import java.util.UUID
 
 class Module(private val context: Context) : BroadcastReceiver() {

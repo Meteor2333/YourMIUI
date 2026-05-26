@@ -4,8 +4,7 @@ package cc.meteormc.yourmiui.xposed
 
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.data.HookParam
-import cc.meteormc.yourmiui.common.util.compareParameterTypes
-import cc.meteormc.yourmiui.common.util.getClass
+import cc.meteormc.yourmiui.common.util.ClassUtil
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam
 import de.robv.android.xposed.XC_MethodReplacement
@@ -20,7 +19,7 @@ fun <T : Any> operator(clazz: Class<T>): ReflectOperator<T> {
 }
 
 fun operator(classLoader: ClassLoader, className: String): ReflectOperator<Any>? {
-    val clazz = getClass(classLoader, className, false)
+    val clazz = ClassUtil.getClass(classLoader, className, false)
     return if (clazz != null) {
         @Suppress("UNCHECKED_CAST")
         ReflectOperator(clazz as Class<Any>)
@@ -131,7 +130,7 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
             }
             for (method in it.getDeclaredMethods()) {
                 // compare name and parameters
-                if (method.name == name && (result == null || compareParameterTypes(
+                if (method.name == name && (result == null || ClassUtil.compareParameterTypes(
                         method.parameterTypes,
                         result!!.parameterTypes,
                         paramTypes

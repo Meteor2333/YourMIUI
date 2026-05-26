@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import cc.meteormc.yourmiui.common.util.getExtra
-import cc.meteormc.yourmiui.common.util.putExtra
+import cc.meteormc.yourmiui.common.util.StorageUtil.getExtra
+import cc.meteormc.yourmiui.common.util.StorageUtil.putExtra
 
 class Host(private val context: Context) : BroadcastReceiver() {
     private val filter = IntentFilter()

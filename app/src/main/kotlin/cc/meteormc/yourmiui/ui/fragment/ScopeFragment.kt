@@ -12,7 +12,7 @@ import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.common.data.RestartMethod
-import cc.meteormc.yourmiui.common.util.getObject
+import cc.meteormc.yourmiui.common.util.StorageUtil.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import cc.meteormc.yourmiui.ui.widget.BottomSheet
