@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.agp.library)
 }
 
 val projectNamespace: String by rootProject.extra
@@ -14,5 +14,5 @@ kotlin {
 
 dependencies {
     implementation(project(":common"))
-    compileOnly("de.robv.android.xposed:api:82")
+    compileOnly(libs.xposed.api)
 }

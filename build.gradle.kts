@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.application") version "9.2.1" apply false
-    id("com.android.library") version "9.2.1" apply false
-    id("org.jetbrains.kotlin.plugin.parcelize") version "2.3.21" apply false
+    alias(libs.plugins.agp.application) apply false
+    alias(libs.plugins.agp.library) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
 }
 
 val minSdkVersion by extra(24)

@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.plugin.parcelize")
+    alias(libs.plugins.agp.library)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 val projectNamespace: String by rootProject.extra
@@ -14,5 +14,5 @@ kotlin {
 }
 
 dependencies {
-    api("androidx.core:core-ktx:1.18.0")
+    api(libs.android.core)
 }

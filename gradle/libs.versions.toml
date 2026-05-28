@@ -1,0 +1,29 @@
+[versions]
+agp = "9.2.1"
+appcompat = "1.7.1"
+core = "1.18.0"
+kotlin = "2.3.21"
+kotlinpoetKsp = "2.3.0"
+ksp = "2.3.8"
+material = "1.14.0"
+navigation = "2.9.8"
+recyclerview = "1.4.0"
+xposed = "82"
+
+[plugins]
+agp-application = { id = "com.android.application", version.ref = "agp" }
+agp-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+[libraries]
+android-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+android-core = { module = "androidx.core:core-ktx", version.ref = "core" }
+android-material = { module = "com.google.android.material:material", version.ref = "material" }
+android-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+android-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
+android-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+kotlinpoet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlinpoetKsp" }
+symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+xposed-api = { module = "de.robv.android.xposed:api", version.ref = "xposed" }
