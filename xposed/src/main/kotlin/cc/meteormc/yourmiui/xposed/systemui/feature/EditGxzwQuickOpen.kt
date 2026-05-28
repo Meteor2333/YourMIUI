@@ -190,7 +190,7 @@ object EditGxzwQuickOpen : Feature(
                 val itemClass = operator("com.android.keyguard.fod.item.IQuickOpenItem")?.delegate ?: return@operator
                 // modifier: public final | signature: handleQuickOpenItemTouchUp(Lcom/android/keyguard/fod/item/IQuickOpenItem;)V
                 (method("handleQucikOpenItemTouchUp") ?: method("handleQuickOpenItemTouchUp"))?.hookDoNothing {
-                    handler() && it.argByClass(itemClass)?.isExtraClass() == true
+                    it.argByClass(itemClass)?.isExtraClass() == true && handler()
                 }
             }
         }
