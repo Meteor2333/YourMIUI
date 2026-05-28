@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.agp.library)
+    alias(libs.plugins.ksp)
 }
 
 val projectNamespace: String by rootProject.extra
@@ -13,6 +14,8 @@ kotlin {
 }
 
 dependencies {
+    api(project(":api"))
     implementation(project(":common"))
+    ksp(project(":processor"))
     compileOnly(libs.xposed.api)
 }

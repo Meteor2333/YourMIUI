@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.agp.application) apply false
     alias(libs.plugins.agp.library) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
 }
 
@@ -8,6 +9,7 @@ val minSdkVersion by extra(24)
 val targetSdkVersion by extra(36)
 val appVersionCode by extra(10)
 val appVersionName by extra("1.3.2")
+
 val projectNamespace by extra("cc.meteormc.yourmiui")
 
 subprojects {
