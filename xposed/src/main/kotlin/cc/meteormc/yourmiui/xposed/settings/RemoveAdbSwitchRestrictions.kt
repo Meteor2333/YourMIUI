@@ -1,13 +1,10 @@
 package cc.meteormc.yourmiui.xposed.settings
 
-import android.os.AsyncTask
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.xposed.MethodWrapper
 import cc.meteormc.yourmiui.xposed.operator
-import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
 
 @FeatureRegister(
     Category.SETTINGS,
@@ -17,23 +14,9 @@ import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
 @RequiredScope("com.miui.securitycenter")
 object RemoveAdbSwitchRestrictions : FeatureHooker {
     override fun hook(packageName: String) {
-        @Suppress("UNCHECKED_CAST")
-        AlertActivityHelper.disableAlert(
-            classLoader,
-            "com.miui.permcenter.install.AdbInstallVerifyActivity"
-        ) {
-            // name: (obfuscated) | type: (obfuscated)
-            val taskField = fields(AsyncTask::class.java).firstOrNull() ?: return@disableAlert false
-            operator(taskField.type()) {
-                // 由于当前hook的位置还没有初始化各种字段 所以手动创建一个$AsyncTask实例
-                // modifier: (default) | signature: <init>(Lcom/miui/permcenter/install/AdbInstallVerifyActivity;)V
-                val task = constructor(this@disableAlert.delegate)?.new(it) ?: return@operator false
-                // 在onPostExecute中有操作adb开关的逻辑 并且这个方法没有混淆 所以直接找到并调用它
-                // 并且里面已经finish掉这个Activity了 无需重复操作
-                // modifier: public | signature: onPostExecute(Ljava/lang/String;)V
-                (method("onPostExecute") as? MethodWrapper<Any>?)?.call(task, null)
-                return@operator true
-            }
+        operator($$"com.miui.permcenter.install.AdbInstallVerifyActivity$a") {
+            // modifier: protected bridge synthetic | signature: doInBackground([Ljava/lang/Object;)Ljava/lang/Object;
+            method("doInBackground")?.hookDoNothing()
         }
     }
 }

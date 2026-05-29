@@ -8,8 +8,6 @@ import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
-import cc.meteormc.yourmiui.xposed.market.wrapper.NativeTabInfoWrapper
-import cc.meteormc.yourmiui.xposed.market.wrapper.TabInfoWrapper
 import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONArray
 import org.json.JSONObject
@@ -58,7 +56,7 @@ object RemoveAds : FeatureHooker {
             val tabInfo = TabInfoWrapper()
             val subTabInfo = TabInfoWrapper()
             val emptyTabInfo by lazy {
-                TabInfoWrapper().new(classLoader)!!
+                TabInfoWrapper().new()!!
             }
             // modifier: public static | signature: fromTabInfo(Lcom/xiaomi/market/model/TabInfo;)Lcom/xiaomi/market/ui/PagerTabsInfo;
             method("fromTabInfo")?.hookBefore {
@@ -235,5 +233,50 @@ object RemoveAds : FeatureHooker {
                 )
             ) { hiddenTags = it }
         )
+    }
+
+    abstract class Wrapper(val className: String) {
+        lateinit var wrapped: Any
+
+        fun from(instance: Any) {
+            wrapped = instance
+        }
+
+        fun new() = operator(className) outer@{
+            val newInstance = constructor()!!.new()
+            operator(this@Wrapper.javaClass) {
+                declaredFields().map {
+                    this@outer.field(it.name()) to it.get<Any>(this@Wrapper)
+                }.forEach { (field, value) ->
+                    field?.set(newInstance, value)
+                }
+
+                newInstance
+            }
+        }
+
+        protected fun <T : Any> getField(name: String) = operator(wrapped.javaClass) {
+            field(name)?.get<T>(wrapped)
+        }
+
+        protected fun <T : Any> updateField(name: String, value: T?) = operator(wrapped.javaClass) {
+            field(name)?.set(wrapped, value)
+            Unit
+        }
+    }
+
+    class NativeTabInfoWrapper : Wrapper("com.xiaomi.market.common.network.retrofit.response.bean.NativeTabInfo") {
+        var tag: String?
+            get() = getField("tag")
+            set(value) = updateField("tag", value)
+    }
+
+    class TabInfoWrapper : Wrapper("com.xiaomi.market.model.TabInfo") {
+        var tag: String?
+            get() = getField("tag")
+            set(value) = updateField("tag", value)
+        var subTabs: List<Any>
+            get() = getField("subTabs") ?: emptyList()
+            set(value) = updateField("subTabs", value)
     }
 }
