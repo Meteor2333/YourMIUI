@@ -4,10 +4,8 @@ import android.content.Intent
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.common.Option.Type
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONArray
 import org.json.JSONObject
@@ -19,6 +17,38 @@ import org.json.JSONObject
 )
 @RequiredScope("com.xiaomi.market")
 object RemoveAds : FeatureHooker {
+    @ListOptionRegister(
+        "@string/option_market_remove_ads_hidden_tags_name",
+        "@string/option_market_remove_ads_hidden_tags_description",
+        [
+            "native_market_home",
+            "native_market_video",
+            "native_market_agent",
+            "native_app_assemble",
+            "native_market_game",
+            "native_market_rank",
+            "software_sub5",
+            "native_market_mine"
+        ],
+        [
+            "@string/option_market_remove_ads_hidden_tags_home",
+            "@string/option_market_remove_ads_hidden_tags_video",
+            "@string/option_market_remove_ads_hidden_tags_agent",
+            "@string/option_market_remove_ads_hidden_tags_assemble",
+            "@string/option_market_remove_ads_hidden_tags_game",
+            "@string/option_market_remove_ads_hidden_tags_rank",
+            "@string/option_market_remove_ads_hidden_tags_software",
+            "@string/option_market_remove_ads_hidden_tags_mine"
+        ],
+        [
+            "native_market_video",
+            "native_market_agent",
+            "native_app_assemble",
+            "native_market_game",
+            "native_market_rank"
+        ],
+        true
+    )
     private lateinit var hiddenTags: Set<String>
 
     private val adTags = setOf(
@@ -206,33 +236,6 @@ object RemoveAds : FeatureHooker {
                 }
             )
         }
-    }
-
-    fun getOptions(): List<Option<*>> {
-        return listOf(
-            Option(
-                "hidden_tags",
-                R.string.option_market_remove_ads_hidden_tags_name,
-                R.string.option_market_remove_ads_hidden_tags_summary,
-                Type.MultiChoiceList(
-                    "native_market_home" to R.string.option_market_remove_ads_hidden_tags_home,
-                    "native_market_video" to R.string.option_market_remove_ads_hidden_tags_video,
-                    "native_market_agent" to R.string.option_market_remove_ads_hidden_tags_agent,
-                    "native_app_assemble" to R.string.option_market_remove_ads_hidden_tags_assemble,
-                    "native_market_game" to R.string.option_market_remove_ads_hidden_tags_game,
-                    "native_market_rank" to R.string.option_market_remove_ads_hidden_tags_rank,
-                    "software_sub5" to R.string.option_market_remove_ads_hidden_tags_software,
-                    "native_market_mine" to R.string.option_market_remove_ads_hidden_tags_mine
-                ),
-                setOf(
-                    "native_market_video",
-                    "native_market_agent",
-                    "native_app_assemble",
-                    "native_market_game",
-                    "native_market_rank"
-                )
-            ) { hiddenTags = it }
-        )
     }
 
     abstract class Wrapper(val className: String) {

@@ -8,11 +8,9 @@ import android.widget.ImageView
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.ConstructorWrapper
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -22,7 +20,40 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.android.systemui")
 object EditGxzwQuickOpen : FeatureHooker {
-    private lateinit var reservedItems: Set<QuickOpenItem>
+    @ListOptionRegister(
+        "@string/option_ui_edit_gxzw_quick_open_reserved_items_name",
+        "@string/option_ui_edit_gxzw_quick_open_reserved_items_description",
+        [
+            "add_event",
+            "qr_code",
+            "search",
+            "alipay_pay",
+            "alipay_scan",
+            "wechat_pay",
+            "wechat_scan",
+            "xiaoai",
+            "torch"
+        ],
+        [
+            "option_systemui_edit_gxzw_quick_open_reserved_items_add_event",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_qr_code",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_search",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_alipay_pay",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_alipay_scan",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_wechat_pay",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_wechat_scan",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_xiaoai",
+            "option_systemui_edit_gxzw_quick_open_reserved_items_torch"
+        ],
+        [
+            "alipay_pay",
+            "alipay_scan",
+            "wechat_pay",
+            "wechat_scan",
+            "xiaoai"
+        ]
+    )
+    private lateinit var reservedItems: Set<String>
 
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"
     private const val EXTRA_ITEM_IDENTIFIER = "cc.meteormc.yourmiui.xposed.EditGxzwQuickOpen#ExtraQuickOpenItem"
@@ -33,7 +64,9 @@ object EditGxzwQuickOpen : FeatureHooker {
         operator("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {
             // modifier: public static | signature: getValidItemIdList(Landroid/content/Context;)Ljava/util/List<Ljava/lang/Integer;>;
             method("getValidItemIdList")?.overrideResult {
-                reservedItems.map { item -> item.id }.sorted()
+                reservedItems.mapNotNull { item ->
+                    QuickOpenItem.entries.firstOrNull { entry -> entry.key == item }?.id
+                }.sorted()
             }
 
             // modifier: public static | signature: generateQuickOpenItem(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;I)Lcom/android/keyguard/fod/item/IQuickOpenItem;
@@ -50,38 +83,6 @@ object EditGxzwQuickOpen : FeatureHooker {
                 }
             }
         }
-    }
-
-    fun getOptions(): List<Option<Set<String>>> {
-        return listOf(
-            Option(
-                "reserved_items",
-                R.string.option_systemui_edit_gxzw_quick_open_reserved_items_name,
-                R.string.option_systemui_edit_gxzw_quick_open_reserved_items_summary,
-                Type.MultiChoiceList(
-                    QuickOpenItem.ADD_EVENT.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_add_event,
-                    QuickOpenItem.QR_CODE.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_qr_code,
-                    QuickOpenItem.SEARCH.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_search,
-                    QuickOpenItem.ALIPAY_PAY.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_alipay_pay,
-                    QuickOpenItem.ALIPAY_SCAN.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_alipay_scan,
-                    QuickOpenItem.WECHAT_PAY.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_wechat_pay,
-                    QuickOpenItem.WECHAT_SCAN.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_wechat_scan,
-                    QuickOpenItem.XIAOAI.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_xiaoai,
-                    QuickOpenItem.TORCH.key to R.string.option_systemui_edit_gxzw_quick_open_reserved_items_torch
-                ),
-                setOf(
-                    QuickOpenItem.ALIPAY_PAY.key,
-                    QuickOpenItem.ALIPAY_SCAN.key,
-                    QuickOpenItem.XIAOAI.key,
-                    QuickOpenItem.WECHAT_PAY.key,
-                    QuickOpenItem.WECHAT_SCAN.key
-                )
-            ) {
-                reservedItems = it.mapNotNull { key ->
-                    QuickOpenItem.entries.firstOrNull { entry -> entry.key == key }
-                }.toSet()
-            }
-        )
     }
 
     private enum class QuickOpenItem(

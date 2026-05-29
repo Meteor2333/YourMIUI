@@ -3,9 +3,8 @@ package cc.meteormc.yourmiui.xposed.ui
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -15,6 +14,40 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.android.systemui")
 object HideStatusBarIcons : FeatureHooker {
+    @ListOptionRegister(
+        "@string/option_ui_hide_status_bar_icons_hidden_icons_name",
+        "@string/option_ui_hide_status_bar_icons_hidden_icons_summary",
+        [
+            "privacy_mode",
+            "nfc",
+            "zen",
+            "cast",
+            "bluetooth",
+            "bluetooth_handsfree_battery",
+            "stealth",
+            "volume",
+            "alarm_clock",
+            "vpn",
+            "airplane",
+            "hotspot",
+            "wifi",
+        ],
+        [
+            "option_ui_hide_status_bar_icons_hidden_icons_privacy",
+            "option_ui_hide_status_bar_icons_hidden_icons_nfc",
+            "option_ui_hide_status_bar_icons_hidden_icons_zen",
+            "option_ui_hide_status_bar_icons_hidden_icons_cast",
+            "option_ui_hide_status_bar_icons_hidden_icons_bluetooth",
+            "option_ui_hide_status_bar_icons_hidden_icons_bluetooth_battery",
+            "option_ui_hide_status_bar_icons_hidden_icons_stealth",
+            "option_ui_hide_status_bar_icons_hidden_icons_volume",
+            "option_ui_hide_status_bar_icons_hidden_icons_alarm_clock",
+            "option_ui_hide_status_bar_icons_hidden_icons_vpn",
+            "option_ui_hide_status_bar_icons_hidden_icons_airplane",
+            "option_ui_hide_status_bar_icons_hidden_icons_hotspot",
+            "option_ui_hide_status_bar_icons_hidden_icons_wifi"
+        ]
+    )
     private lateinit var hiddenIcons: Set<String>
 
     override fun hook(packageName: String) {
@@ -38,31 +71,5 @@ object HideStatusBarIcons : FeatureHooker {
                 }
             }
         }
-    }
-
-    fun getOptions(): List<Option<*>> {
-        return listOf(
-            Option(
-                "hidden_icons",
-                R.string.option_systemui_hide_status_bar_icons_hidden_icons_name,
-                R.string.option_systemui_hide_status_bar_icons_hidden_icons_summary,
-                Option.Type.MultiChoiceList(
-                    "privacy_mode" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_privacy,
-                    "nfc" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_nfc,
-                    "zen" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_zen,
-                    "cast" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_cast,
-                    "bluetooth" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_bluetooth,
-                    "bluetooth_handsfree_battery" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_bluetooth_battery,
-                    "stealth" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_stealth,
-                    "volume" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_volume,
-                    "alarm_clock" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_alarm_clock,
-                    "vpn" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_vpn,
-                    "airplane" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_airplane,
-                    "hotspot" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_hotspot,
-                    "wifi" to R.string.option_systemui_hide_status_bar_icons_hidden_icons_wifi
-                ),
-                emptySet()
-            ) { hiddenIcons = it }
-        )
     }
 }

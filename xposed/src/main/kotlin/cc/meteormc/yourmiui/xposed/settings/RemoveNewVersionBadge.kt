@@ -6,9 +6,7 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.common.Option.Type
-import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.api.annotation.SwitchOptionRegister
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -20,6 +18,10 @@ import cc.meteormc.yourmiui.xposed.operator
 object RemoveNewVersionBadge : FeatureHooker {
     private const val PROPERTY_MIUI_NEW_VERSION = "miui_new_version"
 
+    @SwitchOptionRegister(
+        "@string/option_settings_remove_new_version_badge_modify_property_name",
+        "@string/option_settings_remove_new_version_badge_modify_property_description"
+    )
     private var modifyProperty = false
 
     override fun hook(packageName: String) {
@@ -36,17 +38,5 @@ object RemoveNewVersionBadge : FeatureHooker {
                 }
             }?.hookDoNothing()
         }
-    }
-
-    fun getOptions(): List<Option<Boolean>> {
-        return listOf(
-            Option(
-                "modify_property",
-                R.string.option_settings_remove_new_version_badge_modify_property_name,
-                R.string.option_settings_remove_new_version_badge_modify_property_summary,
-                Type.Switch(),
-                modifyProperty
-            ) { modifyProperty = it }
-        )
     }
 }

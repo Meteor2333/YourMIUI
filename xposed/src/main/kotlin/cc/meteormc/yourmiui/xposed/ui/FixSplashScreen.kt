@@ -18,9 +18,7 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Option
-import cc.meteormc.yourmiui.common.Option.Type
-import cc.meteormc.yourmiui.xposed.R
+import cc.meteormc.yourmiui.api.annotation.SwitchOptionRegister
 import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
@@ -34,6 +32,11 @@ import kotlin.math.sqrt
 object FixSplashScreen : FeatureHooker {
     private const val ALLOW_LAUNCH_PACKAGE = "com.miui.home"
 
+    @SwitchOptionRegister(
+        "@string/option_ui_fix_splash_screen_replace_background_color_name",
+        "@string/option_ui_fix_splash_screen_replace_background_color_description",
+        true
+    )
     private var replaceBackgroundColor: Boolean = true
 
     private val infoCache = mutableMapOf<String, SplashScreenInfo>()
@@ -144,18 +147,6 @@ object FixSplashScreen : FeatureHooker {
                 }
             }
         }
-    }
-
-    fun getOptions(): List<Option<*>> {
-        return listOf(
-            Option(
-                "replace_background_color",
-                R.string.option_systemui_fix_splash_screen_replace_background_color_name,
-                R.string.option_systemui_fix_splash_screen_replace_background_color_summary,
-                Type.Switch(),
-                replaceBackgroundColor
-            ) { replaceBackgroundColor = it }
-        )
     }
 
     private fun Bitmap.getPixels(stride: Int): IntArray {
