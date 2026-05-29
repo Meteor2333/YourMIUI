@@ -1,19 +1,15 @@
 package cc.meteormc.yourmiui.ui.fragment
 
-import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.api.data.AppInfo
-import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.common.util.StorageUtil.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
-import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import cc.meteormc.yourmiui.ui.widget.BottomSheet
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -22,8 +18,9 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
 }) {
     private val name: String
         get() = arguments?.getString("name") ?: "Unknown Scope"
-    private val scope: Scope?
-        get() = arguments?.getObject("scope")
+    // todo
+//    private val scope: Scope?
+//        get() = arguments?.getObject("scope")
     private val apps: List<AppInfo>
         get() = arguments?.getObject("apps") ?: emptyList()
 
@@ -46,7 +43,8 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
                     .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
                     .setPositiveButton(android.R.string.ok) { dialog, _ ->
                         dialog.dismiss()
-                        executeRestart()
+                        // todo
+//                        executeRestart()
                     }
                     .build()
                     .show()
@@ -56,29 +54,31 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
             return@setOnMenuItemClickListener false
         }
 
-        if (scope != null) {
-            val featureList = binding.featureList
-            featureList.adapter = FeatureAdapter(scope!!.getFeatures())
-            featureList.layoutManager = LinearLayoutManager(requireContext())
-        }
+        // todo
+//        if (scope != null) {
+//            val featureList = binding.featureList
+//            featureList.adapter = FeatureAdapter(scope!!.getFeatures())
+//            featureList.layoutManager = LinearLayoutManager(requireContext())
+//        }
 
         return binding.root
     }
 
-    private fun executeRestart() {
-        val restartMethod = scope?.getRestartMethod() ?: return
-        when (restartMethod) {
-            RestartMethod.DoNothing -> requestRestart()
-            RestartMethod.Reboot -> requestReboot()
-            is RestartMethod.ViaComponent -> requestRestart {
-                restartMethod.components.forEach { component ->
-                    val intent = Intent().apply { this.component = component }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                }
-            }
-        }
-    }
+    //todo
+//    private fun executeRestart() {
+//        val restartMethod = scope?.getRestartMethod() ?: return
+//        when (restartMethod) {
+//            RestartMethod.DoNothing -> requestRestart()
+//            RestartMethod.Reboot -> requestReboot()
+//            is RestartMethod.ViaComponent -> requestRestart {
+//                restartMethod.components.forEach { component ->
+//                    val intent = Intent().apply { this.component = component }
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    startActivity(intent)
+//                }
+//            }
+//        }
+//    }
 
     private fun requestRestart(callback: (successd: Boolean) -> Unit = { }) {
         val onResponse = object : ResponseCallback<Unit> {
