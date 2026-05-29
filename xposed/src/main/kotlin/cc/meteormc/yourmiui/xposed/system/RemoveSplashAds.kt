@@ -5,8 +5,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -15,12 +13,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_system_remove_splash_ads_description"
 )
 @RequiredScope("com.miui.systemAdSolution")
-object RemoveSplashAds : Feature(
-    key = "remove_splash_ads",
-    nameRes = R.string.feature_systemadsolution_remove_splash_ads_name,
-    descriptionRes = R.string.feature_systemadsolution_remove_splash_ads_description,
-    testEnvironmentRes = R.string.feature_systemadsolution_remove_splash_ads_test_environment
-), FeatureHooker {
+object RemoveSplashAds : FeatureHooker {
     private val emptyBinder = Binder()
 
     override fun hook(packageName: String) {

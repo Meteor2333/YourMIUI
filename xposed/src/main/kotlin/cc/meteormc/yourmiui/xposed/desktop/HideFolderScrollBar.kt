@@ -5,8 +5,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -15,12 +13,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_desktop_hide_folder_scroll_bar_description"
 )
 @RequiredScope("com.miui.home")
-object HideFolderScrollBar : Feature(
-    key = "hide_folder_scroll_bar",
-    nameRes = R.string.feature_home_hide_folder_scroll_bar_name,
-    descriptionRes = R.string.feature_home_hide_folder_scroll_bar_description,
-    testEnvironmentRes = R.string.feature_home_hide_folder_scroll_bar_test_environment
-), FeatureHooker {
+object HideFolderScrollBar : FeatureHooker {
     override fun hook(packageName: String) {
         operator("com.miui.home.launcher.FolderGridView") {
             // modifier: public | signature: <init>(Landroid/content/Context;Landroid/util/AttributeSet;)V

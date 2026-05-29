@@ -5,9 +5,7 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.MethodWrapper
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
 
@@ -17,12 +15,7 @@ import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
     "@string/feature_settings_remove_adb_switch_restrictions_description"
 )
 @RequiredScope("com.miui.securitycenter")
-object RemoveAdbSwitchRestrictions : Feature(
-    key = "remove_adb_switch_restrictions",
-    nameRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_name,
-    descriptionRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_description,
-    testEnvironmentRes = R.string.feature_securitycenter_remove_adb_switch_restrictions_test_environment
-), FeatureHooker {
+object RemoveAdbSwitchRestrictions : FeatureHooker {
     override fun hook(packageName: String) {
         @Suppress("UNCHECKED_CAST")
         AlertActivityHelper.disableAlert(

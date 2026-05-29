@@ -6,7 +6,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
@@ -18,12 +17,7 @@ import cc.meteormc.yourmiui.xposed.securitycenter.helper.AlertActivityHelper
     "@string/feature_system_disable_adb_install_alert_description"
 )
 @RequiredScope("com.miui.securitycenter")
-object DisableAdbInstallAlert : Feature(
-    key = "disable_adb_install_alert",
-    nameRes = R.string.feature_securitycenter_disable_adb_install_alert_name,
-    descriptionRes = R.string.feature_securitycenter_disable_adb_install_alert_description,
-    testEnvironmentRes = R.string.feature_securitycenter_disable_adb_install_alert_test_environment
-), FeatureHooker {
+object DisableAdbInstallAlert : FeatureHooker {
     private var requireUnlock = false
 
     override fun hook(packageName: String) {
@@ -58,7 +52,7 @@ object DisableAdbInstallAlert : Feature(
         }
     }
 
-    override fun getOptions(): List<Option<*>> {
+    fun getOptions(): List<Option<*>> {
         return listOf(
             Option(
                 "require_unlock",

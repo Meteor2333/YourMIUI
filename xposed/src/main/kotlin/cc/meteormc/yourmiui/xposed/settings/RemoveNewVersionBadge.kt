@@ -6,7 +6,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
@@ -18,12 +17,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_settings_remove_new_version_badge_description"
 )
 @RequiredScope("com.android.settings")
-object RemoveNewVersionBadge : Feature(
-    key = "remove_new_version_badge",
-    nameRes = R.string.feature_settings_remove_new_version_badge_name,
-    descriptionRes = R.string.feature_settings_remove_new_version_badge_description,
-    testEnvironmentRes = R.string.feature_settings_remove_new_version_badge_test_environment
-), FeatureHooker {
+object RemoveNewVersionBadge : FeatureHooker {
     private const val PROPERTY_MIUI_NEW_VERSION = "miui_new_version"
 
     private var modifyProperty = false
@@ -44,7 +38,7 @@ object RemoveNewVersionBadge : Feature(
         }
     }
 
-    override fun getOptions(): List<Option<Boolean>> {
+    fun getOptions(): List<Option<Boolean>> {
         return listOf(
             Option(
                 "modify_property",

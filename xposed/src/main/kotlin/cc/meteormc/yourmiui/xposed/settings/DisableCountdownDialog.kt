@@ -5,9 +5,7 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.data.HookParam
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.ReflectOperator
 import cc.meteormc.yourmiui.xposed.operator
 
@@ -17,12 +15,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_settings_disable_countdown_dialog_description"
 )
 @RequiredScope("com.miui.securitycenter")
-object DisableCountdownDialog : Feature(
-    key = "disable_countdown_dialog",
-    nameRes = R.string.feature_securitycenter_disable_countdown_dialog_name,
-    descriptionRes = R.string.feature_securitycenter_disable_countdown_dialog_description,
-    testEnvironmentRes = R.string.feature_securitycenter_disable_countdown_dialog_test_environment
-), FeatureHooker {
+object DisableCountdownDialog : FeatureHooker {
     override fun hook(packageName: String) {
         operator("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V

@@ -4,8 +4,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -15,13 +13,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_packageinstaller_disable_safe_check_warning"
 )
 @RequiredScope("com.miui.packageinstaller")
-object DisableSafeCheck : Feature(
-    key = "disable_safe_check",
-    nameRes = R.string.feature_packageinstaller_disable_safe_check_name,
-    descriptionRes = R.string.feature_packageinstaller_disable_safe_check_description,
-    warningRes = R.string.feature_packageinstaller_disable_safe_check_warning,
-    testEnvironmentRes = R.string.feature_packageinstaller_disable_safe_check_test_environment
-), FeatureHooker {
+object DisableSafeCheck : FeatureHooker {
     override fun hook(packageName: String) {
         operator("com.miui.packageInstaller.model.ApkInfo") {
             val operator = operator("com.miui.packageInstaller.model.CloudParams") ?: return@operator

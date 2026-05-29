@@ -7,7 +7,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
@@ -18,13 +17,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_system_block_process_kill_description"
 )
 @RequiredScope("android")
-object BlockProcessKill : Feature(
-    key = "block_process_kill",
-    nameRes = R.string.feature_android_block_process_kill_name,
-    descriptionRes = R.string.feature_android_block_process_kill_description,
-    testEnvironmentRes = R.string.feature_android_block_process_kill_test_environment,
-    originalAuthor = "dantmnf"
-), FeatureHooker {
+object BlockProcessKill : FeatureHooker {
     private lateinit var blockedPackages: Set<String>
 
     override fun hook(packageName: String) {
@@ -52,7 +45,7 @@ object BlockProcessKill : Feature(
         }
     }
 
-    override fun getOptions(): List<Option<Set<String>>> {
+    fun getOptions(): List<Option<Set<String>>> {
         return listOf(
             Option(
                 "blocked_packages",

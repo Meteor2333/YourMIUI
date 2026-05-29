@@ -4,8 +4,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -14,12 +12,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_desktop_disable_today_recommend_description"
 )
 @RequiredScope("com.miui.home")
-object DisableTodayRecommend : Feature(
-    key = "disable_today_recommend",
-    nameRes = R.string.feature_home_disable_today_recommend_name,
-    descriptionRes = R.string.feature_home_disable_today_recommend_description,
-    testEnvironmentRes = R.string.feature_home_disable_today_recommend_test_environment
-), FeatureHooker {
+object DisableTodayRecommend : FeatureHooker {
     override fun hook(packageName: String) {
         operator("com.miui.home.launcher.Folder") {
             // modifier: public | signature: showRecommendAppsSwitch(ZZ)V

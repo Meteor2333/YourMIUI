@@ -5,8 +5,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -16,13 +14,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_nfc_allow_locked_access_warning"
 )
 @RequiredScope("com.android.nfc")
-object AllowLockedAccess : Feature(
-    key = "nfc_allow_locked_access",
-    nameRes = R.string.feature_nfc_allow_locked_access_name,
-    descriptionRes = R.string.feature_nfc_allow_locked_access_description,
-    warningRes = R.string.feature_nfc_allow_locked_access_warning,
-    testEnvironmentRes = R.string.feature_nfc_allow_locked_access_test_environment
-), FeatureHooker {
+object AllowLockedAccess : FeatureHooker {
     private const val SCREEN_STATE_ON_UNLOCKED = 8
     private const val MSG_APPLY_SCREEN_STATE = 16
 

@@ -4,7 +4,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
@@ -15,12 +14,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_ui_hide_status_bar_icons_description"
 )
 @RequiredScope("com.android.systemui")
-object HideStatusBarIcons : Feature(
-    key = "hide_status_bar_icons",
-    nameRes = R.string.feature_systemui_hide_status_bar_icons_name,
-    descriptionRes = R.string.feature_systemui_hide_status_bar_icons_description,
-    testEnvironmentRes = R.string.feature_systemui_hide_status_bar_icons_test_environment
-), FeatureHooker {
+object HideStatusBarIcons : FeatureHooker {
     private lateinit var hiddenIcons: Set<String>
 
     override fun hook(packageName: String) {
@@ -46,7 +40,7 @@ object HideStatusBarIcons : Feature(
         }
     }
 
-    override fun getOptions(): List<Option<*>> {
+    fun getOptions(): List<Option<*>> {
         return listOf(
             Option(
                 "hidden_icons",

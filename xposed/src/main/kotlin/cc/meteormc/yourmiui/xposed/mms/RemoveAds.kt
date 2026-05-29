@@ -4,8 +4,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
-import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -14,12 +12,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_mms_remove_ads_description"
 )
 @RequiredScope("com.android.mms")
-object RemoveAds : Feature(
-    key = "remove_mms_ads",
-    nameRes = R.string.feature_mms_remove_ads_name,
-    descriptionRes = R.string.feature_mms_remove_ads_description,
-    testEnvironmentRes = R.string.feature_mms_remove_ads_test_environment
-), FeatureHooker {
+object RemoveAds : FeatureHooker {
     override fun hook(packageName: String) {
         operator("com.miui.smsextra.ui.UnderstandButton") {
             // modifier: private | signature: needRequestAD(Ljava/lang/Object;Lcom/miui/smsextra/sdk/ItemExtra;Lcom/miui/smsextra/ui/UnderstandButton$ADCallback;)Z

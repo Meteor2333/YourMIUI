@@ -9,7 +9,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.ConstructorWrapper
@@ -22,12 +21,7 @@ import cc.meteormc.yourmiui.xposed.operator
     "@string/feature_ui_edit_gxzw_quick_open_description"
 )
 @RequiredScope("com.android.systemui")
-object EditGxzwQuickOpen : Feature(
-    key = "edit_gxzw_quick_open",
-    nameRes = R.string.feature_systemui_edit_gxzw_quick_open_name,
-    descriptionRes = R.string.feature_systemui_edit_gxzw_quick_open_description,
-    testEnvironmentRes = R.string.feature_systemui_edit_gxzw_quick_open_test_environment
-), FeatureHooker {
+object EditGxzwQuickOpen : FeatureHooker {
     private lateinit var reservedItems: Set<QuickOpenItem>
 
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"
@@ -58,7 +52,7 @@ object EditGxzwQuickOpen : Feature(
         }
     }
 
-    override fun getOptions(): List<Option<Set<String>>> {
+    fun getOptions(): List<Option<Set<String>>> {
         return listOf(
             Option(
                 "reserved_items",

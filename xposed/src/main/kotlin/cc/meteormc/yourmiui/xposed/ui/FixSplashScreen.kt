@@ -18,7 +18,6 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
 import cc.meteormc.yourmiui.xposed.R
@@ -32,12 +31,7 @@ import kotlin.math.sqrt
     "@string/feature_ui_fix_splash_screen_description"
 )
 @RequiredScope("com.android.systemui")
-object FixSplashScreen : Feature(
-    key = "fix_splash_screen",
-    nameRes = R.string.feature_systemui_fix_splash_screen_name,
-    descriptionRes = R.string.feature_systemui_fix_splash_screen_description,
-    testEnvironmentRes = R.string.feature_systemui_fix_splash_screen_test_environment
-), FeatureHooker {
+object FixSplashScreen : FeatureHooker {
     private const val ALLOW_LAUNCH_PACKAGE = "com.miui.home"
 
     private var replaceBackgroundColor: Boolean = true
@@ -152,7 +146,7 @@ object FixSplashScreen : Feature(
         }
     }
 
-    override fun getOptions(): List<Option<*>> {
+    fun getOptions(): List<Option<*>> {
         return listOf(
             Option(
                 "replace_background_color",
