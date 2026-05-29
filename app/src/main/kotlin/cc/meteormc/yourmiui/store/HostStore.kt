@@ -5,6 +5,7 @@ import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.util.ClassUtil
+import cc.meteormc.yourmiui.common.util.SingletonUtil
 
 object HostStore {
     val apiName = MutableLiveData("Unknown")
@@ -29,7 +30,7 @@ object HostStore {
             "${BuildConfig.APPLICATION_ID}.FeatureRegistry",
             true
         )?.run {
-            val instance = getDeclaredField("INSTANCE").get(null) ?: return@run null
+            val instance = SingletonUtil.getInstance(this) ?: return@run null
 
             @Suppress("UNCHECKED_CAST")
             val feature =
