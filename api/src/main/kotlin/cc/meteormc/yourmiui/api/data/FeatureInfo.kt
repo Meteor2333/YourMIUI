@@ -24,6 +24,7 @@ data class FeatureInfo(
                     .replace(Regex("([A-Z]+)([A-Z][a-z])"), "$1_$2")
                     .lowercase(),
                 registerAnnotation.category,
+                // todo: toInt只是为了过编译，后续需要改成解析真正的字符串资源id
                 registerAnnotation.name.toInt(),
                 registerAnnotation.description.toInt(),
                 registerAnnotation.warning.toInt(),

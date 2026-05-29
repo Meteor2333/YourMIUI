@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -81,12 +80,12 @@ class AppPicker(
 
         fun loadAppInfos(): Flow<AppInfo> = flow {
             installedApps.forEach {
-                val info = AppInfo(
-                    it.packageName,
-                    pm.getApplicationLabel(it).toString(),
-                    pm.getApplicationIcon(it).toBitmap()
-                )
-                emit(info)
+//                val info = AppInfo(
+//                    it.packageName,
+//                    pm.getApplicationLabel(it).toString(),
+//                    pm.getApplicationIcon(it).toBitmap()
+//                )
+//                emit(info)
             }
         }
 
@@ -200,7 +199,7 @@ class AppPicker(
             return object : BaseViewHolder(binding, binding.root) {
                 override fun onBind(item: AppInfo?) {
                     if (item == null) return
-                    binding.appIcon.setImageBitmap(item.icon)
+//                    binding.appIcon.setImageBitmap(item.icon)
                     binding.appName.text = item.label
 
                     val checkbox = binding.checkbox
