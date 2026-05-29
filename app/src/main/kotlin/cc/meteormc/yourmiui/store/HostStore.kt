@@ -5,10 +5,12 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.MutableLiveData
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.YourMIUI
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
 import cc.meteormc.yourmiui.common.data.AppInfo
+import cc.meteormc.yourmiui.common.util.ClassUtil
 
 object HostStore {
     val apiName = MutableLiveData("Unknown")
@@ -28,6 +30,27 @@ object HostStore {
         this.apiVersion.value = apiVersion
         this.isActivated.value = true
         fetchScopes()
+
+        // todo
+        ClassUtil.getClass(
+            javaClass.classLoader!!,
+            "${BuildConfig.APPLICATION_ID}.FeatureRegistry",
+            true
+        )?.run {
+            val instance = getDeclaredField("INSTANCE").get(null) ?: return@run null
+
+            @Suppress("UNCHECKED_CAST")
+            val feature =
+                getDeclaredMethod("getFeatures").invoke(instance) as? Map<String, List<Any>>
+                    ?: return@run null
+            return@run feature.values
+                .flatten()
+                .distinct()
+                .mapNotNull {
+                    runCatching { it.javaClass.getDeclaredAnnotation(FeatureRegister::class.java) }.getOrNull()
+                }
+                .groupBy { it.category }
+        } ?: emptyMap()
     }
 
     private fun fetchScopes() {
