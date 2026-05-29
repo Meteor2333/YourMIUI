@@ -14,7 +14,6 @@ kotlin {
 }
 
 dependencies {
-    api(project(":api"))
     implementation(project(":common"))
     ksp(project(":processor"))
     compileOnly(libs.xposed.api)

@@ -65,7 +65,6 @@ kotlin {
 }
 
 dependencies {
-    api(project(":api"))
     implementation(project(":common"))
     runtimeOnly(project(":xposed"))
 

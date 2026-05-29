@@ -14,5 +14,6 @@ kotlin {
 }
 
 dependencies {
+    api(project(":api"))
     api(libs.android.core)
 }
