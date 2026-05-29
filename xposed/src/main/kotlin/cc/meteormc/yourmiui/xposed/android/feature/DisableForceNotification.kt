@@ -10,7 +10,7 @@ import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
-    Category.SYSTEM,
+    Category.NOTIFICATION,
     "@string/feature_system_disable_force_notification_name",
     "@string/feature_system_disable_force_notification_description"
 )

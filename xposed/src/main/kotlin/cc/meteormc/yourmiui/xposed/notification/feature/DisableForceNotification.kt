@@ -10,9 +10,8 @@ import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
     Category.SYSTEM,
-    "@string/feature_system_disable_safe_check_name",
-    "@string/feature_system_disable_safe_check_description",
-    "@string/feature_system_disable_safe_check_warning"
+    "@string/feature_system_disable_force_notification_name",
+    "@string/feature_system_disable_force_notification_description"
 )
 @RequiredScope("com.miui.notification")
 object DisableForceNotification : Feature(
