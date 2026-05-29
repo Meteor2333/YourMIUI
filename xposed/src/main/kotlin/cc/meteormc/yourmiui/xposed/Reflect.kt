@@ -245,6 +245,8 @@ abstract class HookableWrapper(private val member: Member) {
 class ConstructorWrapper<T : Any>(private val delegate: Constructor<T>) : HookableWrapper(delegate) {
     fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
 
+    fun modifiers(): Int = delegate.modifiers
+
     fun new(vararg args: Any?): T {
         return delegate.apply { isAccessible = true }.newInstance(*args)
     }
@@ -255,6 +257,8 @@ class FieldWrapper<T : Any>(private val delegate: Field) {
     fun name(): String = delegate.name
 
     fun type(): Class<*> = delegate.type
+
+    fun modifiers(): Int = delegate.modifiers
 
     operator fun <R : Any> get(obj: T?): R? {
         return delegate.apply { isAccessible = true }[obj] as? R?
@@ -270,6 +274,8 @@ class MethodWrapper<T : Any>(private val delegate: Method) : HookableWrapper(del
     fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
 
     fun returnType(): Class<*> = delegate.returnType
+
+    fun modifiers(): Int = delegate.modifiers
 
     fun call(obj: T?, vararg args: Any?): Any? {
         return delegate.apply { isAccessible = true }.invoke(obj, *args)
