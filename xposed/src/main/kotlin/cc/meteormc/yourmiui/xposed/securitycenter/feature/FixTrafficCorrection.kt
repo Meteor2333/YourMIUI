@@ -1,17 +1,27 @@
 package cc.meteormc.yourmiui.xposed.securitycenter.feature
 
 import android.os.Looper
+import cc.meteormc.yourmiui.api.Category
+import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
+@FeatureRegister(
+    Category.SECURITY_CENTER,
+    "@string/feature_securitycenter_fix_traffic_correction_name",
+    "@string/feature_securitycenter_fix_traffic_correction_description"
+)
+@RequiredScope("com.miui.securitycenter")
 object FixTrafficCorrection : Feature(
     key = "fix_traffic_correction",
     nameRes = R.string.feature_securitycenter_fix_traffic_correction_name,
     descriptionRes = R.string.feature_securitycenter_fix_traffic_correction_description,
     testEnvironmentRes = R.string.feature_securitycenter_fix_traffic_correction_test_environment
-) {
-    override fun onLoadPackage() {
+), FeatureHooker {
+    override fun hook(packageName: String) {
         operator("com.miui.sdk.tc.TcManager") {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;
             val refreshMethod = method("getAllInstructions") ?: return@operator

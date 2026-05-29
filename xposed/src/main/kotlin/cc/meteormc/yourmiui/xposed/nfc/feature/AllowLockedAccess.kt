@@ -1,21 +1,32 @@
 package cc.meteormc.yourmiui.xposed.nfc.feature
 
 import android.os.Message
+import cc.meteormc.yourmiui.api.Category
+import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
+@FeatureRegister(
+    Category.NFC,
+    "@string/feature_nfc_allow_locked_access_name",
+    "@string/feature_nfc_allow_locked_access_description",
+    "@string/feature_nfc_allow_locked_access_warning"
+)
+@RequiredScope("com.android.nfc")
 object AllowLockedAccess : Feature(
     key = "nfc_allow_locked_access",
     nameRes = R.string.feature_nfc_allow_locked_access_name,
     descriptionRes = R.string.feature_nfc_allow_locked_access_description,
     warningRes = R.string.feature_nfc_allow_locked_access_warning,
     testEnvironmentRes = R.string.feature_nfc_allow_locked_access_test_environment
-) {
+), FeatureHooker {
     private const val SCREEN_STATE_ON_UNLOCKED = 8
     private const val MSG_APPLY_SCREEN_STATE = 16
 
-    override fun onLoadPackage() {
+    override fun hook(packageName: String) {
         operator($$"com.android.nfc.NfcService$NfcServiceHandler") {
             // modifier: public | signature: handleMessage(Landroid/os/Message;)V
             method("handleMessage")?.hookDoNothing {

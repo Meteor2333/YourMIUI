@@ -14,6 +14,10 @@ import android.os.Build
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.withScale
+import cc.meteormc.yourmiui.api.Category
+import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
@@ -22,12 +26,18 @@ import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
+@FeatureRegister(
+    Category.UI,
+    "@string/feature_ui_fix_splash_screen_name",
+    "@string/feature_ui_fix_splash_screen_description"
+)
+@RequiredScope("com.android.systemui")
 object FixSplashScreen : Feature(
     key = "fix_splash_screen",
     nameRes = R.string.feature_systemui_fix_splash_screen_name,
     descriptionRes = R.string.feature_systemui_fix_splash_screen_description,
     testEnvironmentRes = R.string.feature_systemui_fix_splash_screen_test_environment
-) {
+), FeatureHooker {
     private const val ALLOW_LAUNCH_PACKAGE = "com.miui.home"
 
     private var replaceBackgroundColor: Boolean = true
@@ -43,8 +53,7 @@ object FixSplashScreen : Feature(
         val background: Int
     )
 
-    override fun onLoadPackage() {
-        val swiClass = operator("android.window.StartingWindowInfo") ?: return
+    override fun hook(packageName: String) {val swiClass = operator("android.window.StartingWindowInfo") ?: return
         // name: targetActivityInfo | type: android.content.pm.ActivityInfo
         val targetActivityInfoField = swiClass.field("targetActivityInfo") ?: return
         // name: taskInfo | type: android.app.ActivityManager$RunningTaskInfo

@@ -1,23 +1,33 @@
 package cc.meteormc.yourmiui.xposed.android.feature
 
 import android.content.pm.PermissionInfo
+import cc.meteormc.yourmiui.api.Category
+import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
+@FeatureRegister(
+    Category.SYSTEM,
+    "@string/feature_system_disable_force_notification_name",
+    "@string/feature_system_disable_force_notification_description"
+)
+@RequiredScope("android")
 object DisableForceNotification : Feature(
     key = "disable_force_notification",
     nameRes = R.string.feature_android_disable_force_notification_name,
     descriptionRes = R.string.feature_android_disable_force_notification_description,
     testEnvironmentRes = R.string.feature_android_disable_force_notification_test_environment
-) {
+), FeatureHooker {
     private const val NOTIFICATION_PERMISSION = "android.permission.POST_NOTIFICATIONS"
     private const val FLAG_PERMISSION_POLICY_FIXED = 1 shl 2
     private const val FLAG_PERMISSION_SYSTEM_FIXED = 1 shl 4
     private const val FLAG_PERMISSION_GRANTED_BY_DEFAULT = 1 shl 5
     private const val FLAG_PERMISSION_GRANTED_BY_ROLE = 1 shl 15
 
-    override fun onLoadPackage() {
+    override fun hook(packageName: String) {
         // 调用链:
         // (通知管理) -> d.a.b.g.h.a(d.a.b.h$b, miui.notification.management.model.AppItem, int, android.widget.CompoundButton, boolean)
         // (通知管理) -> miui.notification.management.activity.NotificationAppListActivity.a(d.a.b.f)

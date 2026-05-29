@@ -5,6 +5,10 @@ import android.content.Context
 import android.graphics.RectF
 import android.graphics.Region
 import android.widget.ImageView
+import cc.meteormc.yourmiui.api.Category
+import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
@@ -12,18 +16,24 @@ import cc.meteormc.yourmiui.xposed.ConstructorWrapper
 import cc.meteormc.yourmiui.xposed.R
 import cc.meteormc.yourmiui.xposed.operator
 
+@FeatureRegister(
+    Category.UI,
+    "@string/feature_ui_edit_gxzw_quick_open_name",
+    "@string/feature_ui_edit_gxzw_quick_open_description"
+)
+@RequiredScope("com.android.systemui")
 object EditGxzwQuickOpen : Feature(
     key = "edit_gxzw_quick_open",
     nameRes = R.string.feature_systemui_edit_gxzw_quick_open_name,
     descriptionRes = R.string.feature_systemui_edit_gxzw_quick_open_description,
     testEnvironmentRes = R.string.feature_systemui_edit_gxzw_quick_open_test_environment
-) {
+), FeatureHooker {
     private lateinit var reservedItems: Set<QuickOpenItem>
 
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"
     private const val EXTRA_ITEM_IDENTIFIER = "cc.meteormc.yourmiui.xposed.EditGxzwQuickOpen#ExtraQuickOpenItem"
 
-    override fun onLoadPackage() {
+    override fun hook(packageName: String) {
         QuickOpenItem.entries.forEach { it.extra?.init() }
 
         operator("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {

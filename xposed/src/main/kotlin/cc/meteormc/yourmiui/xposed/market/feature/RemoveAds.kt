@@ -1,6 +1,10 @@
 package cc.meteormc.yourmiui.xposed.market.feature
 
 import android.content.Intent
+import cc.meteormc.yourmiui.api.Category
+import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.annotation.FeatureRegister
+import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.Option
 import cc.meteormc.yourmiui.common.Option.Type
@@ -11,12 +15,18 @@ import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONArray
 import org.json.JSONObject
 
+@FeatureRegister(
+    Category.MARTET,
+    "@string/feature_market_remove_ads_name",
+    "@string/feature_market_remove_ads_description"
+)
+@RequiredScope("com.xiaomi.market")
 object RemoveAds : Feature(
     key = "remove_market_ads",
     nameRes = R.string.feature_market_remove_ads_name,
     descriptionRes = R.string.feature_market_remove_ads_description,
     testEnvironmentRes = R.string.feature_market_remove_ads_test_environment
-) {
+), FeatureHooker {
     private lateinit var hiddenTags: Set<String>
 
     private val adTags = setOf(
@@ -29,7 +39,7 @@ object RemoveAds : Feature(
         "com.xiaomi.market.common.component.componentbeans.RecommendCollectionComponent"
     )
 
-    override fun onLoadPackage() {
+    override fun hook(packageName: String) {
         operator("com.xiaomi.market.model.TabInfo") {
             val tabInfo = TabInfoWrapper()
             // modifier: public static | signature: fromJSON(Lorg/json/JSONArray;)Ljava/util/List;
