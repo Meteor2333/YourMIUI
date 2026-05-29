@@ -8,8 +8,7 @@ data class HookParam(
     val instance: Any?,
     val args: Array<Any?>,
     private val initialResult: Any?,
-    private val initialThrowable: Throwable?,
-    private var onCallSuper: (param: HookParam) -> Any?
+    private val initialThrowable: Throwable?
 ) {
     var resultChanged = false
     var throwableChanged = false
@@ -79,8 +78,6 @@ data class HookParam(
     fun <T> result() = this.result as T?
 
     fun <T : Throwable> throwable() = this.throwable as T?
-
-    fun callSuper() = this.onCallSuper(this)
 
     override fun equals(other: Any?) = other is HookParam && this.member == other.member
 

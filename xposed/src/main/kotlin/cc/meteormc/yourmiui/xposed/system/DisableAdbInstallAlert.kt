@@ -33,15 +33,13 @@ object DisableAdbInstallAlert : FeatureHooker {
 
         operator("com.miui.common.base.AlertActivity") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
-            method("onCreate")?.hookDoNothing {
+            method("onCreate")?.hookAfter {
                 val activity = it.instance<Activity>()
                 // 判断当前子类环境是否为所需的类
                 if (activity.javaClass.name != "com.miui.permcenter.install.AdbInstallActivity") {
-                    return@hookDoNothing false
+                    return@hookAfter
                 }
 
-                // 调用super.onCreate以防止SuperNotCalledException报错
-                it.callSuper()
                 val binder = getBinderMethod.call(null, activity.intent, "observer")
                 val messenger = asInterfaceMethod.call(null, binder)
                 // name: (obfuscated) | type: android.os.IMessenger
@@ -56,7 +54,6 @@ object DisableAdbInstallAlert : FeatureHooker {
                 }
 
                 activity.finish()
-                true
             }
         }
     }

@@ -241,9 +241,7 @@ abstract class HookableWrapper(private val member: Member) {
             this.args.copyOf(),
             this.result,
             this.throwable
-        ) {
-            XposedBridge.invokeOriginalMethod(it.member, it.instance, it.args)
-        }
+        )
     }
 
     private fun HookParam.toExternal(param: MethodHookParam) {
