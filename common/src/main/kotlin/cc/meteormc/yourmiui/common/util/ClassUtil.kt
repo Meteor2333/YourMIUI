@@ -123,10 +123,9 @@ object ClassUtil {
      * @param initialize  whether the class must be initialized
      * @return the class represented by `className` using the `classLoader`
      */
-    fun getClass(classLoader: ClassLoader? = null, className: String, initialize: Boolean): Class<*>? {
+    fun getClass(classLoader: ClassLoader, className: String, initialize: Boolean): Class<*>? {
         fun forName(name: String): Class<*> {
-            return if (classLoader == null) Class.forName(name)
-            else Class.forName(name, initialize, classLoader)
+            return Class.forName(name, initialize, classLoader)
         }
 
         fun tryLoad(name: String): Class<*> {

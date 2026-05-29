@@ -2,7 +2,6 @@
 
 package cc.meteormc.yourmiui.xposed
 
-import cc.meteormc.yourmiui.common.Feature
 import cc.meteormc.yourmiui.common.data.HookParam
 import cc.meteormc.yourmiui.common.util.ClassUtil
 import de.robv.android.xposed.XC_MethodHook
@@ -18,8 +17,8 @@ fun <T : Any> operator(clazz: Class<T>): ReflectOperator<T> {
     return ReflectOperator(clazz)
 }
 
-fun operator(classLoader: ClassLoader, className: String): ReflectOperator<Any>? {
-    val clazz = ClassUtil.getClass(classLoader, className, false)
+fun operator(className: String): ReflectOperator<Any>? {
+    val clazz = ClassUtil.getClass(XposedEntry.INSTANCE.classLoader, className, false)
     return if (clazz != null) {
         @Suppress("UNCHECKED_CAST")
         ReflectOperator(clazz as Class<Any>)
@@ -29,19 +28,11 @@ fun operator(classLoader: ClassLoader, className: String): ReflectOperator<Any>?
     }
 }
 
-fun Feature.operator(className: String): ReflectOperator<Any>? {
-    return operator(classLoader, className)
-}
-
 fun <T : Any, R> operator(clazz: Class<T>, operator: ReflectOperator<T>.() -> R): R {
     return operator(clazz).run(operator)
 }
 
-fun <R> operator(classLoader: ClassLoader, className: String, operator: ReflectOperator<Any>.() -> R): R? {
-    return operator(classLoader, className)?.run(operator)
-}
-
-fun <R> Feature.operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
+fun <R> operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
     return operator(className)?.run(operator)
 }
 
