@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.common.data
+package cc.meteormc.yourmiui.api.data
 
 import java.lang.reflect.Member
 

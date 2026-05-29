@@ -7,11 +7,10 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
+import cc.meteormc.yourmiui.api.data.AppInfo
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
-import cc.meteormc.yourmiui.common.data.AppInfo
-import cc.meteormc.yourmiui.common.data.RestartMethod
 import cc.meteormc.yourmiui.common.util.StorageUtil.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter

@@ -5,7 +5,7 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.common.data.HookParam
+import cc.meteormc.yourmiui.api.data.HookParam
 import cc.meteormc.yourmiui.xposed.ReflectOperator
 import cc.meteormc.yourmiui.xposed.operator
 

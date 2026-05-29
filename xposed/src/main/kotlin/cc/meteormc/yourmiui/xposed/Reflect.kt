@@ -2,7 +2,7 @@
 
 package cc.meteormc.yourmiui.xposed
 
-import cc.meteormc.yourmiui.common.data.HookParam
+import cc.meteormc.yourmiui.api.data.HookParam
 import cc.meteormc.yourmiui.common.util.ClassUtil
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam

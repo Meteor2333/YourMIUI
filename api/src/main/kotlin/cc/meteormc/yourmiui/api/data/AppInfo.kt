@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.common.data
+package cc.meteormc.yourmiui.api.data
 
 import android.graphics.Bitmap
 import android.os.Parcelable

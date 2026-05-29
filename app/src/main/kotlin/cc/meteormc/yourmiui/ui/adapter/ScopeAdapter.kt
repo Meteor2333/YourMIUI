@@ -8,8 +8,8 @@ import android.os.Looper
 import androidx.core.graphics.drawable.toDrawable
 import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.api.data.AppInfo
 import cc.meteormc.yourmiui.common.Scope
-import cc.meteormc.yourmiui.common.data.AppInfo
 import cc.meteormc.yourmiui.common.util.StorageUtil.putObject
 import cc.meteormc.yourmiui.databinding.ItemScopeBinding
 
