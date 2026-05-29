@@ -5,8 +5,8 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.MutableLiveData
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.YourMIUI
-import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.data.AppInfo
+import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.common.Scope
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
@@ -46,9 +46,7 @@ object HostStore {
             return@run feature.values
                 .flatten()
                 .distinct()
-                .mapNotNull {
-                    runCatching { it.javaClass.getDeclaredAnnotation(FeatureRegister::class.java) }.getOrNull()
-                }
+                .map { FeatureInfo.fromSource(it.javaClass) }
                 .groupBy { it.category }
         } ?: emptyMap()
     }
