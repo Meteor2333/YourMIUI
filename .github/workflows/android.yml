@@ -34,10 +34,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
         env:
-          ORG_GRADLE_PROJECT_android_storeFile: ${{ runner.temp }}/release.jks
-          ORG_GRADLE_PROJECT_android_storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_android_keyAlias: ${{ secrets.ALIAS }}
-          ORG_GRADLE_PROJECT_android_keyPassword: ${{ secrets.KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_android.storeFile: ${{ runner.temp }}/release.jks
+          ORG_GRADLE_PROJECT_android.storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_android.keyAlias: ${{ secrets.ALIAS }}
+          ORG_GRADLE_PROJECT_android.keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Collect artifact
         id: collect_artifact
