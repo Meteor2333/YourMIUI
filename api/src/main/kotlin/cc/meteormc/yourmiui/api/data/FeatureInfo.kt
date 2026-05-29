@@ -19,10 +19,7 @@ data class FeatureInfo(
             val registerAnnotation = source.getDeclaredAnnotation(FeatureRegister::class.java)
             val scopeAnnotations = source.getDeclaredAnnotationsByType(RequiredScope::class.java)
             return FeatureInfo(
-                source.simpleName
-                    .replace(Regex("([a-z0-9])([A-Z])"), "$1_$2")
-                    .replace(Regex("([A-Z]+)([A-Z][a-z])"), "$1_$2")
-                    .lowercase(),
+                source.simpleName,
                 registerAnnotation.category,
                 // todo: toInt只是为了过编译，后续需要改成解析真正的字符串资源id
                 registerAnnotation.name.toInt(),
