@@ -28,19 +28,22 @@ android {
     }
 
     signingConfigs {
+        val storeFile = providers.gradleProperty("android.storeFile").orNull ?: return@signingConfigs
+        val storePassword = providers.gradleProperty("android.storePassword").orNull ?: return@signingConfigs
+        val keyAlias = providers.gradleProperty("android.keyAlias").orNull ?: return@signingConfigs
+        val keyPassword = providers.gradleProperty("android.keyPassword").orNull ?: return@signingConfigs
+
         create("release") {
-            storeFile = keystoreProp.getProperty("storeFile")?.let { rootProject.file(it) }
-            storePassword = keystoreProp.getProperty("storePassword")
-            keyAlias = keystoreProp.getProperty("keyAlias")
-            keyPassword = keystoreProp.getProperty("keyPassword")
+            this.storeFile = rootProject.file(storeFile)
+            this.storePassword = storePassword
+            this.keyAlias = keyAlias
+            this.keyPassword = keyPassword
         }
     }
 
     buildTypes {
         release {
-            if (keystorePropFile.exists()) {
-                signingConfig = signingConfigs.getByName("release")
-            }
+            signingConfig = signingConfigs.findByName("release")
 
             isMinifyEnabled = true
             isShrinkResources = true

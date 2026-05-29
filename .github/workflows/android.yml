@@ -29,19 +29,15 @@ jobs:
         run: chmod +x gradlew
 
       - name: Decode keystore
-        run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/keystore.jks
-
-      - name: Generate keystore properties
-        run: |
-          cat <<EOF > keystore.properties
-          storeFile=${{ runner.temp }}/keystore.jks
-          storePassword=${{ secrets.KEY_STORE_PASSWORD }}
-          keyAlias=${{ secrets.ALIAS }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          EOF
+        run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/release.jks
 
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          ORG_GRADLE_PROJECT_android_storeFile: ${{ runner.temp }}/release.jks
+          ORG_GRADLE_PROJECT_android_storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_android_keyAlias: ${{ secrets.ALIAS }}
+          ORG_GRADLE_PROJECT_android_keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Collect artifact
         id: collect_artifact
