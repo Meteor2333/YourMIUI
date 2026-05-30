@@ -29,9 +29,9 @@ object IntentExt {
                             (value as Collection<Parcelable>).toCollection(ArrayList())
                         )
                     }
-                    java.io.Serializable::class.java.isAssignableFrom(type) -> {
+                    Serializable::class.java.isAssignableFrom(type) -> {
                         putExtra($$"$$name$type", "List<Serializable>")
-                        putExtra(name, (value as Collection<java.io.Serializable>).toCollection(ArrayList()))
+                        putExtra(name, (value as Collection<Serializable>).toCollection(ArrayList()))
                     }
                     else -> throw IllegalArgumentException("Unsupported collection element type: $type")
                 }
@@ -54,7 +54,7 @@ object IntentExt {
     }
 
     fun <T : Any> Intent.getExtra(name: String): T? {
-        @Suppress("DEPRECATION")
+        @Suppress("DEPRECATION", "UNCHECKED_CAST")
         return when (getStringExtra($$"$$name$type")) {
             "Unit" -> Unit
             "List<Empty>" -> {
