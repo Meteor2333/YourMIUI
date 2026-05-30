@@ -8,10 +8,10 @@ import cc.meteormc.yourmiui.xposed.hookResult
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
-    Category.SUPER_WALLPAPER,
-    "@string/feature_superwallpaper_disable_pause_name",
-    "@string/feature_superwallpaper_disable_pause_description",
-    "@string/feature_superwallpaper_disable_pause_warning"
+    Category.WALLPAPER,
+    "@string/feature_wallpaper_disable_superwallpaper_pause_name",
+    "@string/feature_wallpaper_disable_superwallpaper_pause_description",
+    "@string/feature_wallpaper_disable_superwallpaper_pause_warning"
 )
 @RequiredScope("com.miui.miwallpaper.earth")
 @RequiredScope("com.miui.miwallpaper.geometry")

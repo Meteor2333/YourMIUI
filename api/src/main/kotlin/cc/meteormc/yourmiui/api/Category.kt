@@ -13,5 +13,5 @@ enum class Category {
     PORTAL,
     SECURITY_CENTER,
     SETTINGS,
-    SUPER_WALLPAPER
+    WALLPAPER
 }
