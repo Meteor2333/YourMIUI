@@ -7,6 +7,7 @@ val projectNamespace: String by rootProject.extra
 
 android {
     namespace = "$projectNamespace.common"
+    androidResources.enable = false
 }
 
 kotlin {
