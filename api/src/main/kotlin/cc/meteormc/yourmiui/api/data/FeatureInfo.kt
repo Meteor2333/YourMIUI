@@ -4,9 +4,10 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.util.NamingCaseUtil.toSnakeCase
 
 data class FeatureInfo(
-    val id: String,
+    val key: String,
     val category: Category,
     val name: Int,
     val description: Int,
@@ -22,7 +23,7 @@ data class FeatureInfo(
             val registerAnnotation = source.getDeclaredAnnotation(FeatureRegister::class.java)
             val scopeAnnotations = source.getDeclaredAnnotationsByType(RequiredScope::class.java)
             return FeatureInfo(
-                source.simpleName,
+                source.simpleName.toSnakeCase(),
                 registerAnnotation.category,
                 // todo: toInt只是为了过编译，后续需要改成解析真正的字符串资源id
                 registerAnnotation.name.toInt(),

@@ -5,10 +5,11 @@ import cc.meteormc.yourmiui.api.annotation.AppOptionRegister
 import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.SwitchOptionRegister
 import cc.meteormc.yourmiui.api.annotation.TextOptionRegister
+import cc.meteormc.yourmiui.api.util.NamingCaseUtil.toSnakeCase
 import java.lang.reflect.Field
 
 data class OptionInfo(
-    val id: String,
+    val key: String,
     val name: Int,
     val description: Int,
     val type: OptionType<*>,
@@ -42,7 +43,7 @@ data class OptionInfo(
                 }
 
                 return OptionInfo(
-                    source.name,
+                    source.name.toSnakeCase(),
                     annotation.name.toInt(),
                     annotation.description.toInt(),
                     OptionType.List(

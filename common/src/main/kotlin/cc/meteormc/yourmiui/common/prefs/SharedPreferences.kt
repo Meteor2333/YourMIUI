@@ -12,7 +12,7 @@ class SharedPreferences(private val prefs: SharedPreferences) {
     }
 
     fun getFeature(feature: FeatureInfo) = Feature(
-        feature.id
+        feature.key
             .replace(formatRegex, "$1_$2")
             .replace(Regex("([A-Z]+)([A-Z][a-z])"), "$1_$2")
             .lowercase()
