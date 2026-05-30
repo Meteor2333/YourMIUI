@@ -5,7 +5,10 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.xposed.get
+import cc.meteormc.yourmiui.xposed.hookResult
 import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.replaceResult
 
 @FeatureRegister(
     Category.NOTIFICATION,

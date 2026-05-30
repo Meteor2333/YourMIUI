@@ -8,7 +8,11 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.xposed.call
+import cc.meteormc.yourmiui.xposed.hookAfter
+import cc.meteormc.yourmiui.xposed.hookResult
 import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.overrideResult
 
 @FeatureRegister(
     Category.NOTIFICATION,

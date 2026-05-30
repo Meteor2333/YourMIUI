@@ -6,7 +6,9 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.api.data.HookParam
-import cc.meteormc.yourmiui.xposed.ReflectOperator
+import cc.meteormc.yourmiui.xposed.Reflect
+import cc.meteormc.yourmiui.xposed.get
+import cc.meteormc.yourmiui.xposed.hookAfter
 import cc.meteormc.yourmiui.xposed.operator
 
 @FeatureRegister(
@@ -33,7 +35,7 @@ object DisableCountdownDialog : FeatureHooker {
             }
         }
 
-        fun hookGetter(operator: ReflectOperator<Any>): (param: HookParam) -> Unit {
+        fun hookGetter(operator: Reflect<Any>): (param: HookParam) -> Unit {
             return tag@{
                 val instance = it.instance
                 // name: (obfuscated) | type: int

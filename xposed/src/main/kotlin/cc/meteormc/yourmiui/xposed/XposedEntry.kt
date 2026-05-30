@@ -51,7 +51,7 @@ class XposedEntry : IXposedHookLoadPackage {
                         // todo
                         val value = null
 
-                        val instance = if (Modifier.isStatic(field.modifiers())) {
+                        val instance = if (Modifier.isStatic(field.modifiers)) {
                             null
                         } else {
                             SingletonUtil.getInstance(delegate) as? FeatureHooker?
@@ -99,7 +99,7 @@ class XposedEntry : IXposedHookLoadPackage {
         val bridgeClass = ClassUtil.getClass(classLoader, Bridge::class.java.name, true)
         if (bridgeClass != null) {
             operator(bridgeClass) {
-                val apiName = ReflectOperator(XposedBridge::class.java).run {
+                val apiName = Reflect(XposedBridge::class.java).run {
                     field("TAG")?.get(null)
                 } ?: "Unknown"
                 val apiVersion = XposedBridge.getXposedVersion()

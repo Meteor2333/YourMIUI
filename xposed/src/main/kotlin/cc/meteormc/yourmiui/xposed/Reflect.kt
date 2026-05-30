@@ -13,45 +13,45 @@ import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 
-fun <T : Any> operator(clazz: Class<T>): ReflectOperator<T> {
-    return ReflectOperator(clazz)
+fun <T : Any> operator(clazz: Class<T>): Reflect<T> {
+    return Reflect(clazz)
 }
 
-fun operator(className: String): ReflectOperator<Any>? {
+fun operator(className: String): Reflect<Any>? {
     val clazz = ClassUtil.getClass(XposedEntry.INSTANCE.classLoader, className, false)
     return if (clazz != null) {
         @Suppress("UNCHECKED_CAST")
-        ReflectOperator(clazz as Class<Any>)
+        Reflect(clazz as Class<Any>)
     } else {
         XposedBridge.log("[YourMIUI] Class not found: $className!")
         null
     }
 }
 
-fun <T : Any, R> operator(clazz: Class<T>, operator: ReflectOperator<T>.() -> R): R {
+fun <T : Any, R> operator(clazz: Class<T>, operator: Reflect<T>.() -> R): R {
     return operator(clazz).run(operator)
 }
 
-fun <R> operator(className: String, operator: ReflectOperator<Any>.() -> R): R? {
+fun <R> operator(className: String, operator: Reflect<Any>.() -> R): R? {
     return operator(className)?.run(operator)
 }
 
 @Suppress("UNCHECKED_CAST")
-class ReflectOperator<T : Any>(val delegate: Class<T>) {
+class Reflect<T : Any>(val delegate: Class<T>) {
     companion object {
-        private val constructorCache = mutableMapOf<String, ConstructorWrapper<*>>()
-        private val fieldCache = mutableMapOf<String, FieldWrapper<*>>()
-        private val methodCache = mutableMapOf<String, MethodWrapper<*>>()
+        private val constructorCache = mutableMapOf<String, Constructor<*>>()
+        private val fieldCache = mutableMapOf<String, Field>()
+        private val methodCache = mutableMapOf<String, Method>()
     }
 
-    fun constructor(vararg paramTypes: Class<*>): ConstructorWrapper<T>? {
+    fun constructor(vararg paramTypes: Class<*>): Constructor<T>? {
         val fullName = "${delegate.getName()}(${getParametersString(*paramTypes)})"
         if (constructorCache.containsKey(fullName)) {
-            return constructorCache[fullName] as? ConstructorWrapper<T>
+            return constructorCache[fullName] as? Constructor<T>
         }
 
         return runCatching {
-            ConstructorWrapper<T>(delegate.getDeclaredConstructor(*paramTypes)).apply {
+            delegate.getDeclaredConstructor(*paramTypes).apply {
                 constructorCache[fullName] = this
             }
         }.onFailure {
@@ -59,57 +59,55 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         }.getOrNull()
     }
 
-    fun constructors(): List<ConstructorWrapper<*>> {
-        return delegate.constructors.map { ConstructorWrapper(it) }
+    fun constructors(): List<Constructor<*>> {
+        return delegate.constructors.toList()
     }
 
-    fun declaredConstructors(): List<ConstructorWrapper<T>> {
-        return (delegate.declaredConstructors as? Array<Constructor<T>>)?.map {
-            ConstructorWrapper(it)
-        } ?: emptyList()
+    fun declaredConstructors(): List<Constructor<T>> {
+        return delegate.declaredConstructors.toList() as? List<Constructor<T>> ?: emptyList()
     }
 
-    fun field(name: String): FieldWrapper<T>? {
+    fun field(name: String): Field? {
         val fullName = "${delegate.getName()}#$name"
         if (fieldCache.containsKey(fullName)) {
-            return fieldCache[fullName] as? FieldWrapper<T>
+            return fieldCache[fullName]
         }
 
         val field = findRecursive {
             runCatching { it.getDeclaredField(name) }.getOrNull()
         }
         return if (field != null) {
-            FieldWrapper<T>(field).apply { fieldCache[fullName] = this }
+            field.apply { fieldCache[fullName] = this }
         } else {
             XposedBridge.log("[YourMIUI] Field not found: $fullName!")
             null
         }
     }
 
-    fun fields(type: Class<*>): List<FieldWrapper<T>> {
-        val result = mutableListOf<FieldWrapper<T>>()
+    fun fields(type: Class<*>): List<Field> {
+        val result = mutableListOf<Field>()
         var superClass: Class<*> = delegate
         do {
             for (field in superClass.declaredFields) {
                 if (!type.isAssignableFrom(field.type)) continue
-                result.add(FieldWrapper(field))
+                result.add(field)
             }
         } while ((superClass.getSuperclass()?.also { superClass = it }) != null)
         return result
     }
 
-    fun fields(): List<FieldWrapper<T>> {
-        return delegate.fields.map { FieldWrapper(it) }
+    fun fields(): List<Field> {
+        return delegate.fields.toList()
     }
 
-    fun declaredFields(): List<FieldWrapper<T>> {
-        return delegate.declaredFields.map { FieldWrapper(it) }
+    fun declaredFields(): List<Field> {
+        return delegate.declaredFields.toList()
     }
 
-    fun method(name: String, vararg paramTypes: Class<*>): MethodWrapper<T>? {
+    fun method(name: String, vararg paramTypes: Class<*>): Method? {
         val fullName = "${delegate.getName()}#$name(${getParametersString(*paramTypes)})"
         if (methodCache.containsKey(fullName)) {
-            return methodCache[fullName] as? MethodWrapper<T>
+            return methodCache[fullName]
         }
 
         var result: Method? = null
@@ -134,19 +132,19 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
         }?.let { result = it }
 
         return if (result != null) {
-            MethodWrapper<T>(result).apply { methodCache[fullName] = this }
+            result.apply { methodCache[fullName] = this }
         } else {
             XposedBridge.log("[YourMIUI] Method not found: $fullName!")
             null
         }
     }
 
-    fun methods(): List<MethodWrapper<T>> {
-        return delegate.methods.map { MethodWrapper(it) }
+    fun methods(): List<Method> {
+        return delegate.methods.toList()
     }
 
-    fun declaredMethods(): List<MethodWrapper<T>> {
-        return delegate.declaredMethods.map { MethodWrapper(it) }
+    fun declaredMethods(): List<Method> {
+        return delegate.declaredMethods.toList()
     }
 
     private fun getParametersString(vararg clazzes: Class<*>): String {
@@ -162,122 +160,98 @@ class ReflectOperator<T : Any>(val delegate: Class<T>) {
     }
 }
 
-abstract class HookableWrapper(private val member: Member) {
-    fun hookResult(result: Any?): HookableWrapper {
-        XposedBridge.hookMethod(member, XC_MethodReplacement.returnConstant(result))
-        return this
-    }
+fun <T : Member> T.hookResult(result: Any?): T {
+    XposedBridge.hookMethod(this, XC_MethodReplacement.returnConstant(result))
+    return this
+}
 
-    fun hookDoNothing(): HookableWrapper {
-        XposedBridge.hookMethod(member, XC_MethodReplacement.DO_NOTHING)
-        return this
-    }
+fun <T : Member> T.hookDoNothing(): T {
+    XposedBridge.hookMethod(this, XC_MethodReplacement.DO_NOTHING)
+    return this
+}
 
-    fun hookDoNothing(condition: (param: HookParam) -> Boolean): HookableWrapper {
-        this.hookBefore {
-            if (condition(it)) it.result = null
-        }
-        return this
+fun <T : Member> T.hookDoNothing(condition: (param: HookParam) -> Boolean): T {
+    this.hookBefore {
+        if (condition(it)) it.result = null
     }
+    return this
+}
 
-    fun overrideResult(block: (param: HookParam) -> Any?): HookableWrapper {
-        this.hookBefore {
-            val result = block(it)
-            if (result != Unit) it.result = result
-        }
-        return this
+fun <T : Member> T.overrideResult(block: (param: HookParam) -> Any?): T {
+    this.hookBefore {
+        val result = block(it)
+        if (result != Unit) it.result = result
     }
+    return this
+}
 
-    fun replaceResult(block: (param: HookParam) -> Any?): HookableWrapper {
-        this.hookAfter {
-            val result = block(it)
-            if (result != Unit) it.result = result
-        }
-        return this
+fun <T : Member> T.replaceResult(block: (param: HookParam) -> Any?): T {
+    this.hookAfter {
+        val result = block(it)
+        if (result != Unit) it.result = result
     }
+    return this
+}
 
-    fun hookBefore(callback: (param: HookParam) -> Unit): HookableWrapper {
-        XposedBridge.hookMethod(
-            member,
-            object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val internal = param.toInternal()
-                    callback(internal)
-                    internal.toExternal(param)
-                }
+fun <T : Member> T.hookBefore(callback: (param: HookParam) -> Unit): T {
+    XposedBridge.hookMethod(
+        this,
+        object : XC_MethodHook() {
+            override fun beforeHookedMethod(param: MethodHookParam) {
+                val internal = param.toInternal()
+                callback(internal)
+                internal.toExternal(param)
             }
-        )
-        return this
-    }
+        }
+    )
+    return this
+}
 
-    fun hookAfter(callback: (param: HookParam) -> Unit): HookableWrapper {
-        XposedBridge.hookMethod(
-            member,
-            object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    val internal = param.toInternal()
-                    callback(internal)
-                    internal.toExternal(param)
-                }
+fun <T : Member> T.hookAfter(callback: (param: HookParam) -> Unit): T {
+    XposedBridge.hookMethod(
+        this,
+        object : XC_MethodHook() {
+            override fun afterHookedMethod(param: MethodHookParam) {
+                val internal = param.toInternal()
+                callback(internal)
+                internal.toExternal(param)
             }
-        )
-        return this
-    }
-
-    private fun MethodHookParam.toInternal(): HookParam {
-        @Suppress("UNCHECKED_CAST")
-        return HookParam(
-            this.method,
-            this.thisObject,
-            this.args.copyOf(),
-            this.result,
-            this.throwable
-        )
-    }
-
-    private fun HookParam.toExternal(param: MethodHookParam) {
-        param.args = this.args.copyOf()
-        if (this.resultChanged) param.result = this.result
-        if (this.throwableChanged) param.throwable = this.throwable
-    }
+        }
+    )
+    return this
 }
 
-class ConstructorWrapper<T : Any>(private val delegate: Constructor<T>) : HookableWrapper(delegate) {
-    fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
-
-    fun modifiers(): Int = delegate.modifiers
-
-    fun new(vararg args: Any?): T {
-        return delegate.apply { isAccessible = true }.newInstance(*args)
-    }
+private fun MethodHookParam.toInternal(): HookParam {
+    @Suppress("UNCHECKED_CAST")
+    return HookParam(
+        this.method,
+        this.thisObject,
+        this.args.copyOf(),
+        this.result,
+        this.throwable
+    )
 }
 
-@Suppress("UNCHECKED_CAST")
-class FieldWrapper<T : Any>(private val delegate: Field) {
-    fun name(): String = delegate.name
-
-    fun type(): Class<*> = delegate.type
-
-    fun modifiers(): Int = delegate.modifiers
-
-    operator fun <R : Any> get(obj: T?): R? {
-        return delegate.apply { isAccessible = true }[obj] as? R?
-    }
-
-    operator fun set(obj: T?, value: Any?): FieldWrapper<T> {
-        delegate.apply { isAccessible = true }[obj] = value
-        return this
-    }
+private fun HookParam.toExternal(param: MethodHookParam) {
+    param.args = this.args.copyOf()
+    if (this.resultChanged) param.result = this.result
+    if (this.throwableChanged) param.throwable = this.throwable
 }
 
-class MethodWrapper<T : Any>(private val delegate: Method) : HookableWrapper(delegate) {
-    fun parameterTypes(): Array<Class<*>> = delegate.parameterTypes
+fun <T> Constructor<T>.new(vararg args: Any?): T {
+    return this.apply { isAccessible = true }.newInstance(*args)
+}
 
-    fun returnType(): Class<*> = delegate.returnType
+operator fun <R : Any> Field.get(obj: Any?): R? {
+    @Suppress("UNCHECKED_CAST")
+    return this.apply { isAccessible = true }[obj] as? R?
+}
 
-    fun modifiers(): Int = delegate.modifiers
+operator fun Field.set(obj: Any?, value: Any?): Field {
+    this.apply { isAccessible = true }[obj] = value
+    return this
+}
 
-    fun call(obj: T?, vararg args: Any?): Any? {
-        return delegate.apply { isAccessible = true }.invoke(obj, *args)
-    }
+fun Method.call(obj: Any?, vararg args: Any?): Any? {
+    return this.apply { isAccessible = true }.invoke(obj, *args)
 }

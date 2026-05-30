@@ -6,6 +6,11 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.xposed.get
+import cc.meteormc.yourmiui.xposed.hookAfter
+import cc.meteormc.yourmiui.xposed.hookBefore
+import cc.meteormc.yourmiui.xposed.hookResult
+import cc.meteormc.yourmiui.xposed.new
 import cc.meteormc.yourmiui.xposed.operator
 import org.json.JSONArray
 import org.json.JSONObject
@@ -249,7 +254,7 @@ object RemoveAds : FeatureHooker {
             val newInstance = constructor()!!.new()
             operator(this@Wrapper.javaClass) {
                 declaredFields().map {
-                    this@outer.field(it.name()) to it.get<Any>(this@Wrapper)
+                    this@outer.field(it.name) to it.get<Any>(this@Wrapper)
                 }.forEach { (field, value) ->
                     field?.set(newInstance, value)
                 }

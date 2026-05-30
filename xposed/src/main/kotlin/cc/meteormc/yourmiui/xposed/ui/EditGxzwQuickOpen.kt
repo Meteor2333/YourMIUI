@@ -10,8 +10,12 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
-import cc.meteormc.yourmiui.xposed.ConstructorWrapper
+import cc.meteormc.yourmiui.xposed.call
+import cc.meteormc.yourmiui.xposed.get
+import cc.meteormc.yourmiui.xposed.hookDoNothing
+import cc.meteormc.yourmiui.xposed.new
 import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.overrideResult
 
 @FeatureRegister(
     Category.UI,
@@ -113,7 +117,7 @@ object EditGxzwQuickOpen : FeatureHooker {
             return@ExtraQuickOpenItem true
         });
 
-        val constructor: ConstructorWrapper<*>? by lazy {
+        val constructor by lazy {
             if (clazzName == null) return@lazy null
             operator("com.android.keyguard.fod.item.$clazzName") {
                 // modifier: public | signature: <init>(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;)V

@@ -19,6 +19,10 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.api.annotation.SwitchOptionRegister
+import cc.meteormc.yourmiui.xposed.call
+import cc.meteormc.yourmiui.xposed.get
+import cc.meteormc.yourmiui.xposed.hookAfter
+import cc.meteormc.yourmiui.xposed.hookBefore
 import cc.meteormc.yourmiui.xposed.operator
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
@@ -112,10 +116,10 @@ object FixSplashScreen : FeatureHooker {
                 if (launchPackageNameField.get<String>(swi) != ALLOW_LAUNCH_PACKAGE) return@hookBefore
 
                 updateDensityMethod.call(it.instance)
-                iconSizeChannel.trySend(iconSizeField[it.instance])
-                iconDefaultSizeChannel.trySend(iconDefaultSizeField[it.instance])
+                iconSizeChannel.trySend(iconSizeField.get<Int>(it.instance))
+                iconDefaultSizeChannel.trySend(iconDefaultSizeField.get<Int>(it.instance))
                 activityInfoChannel.trySend(
-                    targetActivityInfoField[swi] ?: topActivityInfoField[taskInfoField[swi]]
+                    targetActivityInfoField.get<ActivityInfo>(swi) ?: topActivityInfoField.get<ActivityInfo>(taskInfoField[swi])
                 )
             }
 
