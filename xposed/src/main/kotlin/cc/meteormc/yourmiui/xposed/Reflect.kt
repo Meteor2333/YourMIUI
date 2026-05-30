@@ -51,9 +51,10 @@ class Reflect<T : Any>(val delegate: Class<T>) {
         }
 
         return runCatching {
-            delegate.getDeclaredConstructor(*paramTypes).apply {
-                constructorCache[fullName] = this
-            }
+            val constructor = delegate.getDeclaredConstructor(*paramTypes)
+            constructor.isAccessible = true
+            constructorCache[fullName] = constructor
+            constructor
         }.onFailure {
             XposedBridge.log("[YourMIUI] Constructor not found: $fullName!")
         }.getOrNull()
@@ -77,7 +78,9 @@ class Reflect<T : Any>(val delegate: Class<T>) {
             runCatching { it.getDeclaredField(name) }.getOrNull()
         }
         return if (field != null) {
-            field.apply { fieldCache[fullName] = this }
+            field.isAccessible = true
+            fieldCache[fullName] = field
+            field
         } else {
             XposedBridge.log("[YourMIUI] Field not found: $fullName!")
             null
@@ -132,7 +135,9 @@ class Reflect<T : Any>(val delegate: Class<T>) {
         }?.let { result = it }
 
         return if (result != null) {
-            result.apply { methodCache[fullName] = this }
+            result.isAccessible = true
+            methodCache[fullName] = result
+            result
         } else {
             XposedBridge.log("[YourMIUI] Method not found: $fullName!")
             null
