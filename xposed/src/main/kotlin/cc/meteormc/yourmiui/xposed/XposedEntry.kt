@@ -6,12 +6,14 @@ import android.os.Process
 import android.util.Log
 import cc.meteormc.yourmiui.FeatureRegistry
 import cc.meteormc.yourmiui.api.FeatureHooker
+import cc.meteormc.yourmiui.api.OptionType
 import cc.meteormc.yourmiui.api.annotation.EntryClass
+import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.api.util.ClassUtil
-import cc.meteormc.yourmiui.api.util.PrefsUtil
 import cc.meteormc.yourmiui.api.util.SingletonUtil
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
+import cc.meteormc.yourmiui.common.prefs.SharedPreferences
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedBridge
@@ -33,10 +35,15 @@ class XposedEntry : IXposedHookLoadPackage {
     lateinit var classLoader: ClassLoader
 
     private val prefs by lazy {
-        XSharedPreferences("cc.meteormc.yourmiui", PrefsUtil.SHARED_PREFERENCES_NAME).apply {
-            makeWorldReadable()
-            reload()
-        }
+        SharedPreferences(
+            XSharedPreferences(
+                "cc.meteormc.yourmiui",
+                SharedPreferences.SHARED_PREFERENCES_NAME
+            ).apply {
+                makeWorldReadable()
+                reload()
+            }
+        )
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -44,41 +51,41 @@ class XposedEntry : IXposedHookLoadPackage {
         classLoader = lpparam.classLoader
 
         val packageName = lpparam.packageName
-        initFeatures(lpparam.packageName) {
-            runCatching {
-                operator(it.javaClass) {
-                    for (field in declaredFields()) {
-                        // todo
-                        val value = null
+        FeatureRegistry.features[packageName]
+            ?.map { FeatureInfo.fromHooker(it) }
+            ?.forEach {
+                val prefs = prefs.getFeature(it)
+                if (!prefs.enabled) return@forEach
 
-                        val instance = if (Modifier.isStatic(field.modifiers)) {
+                runCatching {
+                    it.options.forEach { option ->
+                        val type = option.type
+                        val source = option.source
+                        val value = prefs.getOption(option.key, source.type) ?: when (type) {
+                            is OptionType.App -> type.defaultPackages
+                            is OptionType.List -> type.defaultOptions
+                            is OptionType.Switch -> type.defaultValue
+                            is OptionType.Text -> type.defaultText
+                        }
+
+                        val instance = if (Modifier.isStatic(source.modifiers)) {
                             null
                         } else {
-                            SingletonUtil.getInstance(delegate) as? FeatureHooker?
+                            SingletonUtil.getInstance(it.source) as? FeatureHooker?
                         }
-                        field[instance] = value
+                        source[instance] = value
                     }
+
+                    it.hooker.hook(packageName)
+                }.onFailure { exception ->
+                    XposedBridge.log(
+                        "[YourMIUI] Failed to " +
+                                "initialize feature '${it.javaClass.simpleName}' " +
+                                "in package '${packageName}':\n" +
+                                Log.getStackTraceString(exception)
+                    )
                 }
-
-//                feature.getOptions().forEach { option ->
-//                    val key = Feature.optionKeyOf(feature.key, option.key)
-//                    val value = prefs.getString(key, null)?.let { preference ->
-//                        option.type.deserializer(preference)
-//                    } ?: option.defaultValue
-//                    (option as Option<Any>).onValueInit(value)
-//                }
-
-                it.hook(packageName)
-            }.onFailure { exception ->
-                XposedBridge.log(
-                    "[YourMIUI] Failed to " +
-                            "initialize feature '${it.javaClass.simpleName}' " +
-                            "in package '${packageName}':\n" +
-                            Log.getStackTraceString(exception)
-                )
             }
-
-        }
 
         operator(Application::class.java) {
             method("attach")?.hookAfter {
@@ -107,11 +114,5 @@ class XposedEntry : IXposedHookLoadPackage {
                 field("apiVersion")?.set(null, apiVersion)
             }
         }
-    }
-
-    private fun initFeatures(packageName: String, initializer: (hooker: FeatureHooker) -> Unit) {
-        FeatureRegistry.features[packageName]
-            ?.filter { prefs.getBoolean(PrefsUtil.getFeatureEnabledKey(it.javaClass.simpleName), false) }
-            ?.forEach { initializer(it) }
     }
 }
