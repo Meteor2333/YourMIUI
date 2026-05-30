@@ -3,7 +3,7 @@ package cc.meteormc.yourmiui.helper
 import android.content.Context
 import android.net.Uri
 import androidx.core.content.edit
-import cc.meteormc.yourmiui.api.util.PrefsUtil
+import cc.meteormc.yourmiui.common.prefs.SharedPreferences
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 object PreferencesIO {
     const val MINE_TYPE = "application/json"
-    private const val SHARED_NAME = PrefsUtil.SHARED_PREFERENCES_NAME
+    private const val SHARED_NAME = SharedPreferences.SHARED_PREFERENCES_NAME
     private const val SETTINGS_NAME = SettingsPreferences.PREFERENCES_NAME
 
     suspend fun export(context: Context, uri: Uri): Boolean {

@@ -5,7 +5,6 @@ import android.app.Application
 import android.os.Bundle
 import cc.meteormc.yourmiui.common.bridge.Module
 import cc.meteormc.yourmiui.helper.SysVersion
-import cc.meteormc.yourmiui.preferences.FeaturePreferences
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -25,7 +24,6 @@ class YourMIUI : Application() {
     override fun onCreate() {
         super.onCreate()
         checkSystem()
-        FeaturePreferences.init(this)
         SettingsPreferences.init(this)
         initModuleBridge()
     }
