@@ -13,6 +13,7 @@ data class FeatureInfo(
     val description: Int,
     val warning: Int?,
     val originalAuthor: String?,
+    val options: List<OptionInfo>,
     val scopes: List<String>,
     val source: Class<*>,
     val hooker: FeatureHooker
@@ -30,6 +31,7 @@ data class FeatureInfo(
                 registerAnnotation.description.toInt(),
                 registerAnnotation.warning.toInt(),
                 registerAnnotation.originalAuthor.takeIf { it.isNotEmpty() },
+                source.declaredFields.mapNotNull { OptionInfo.fromSource(it) },
                 scopeAnnotations.map { it.value },
                 source,
                 hooker
