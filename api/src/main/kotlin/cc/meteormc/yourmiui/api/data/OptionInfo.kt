@@ -20,7 +20,7 @@ data class OptionInfo(
             if (source.isAnnotationPresent(AppOptionRegister::class.java)) {
                 val annotation = source.getDeclaredAnnotation(AppOptionRegister::class.java)!!
                 return OptionInfo(
-                    source.name,
+                    source.name.toSnakeCase(),
                     annotation.name.toInt(),
                     annotation.description.toInt(),
                     OptionType.App(
@@ -58,7 +58,7 @@ data class OptionInfo(
             if (source.isAnnotationPresent(SwitchOptionRegister::class.java)) {
                 val annotation = source.getDeclaredAnnotation(SwitchOptionRegister::class.java)!!
                 return OptionInfo(
-                    source.name,
+                    source.name.toSnakeCase(),
                     annotation.name.toInt(),
                     annotation.description.toInt(),
                     OptionType.Switch(annotation.defaultValue),
@@ -69,7 +69,7 @@ data class OptionInfo(
             if (source.isAnnotationPresent(TextOptionRegister::class.java)) {
                 val annotation = source.getDeclaredAnnotation(TextOptionRegister::class.java)!!
                 return OptionInfo(
-                    source.name,
+                    source.name.toSnakeCase(),
                     annotation.name.toInt(),
                     annotation.description.toInt(),
                     OptionType.Text(annotation.defaultText),
