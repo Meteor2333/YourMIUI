@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.common.util
+package cc.meteormc.yourmiui.api.util
 
 import java.lang.reflect.Field
 

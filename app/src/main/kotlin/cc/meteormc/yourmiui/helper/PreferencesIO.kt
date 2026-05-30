@@ -3,7 +3,7 @@ package cc.meteormc.yourmiui.helper
 import android.content.Context
 import android.net.Uri
 import androidx.core.content.edit
-import cc.meteormc.yourmiui.common.util.PrefsUtil
+import cc.meteormc.yourmiui.api.util.PrefsUtil
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

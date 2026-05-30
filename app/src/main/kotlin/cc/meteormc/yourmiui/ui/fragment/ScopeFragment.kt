@@ -8,7 +8,6 @@ import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.api.data.AppInfo
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.ResponseCallback
-import cc.meteormc.yourmiui.common.util.StorageUtil.getObject
 import cc.meteormc.yourmiui.databinding.FragmentScopeBinding
 import cc.meteormc.yourmiui.ui.widget.BottomSheet
 import java.util.concurrent.atomic.AtomicInteger
@@ -22,7 +21,7 @@ class ScopeFragment : BaseFragment<FragmentScopeBinding>({ inflater, container -
 //    private val scope: Scope?
 //        get() = arguments?.getObject("scope")
     private val apps: List<AppInfo>
-        get() = arguments?.getObject("apps") ?: emptyList()
+        get() = /*arguments?.getObject("apps") ?: */emptyList()
 
     override fun onCreate(): View {
         val scopeToolbar = binding.scopeToolbar

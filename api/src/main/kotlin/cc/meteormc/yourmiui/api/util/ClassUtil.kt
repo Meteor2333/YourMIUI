@@ -1,6 +1,6 @@
 @file:Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 
-package cc.meteormc.yourmiui.common.util
+package cc.meteormc.yourmiui.api.util
 
 import kotlin.math.abs
 

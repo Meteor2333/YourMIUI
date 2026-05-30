@@ -5,9 +5,9 @@ import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.data.FeatureInfo
+import cc.meteormc.yourmiui.api.util.ClassUtil
+import cc.meteormc.yourmiui.api.util.SingletonUtil
 import cc.meteormc.yourmiui.common.bridge.Bridge
-import cc.meteormc.yourmiui.common.util.ClassUtil
-import cc.meteormc.yourmiui.common.util.SingletonUtil
 import java.util.EnumMap
 
 object HostStore {

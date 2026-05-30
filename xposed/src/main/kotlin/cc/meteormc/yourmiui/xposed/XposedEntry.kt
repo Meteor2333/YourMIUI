@@ -7,11 +7,11 @@ import android.util.Log
 import cc.meteormc.yourmiui.FeatureRegistry
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.EntryClass
+import cc.meteormc.yourmiui.api.util.ClassUtil
+import cc.meteormc.yourmiui.api.util.PrefsUtil
+import cc.meteormc.yourmiui.api.util.SingletonUtil
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
-import cc.meteormc.yourmiui.common.util.ClassUtil
-import cc.meteormc.yourmiui.common.util.PrefsUtil
-import cc.meteormc.yourmiui.common.util.SingletonUtil
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedBridge
