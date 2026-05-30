@@ -24,7 +24,7 @@ data class OptionInfo(
                     annotation.name.toInt(),
                     annotation.description.toInt(),
                     OptionType.App(
-                        annotation.defaultPackages,
+                        annotation.defaultPackages.toSet(),
                         annotation.multiSelect
                     ),
                     source
@@ -48,7 +48,7 @@ data class OptionInfo(
                     annotation.description.toInt(),
                     OptionType.List(
                         options.zip(displayOptions).toMap(),
-                        annotation.defaultOptions,
+                        annotation.defaultOptions.toSet(),
                         annotation.multiSelect
                     ),
                     source
