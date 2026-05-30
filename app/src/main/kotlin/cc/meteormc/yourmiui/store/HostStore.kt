@@ -39,7 +39,7 @@ object HostStore {
             return@run feature.values
                 .flatten()
                 .distinct()
-                .map { FeatureInfo.fromSource(it.javaClass) }
+                .map { FeatureInfo.fromHooker(it) }
                 .groupBy { it.category }
         } ?: emptyMap()
     }
