@@ -39,15 +39,15 @@ object EditGxzwQuickOpen : FeatureHooker {
             "torch"
         ],
         [
-            "option_systemui_edit_gxzw_quick_open_reserved_items_add_event",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_qr_code",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_search",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_alipay_pay",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_alipay_scan",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_wechat_pay",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_wechat_scan",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_xiaoai",
-            "option_systemui_edit_gxzw_quick_open_reserved_items_torch"
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_add_event",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_qr_code",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_search",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_alipay_pay",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_alipay_scan",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_wechat_pay",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_wechat_scan",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_xiaoai",
+            "@string/option_ui_edit_gxzw_quick_open_reserved_items_torch"
         ],
         [
             "alipay_pay",

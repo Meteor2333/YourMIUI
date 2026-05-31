@@ -34,19 +34,19 @@ object HideStatusBarIcons : FeatureHooker {
             "wifi",
         ],
         [
-            "option_ui_hide_status_bar_icons_hidden_icons_privacy",
-            "option_ui_hide_status_bar_icons_hidden_icons_nfc",
-            "option_ui_hide_status_bar_icons_hidden_icons_zen",
-            "option_ui_hide_status_bar_icons_hidden_icons_cast",
-            "option_ui_hide_status_bar_icons_hidden_icons_bluetooth",
-            "option_ui_hide_status_bar_icons_hidden_icons_bluetooth_battery",
-            "option_ui_hide_status_bar_icons_hidden_icons_stealth",
-            "option_ui_hide_status_bar_icons_hidden_icons_volume",
-            "option_ui_hide_status_bar_icons_hidden_icons_alarm_clock",
-            "option_ui_hide_status_bar_icons_hidden_icons_vpn",
-            "option_ui_hide_status_bar_icons_hidden_icons_airplane",
-            "option_ui_hide_status_bar_icons_hidden_icons_hotspot",
-            "option_ui_hide_status_bar_icons_hidden_icons_wifi"
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_privacy",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_nfc",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_zen",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_cast",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_bluetooth",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_bluetooth_battery",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_stealth",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_volume",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_alarm_clock",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_vpn",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_airplane",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_hotspot",
+            "@string/option_ui_hide_status_bar_icons_hidden_icons_wifi"
         ]
     )
     private lateinit var hiddenIcons: Set<String>
