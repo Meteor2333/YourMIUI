@@ -145,7 +145,7 @@ class AnnotationProcessor(
             )
 
             scopes.forEach { scope ->
-                it.write("    <item>$scope</item>\n")
+                it.write("        <item>$scope</item>\n")
             }
 
             it.write(
