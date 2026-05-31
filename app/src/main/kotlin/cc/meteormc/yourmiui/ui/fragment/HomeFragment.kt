@@ -1,5 +1,6 @@
 package cc.meteormc.yourmiui.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.view.View
@@ -7,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.api.util.PropertiesUtil
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.helper.UpdateChecker
@@ -63,11 +65,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bindDeviceInfo() {
-        binding.infoDeviceBrand.text = Build.BRAND
-        binding.infoDeviceModel.text = Build.MODEL
+        binding.infoDeviceModel.text = PropertiesUtil.get("ro.product.marketname")
         binding.infoSystemCode.text = Build.DEVICE
-        binding.infoAndroidVersion.text = Build.VERSION.RELEASE
+        binding.infoAndroidVersion.text = "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
         binding.infoMiuiVersion.text = SysVersion.getCurrent().code.toString()
         binding.infoCpuAbi.text = Build.SUPPORTED_ABIS.firstOrNull() ?: System.getProperty("os.arch", Build.UNKNOWN)
     }
