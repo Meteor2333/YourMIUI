@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.ui.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
@@ -12,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
-import cc.meteormc.yourmiui.api.data.AppInfo
 import cc.meteormc.yourmiui.databinding.ItemAppBinding
 import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class AppPicker(
     private val context: Context,
@@ -82,14 +83,13 @@ class AppPicker(
         container.addView(appList)
 
         fun loadAppInfos(): Flow<AppInfo> = flow {
-            // todo
             installedApps.forEach {
-//                val info = AppInfo(
-//                    it.packageName,
-//                    pm.getApplicationLabel(it).toString(),
-//                    pm.getApplicationIcon(it).toBitmap()
-//                )
-//                emit(info)
+                val info = AppInfo(
+                    it.packageName,
+                    pm.getApplicationLabel(it).toString(),
+                    pm.getApplicationIcon(it)
+                )
+                emit(info)
             }
         }
 
@@ -123,6 +123,16 @@ class AppPicker(
     fun setSaveListener(listener: (selected: Set<String>) -> Unit): AppPicker {
         saveListener = listener
         return this
+    }
+
+    private data class AppInfo(
+        val packageName: String,
+        val label: String,
+        val icon: Drawable
+    ) : Serializable {
+        override fun equals(other: Any?) = other is AppInfo && packageName == other.packageName
+
+        override fun hashCode() = packageName.hashCode()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -206,8 +216,7 @@ class AppPicker(
             return object : BaseViewHolder(binding, binding.root) {
                 override fun onBind(item: AppInfo?) {
                     if (item == null) return
-                    // todo
-//                    binding.appIcon.setImageBitmap(item.icon)
+                    binding.appIcon.setImageDrawable(item.icon)
                     binding.appName.text = item.label
 
                     val checkbox = binding.checkbox
