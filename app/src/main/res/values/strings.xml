@@ -82,6 +82,14 @@
     <string name="settings_misc_import_success">导入成功！</string>
     <string name="settings_misc_import_failure">导入失败！\n请检查首选项文件后重试</string>
 
+    <string name="category_system">系统</string>
+    <string name="category_ui">界面</string>
+    <string name="category_desktop">桌面</string>
+    <string name="category_miuiplus">MIUI+</string>
+    <string name="category_nfc">NFC</string>
+    <string name="category_notification">通知</string>
+    <string name="category_packageinstaller">软件安装器</string>
+
     <string name="feature_system_block_process_kill_name">阻止结束进程</string>
     <string name="feature_system_block_process_kill_description">阻止系统或第三方应用结束指定软件的进程</string>
     <string name="option_system_block_process_kill_blocked_packages_name">阻止的软件列表</string>

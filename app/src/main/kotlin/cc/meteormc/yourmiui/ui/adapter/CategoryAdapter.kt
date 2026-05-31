@@ -58,15 +58,15 @@ class CategoryAdapter(
             }
 
             return when (category) {
-                Category.SYSTEM -> provideByPkg("android")
-                Category.UI -> provideByPkg("com.android.systemui")
-                Category.DESKTOP -> provideByPkg("com.miui.home")
+                Category.SYSTEM -> provideByRes(R.string.category_system)
+                Category.UI -> provideByRes(R.string.category_ui)
+                Category.DESKTOP -> provideByRes(R.string.category_desktop)
                 Category.MARTET -> provideByPkg("com.xiaomi.market")
-                Category.MIUI_PLUS -> provideByPkg("com.xiaomi.mirror")
+                Category.MIUI_PLUS -> provideByRes(R.string.category_miuiplus)
                 Category.MMS -> provideByPkg("com.android.mms")
-                Category.NFC -> provideByPkg("com.android.nfc")
-                Category.NOTIFICATION -> provideByPkg("com.miui.notification")
-                Category.PACKAGE_INSTALLER -> provideByPkg("com.miui.packageinstaller")
+                Category.NFC -> provideByRes(R.string.category_nfc)
+                Category.NOTIFICATION -> provideByRes(R.string.category_notification)
+                Category.PACKAGE_INSTALLER -> provideByRes(R.string.category_packageinstaller)
                 Category.PORTAL -> provideByPkg("com.miui.contentextension")
                 Category.SECURITY_CENTER -> provideByPkg("com.miui.securitycenter")
                 Category.SETTINGS -> provideByPkg("com.android.settings")
