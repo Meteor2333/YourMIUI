@@ -3,6 +3,7 @@ package cc.meteormc.yourmiui.ui.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -24,12 +25,14 @@ import kotlinx.coroutines.launch
 
 class AppPicker(
     private val context: Context,
-    private val selected: Collection<String>
+    private val selected: Collection<String>,
+    private val multiSelect: Boolean
 ) : MaterialAlertDialogBuilder(context) {
     companion object {
         private var appCache: List<AppInfo> = emptyList()
     }
 
+    private lateinit var dialog: AlertDialog
     private var saveListener: (selected: Set<String>) -> Unit = { }
 
     override fun create(): AlertDialog {
@@ -79,6 +82,7 @@ class AppPicker(
         container.addView(appList)
 
         fun loadAppInfos(): Flow<AppInfo> = flow {
+            // todo
             installedApps.forEach {
 //                val info = AppInfo(
 //                    it.packageName,
@@ -108,8 +112,11 @@ class AppPicker(
 
         setView(container)
         setTitle(R.string.app_picker_title)
-        setNegativeButton(android.R.string.cancel, null)
-        setPositiveButton(android.R.string.ok) { _, _ -> saveListener(adapter.selected) }
+        if (multiSelect) {
+            setNegativeButton(android.R.string.cancel, null)
+            setPositiveButton(android.R.string.ok) { _, _ -> saveListener(adapter.selected) }
+        }
+
         return super.create()
     }
 
@@ -119,7 +126,7 @@ class AppPicker(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private class AppAdapter(
+    private inner class AppAdapter(
         size: Int,
         val selected: MutableSet<String>
     ) : BaseAdapter<ItemAppBinding, AppInfo?>(
@@ -199,21 +206,29 @@ class AppPicker(
             return object : BaseViewHolder(binding, binding.root) {
                 override fun onBind(item: AppInfo?) {
                     if (item == null) return
+                    // todo
 //                    binding.appIcon.setImageBitmap(item.icon)
                     binding.appName.text = item.label
 
                     val checkbox = binding.checkbox
-                    checkbox.setOnCheckedChangeListener(null)
-                    checkbox.isChecked = selected.contains(item.packageName)
-
                     fun toggle(isChecked: Boolean) {
+                        if (!multiSelect) {
+                            dialog.dismiss()
+                            saveListener(setOf(item.packageName))
+                            return
+                        }
+
                         if (isChecked) selected.add(item.packageName)
                         else selected.remove(item.packageName)
                         notifyItemChanged(layoutPosition)
                     }
 
-                    checkbox.setOnCheckedChangeListener { _, isChecked ->
-                        toggle(isChecked)
+                    if (multiSelect) {
+                        checkbox.visibility = View.VISIBLE
+                        checkbox.isChecked = selected.contains(item.packageName)
+                        checkbox.setOnCheckedChangeListener { _, isChecked ->
+                            toggle(isChecked)
+                        }
                     }
 
                     itemView.setOnClickListener {
