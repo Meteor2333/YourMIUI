@@ -2,9 +2,10 @@ package cc.meteormc.yourmiui.common.prefs
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import cc.meteormc.yourmiui.api.OptionType
 import cc.meteormc.yourmiui.api.data.FeatureInfo
 
-class SharedPreferences(private val prefs: SharedPreferences) {
+class SharedPreferences(val prefs: SharedPreferences) {
     companion object {
         const val SHARED_PREFERENCES_NAME = "shared"
     }
@@ -12,7 +13,7 @@ class SharedPreferences(private val prefs: SharedPreferences) {
     fun getFeature(feature: FeatureInfo) = Feature(feature.key)
 
     inner class Feature internal constructor(featureKey: String) {
-        private val featureKey = "feature_$featureKey"
+        val featureKey = "feature_$featureKey"
 
         var enabled: Boolean
             get() = prefs.getBoolean("${featureKey}_enabled", false)
@@ -30,16 +31,16 @@ class SharedPreferences(private val prefs: SharedPreferences) {
                 value.forEach { (k, v) -> setOption(k, v) }
             }
 
-        fun <T> getOption(key: String, type: Class<T>): T? {
+        inline fun <reified T> getOption(key: String, type: OptionType<T>): T? {
             val format = "${featureKey}_option_$key"
             @Suppress("UNCHECKED_CAST")
-            return when (type) {
-                String::class.java -> prefs.getString(format, null)
-                Boolean::class.java -> prefs.getBoolean(format, false)
-                Int::class.java -> prefs.getInt(format, -1)
-                Long::class.java -> prefs.getLong(format, -1L)
-                Float::class.java -> prefs.getFloat(format, -1F)
-                Set::class.java -> prefs.getStringSet(format, null)
+            return when (T::class) {
+                String::class -> prefs.getString(format, null)
+                Boolean::class -> prefs.getBoolean(format, false)
+                Int::class -> prefs.getInt(format, -1)
+                Long::class -> prefs.getLong(format, -1L)
+                Float::class -> prefs.getFloat(format, -1F)
+                Set::class -> prefs.getStringSet(format, null)
                 else -> throw IllegalArgumentException("Unsupported type: $type")
             } as T?
         }
