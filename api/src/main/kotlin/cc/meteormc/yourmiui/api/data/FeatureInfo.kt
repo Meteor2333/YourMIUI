@@ -9,9 +9,9 @@ import cc.meteormc.yourmiui.api.util.NamingCaseUtil.toSnakeCase
 data class FeatureInfo(
     val key: String,
     val category: Category,
-    val name: Int,
-    val description: Int,
-    val warning: Int?,
+    val name: String,
+    val description: String,
+    val warning: String?,
     val originalAuthor: String?,
     val options: List<OptionInfo>,
     val scopes: List<String>,
@@ -26,10 +26,9 @@ data class FeatureInfo(
             return FeatureInfo(
                 source.simpleName.toSnakeCase(),
                 registerAnnotation.category,
-                // todo: toInt只是为了过编译，后续需要改成解析真正的字符串资源id
-                registerAnnotation.name.toInt(),
-                registerAnnotation.description.toInt(),
-                registerAnnotation.warning.toInt(),
+                registerAnnotation.name,
+                registerAnnotation.description,
+                registerAnnotation.warning.takeIf { it.isNotEmpty() },
                 registerAnnotation.originalAuthor.takeIf { it.isNotEmpty() },
                 source.declaredFields.mapNotNull { OptionInfo.fromSource(it) },
                 scopeAnnotations.map { it.value },

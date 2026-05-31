@@ -10,8 +10,8 @@ import java.lang.reflect.Field
 
 data class OptionInfo(
     val key: String,
-    val name: Int,
-    val description: Int,
+    val name: String,
+    val description: String,
     val type: OptionType<*>,
     val source: Field
 ) {
@@ -21,8 +21,8 @@ data class OptionInfo(
                 val annotation = source.getDeclaredAnnotation(AppOptionRegister::class.java)!!
                 return OptionInfo(
                     source.name.toSnakeCase(),
-                    annotation.name.toInt(),
-                    annotation.description.toInt(),
+                    annotation.name,
+                    annotation.description,
                     OptionType.App(
                         annotation.defaultPackages.toSet(),
                         annotation.multiSelect
@@ -34,18 +34,15 @@ data class OptionInfo(
             if (source.isAnnotationPresent(ListOptionRegister::class.java)) {
                 val annotation = source.getDeclaredAnnotation(ListOptionRegister::class.java)!!
                 val options = annotation.options
-                val displayOptions = annotation.displayOptions.map {
-                    // todo: toInt只是为了过编译，后续需要改成解析真正的字符串资源id
-                    it.toInt()
-                }
+                val displayOptions = annotation.displayOptions
                 if (options.size != displayOptions.size) {
                     throw IllegalArgumentException("Options and display options must have the same length")
                 }
 
                 return OptionInfo(
                     source.name.toSnakeCase(),
-                    annotation.name.toInt(),
-                    annotation.description.toInt(),
+                    annotation.name,
+                    annotation.description,
                     OptionType.List(
                         options.zip(displayOptions).toMap(),
                         annotation.defaultOptions.toSet(),
@@ -59,8 +56,8 @@ data class OptionInfo(
                 val annotation = source.getDeclaredAnnotation(SwitchOptionRegister::class.java)!!
                 return OptionInfo(
                     source.name.toSnakeCase(),
-                    annotation.name.toInt(),
-                    annotation.description.toInt(),
+                    annotation.name,
+                    annotation.description,
                     OptionType.Switch(annotation.defaultValue),
                     source
                 )
@@ -70,8 +67,8 @@ data class OptionInfo(
                 val annotation = source.getDeclaredAnnotation(TextOptionRegister::class.java)!!
                 return OptionInfo(
                     source.name.toSnakeCase(),
-                    annotation.name.toInt(),
-                    annotation.description.toInt(),
+                    annotation.name,
+                    annotation.description,
                     OptionType.Text(annotation.defaultText),
                     source
                 )

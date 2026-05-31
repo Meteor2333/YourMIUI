@@ -7,7 +7,7 @@ sealed class OptionType<T> {
     ) : OptionType<Set<String>>()
 
     class List(
-        val options: Map<String, Int>,
+        val options: Map<String, String>,
         val defaultOptions: Set<String>,
         val multiSelect: Boolean
     ) : OptionType<Set<String>>()
