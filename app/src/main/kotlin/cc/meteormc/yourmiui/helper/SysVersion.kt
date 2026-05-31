@@ -1,7 +1,7 @@
 package cc.meteormc.yourmiui.helper
 
-import android.annotation.SuppressLint
 import android.os.Build
+import cc.meteormc.yourmiui.api.util.PropertiesUtil
 
 enum class SysVersion(val code: Int, val prefix: String) {
     MIUI_UNSUPPORTED(0, "V"),
@@ -21,15 +21,9 @@ enum class SysVersion(val code: Int, val prefix: String) {
 
     companion object {
         private const val VERSION_PROPERTY_KEY = "ro.miui.ui.version.code"
+
         private val currentSysVersion by lazy {
-            var versionCode = runCatching {
-                @SuppressLint("PrivateApi")
-                Class.forName("android.os.SystemProperties").getDeclaredMethod(
-                    "getInt",
-                    String::class.java,
-                    Int::class.javaPrimitiveType
-                ).also { it.isAccessible = true }.invoke(null, VERSION_PROPERTY_KEY, -1) as Int
-            }.getOrDefault(0)
+            var versionCode = PropertiesUtil.getInt(VERSION_PROPERTY_KEY)
             if (versionCode <= 0) OTHER
             else entries.find { it.code == versionCode } ?: MIUI_UNSUPPORTED
         }
