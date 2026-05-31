@@ -33,7 +33,7 @@ class SharedPreferences(val prefs: SharedPreferences) {
             }
 
         inline fun <reified T> getOption(key: String, type: OptionType<T>): T? {
-            val format = "${featureKey}_option_$key"
+            val format = "${featureKey}_options_$key"
             @Suppress("UNCHECKED_CAST")
             return when (T::class) {
                 String::class -> prefs.getString(format, null)
