@@ -64,31 +64,6 @@
                     android:visibility="gone"
                     tools:listitem="@layout/item_scope" />
 
-                <LinearLayout
-                    android:id="@+id/empty_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="150dp"
-                    android:visibility="gone">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:src="@drawable/ic_empty_48dp"
-                        android:tint="?android:attr/textColorSecondary" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/manager_empty"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-                </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>

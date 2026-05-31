@@ -19,14 +19,12 @@ object HostStore {
     fun init() {
         val apiName = Bridge.apiName
         val apiVersion = Bridge.apiVersion
-        if (apiName == null || apiVersion == null) {
-            this.isActivated.value = false
-            return
+        if (apiName != null && apiVersion != null) {
+            this.apiName.value = apiName
+            this.apiVersion.value = apiVersion
+            this.isActivated.value = true
         }
 
-        this.apiName.value = apiName
-        this.apiVersion.value = apiVersion
-        this.isActivated.value = true
         this.features.value = ClassUtil.getClass(
             javaClass.classLoader!!,
             "${BuildConfig.APPLICATION_ID}.FeatureRegistry",

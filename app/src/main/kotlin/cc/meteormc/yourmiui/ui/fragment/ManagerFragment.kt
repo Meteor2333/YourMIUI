@@ -10,13 +10,10 @@ class ManagerFragment : BaseFragment<FragmentManagerBinding>({ inflater, contain
     FragmentManagerBinding.inflate(inflater, container, false)
 }) {
     override fun onCreate(): View {
-        val emptyView = binding.emptyView
         val scopeList = binding.scopeList
-        emptyView.visibility = View.VISIBLE
         scopeList.layoutManager = LinearLayoutManager(requireContext())
         HostStore.features.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
-            emptyView.visibility = View.GONE
             scopeList.visibility = View.VISIBLE
             scopeList.adapter = CategoryAdapter(it.keys.toList())
         }
