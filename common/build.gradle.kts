@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.agp.library)
-    alias(libs.plugins.kotlin.parcelize)
 }
 
 val projectNamespace: String by rootProject.extra
