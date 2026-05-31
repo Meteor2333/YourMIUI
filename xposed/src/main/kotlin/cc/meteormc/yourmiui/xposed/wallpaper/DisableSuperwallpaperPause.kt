@@ -1,4 +1,4 @@
-package cc.meteormc.yourmiui.xposed.superwallpaper
+package cc.meteormc.yourmiui.xposed.wallpaper
 
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
@@ -18,7 +18,7 @@ import cc.meteormc.yourmiui.xposed.operator
 @RequiredScope("com.miui.miwallpaper.mars")
 @RequiredScope("com.miui.miwallpaper.saturn")
 @RequiredScope("com.miui.miwallpaper.snowmountain")
-object DisablePause : FeatureHooker {
+object DisableSuperwallpaperPause : FeatureHooker {
     override fun hook(packageName: String) {
         operator("com.miui.miwallpaper.basesuperwallpaper.SuperWallpaper") {
             // modifier: protected | signature: getDeskPauseDelay()I

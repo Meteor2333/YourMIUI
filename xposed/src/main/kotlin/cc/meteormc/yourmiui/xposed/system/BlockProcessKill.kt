@@ -21,7 +21,7 @@ import cc.meteormc.yourmiui.xposed.operator
 object BlockProcessKill : FeatureHooker {
     @AppOptionRegister(
         "@string/option_system_block_process_kill_blocked_packages_name",
-        "@string/option_system_block_process_kill_blocked_packages_summary"
+        "@string/option_system_block_process_kill_blocked_packages_description"
     )
     private lateinit var blockedPackages: Set<String>
 

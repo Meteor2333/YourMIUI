@@ -17,7 +17,7 @@ import cc.meteormc.yourmiui.xposed.operator
 object HideStatusBarIcons : FeatureHooker {
     @ListOptionRegister(
         "@string/option_ui_hide_status_bar_icons_hidden_icons_name",
-        "@string/option_ui_hide_status_bar_icons_hidden_icons_summary",
+        "@string/option_ui_hide_status_bar_icons_hidden_icons_description",
         [
             "privacy_mode",
             "nfc",
