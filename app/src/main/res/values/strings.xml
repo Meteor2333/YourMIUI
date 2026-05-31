@@ -12,6 +12,8 @@
     <string name="syscheck_ignore">忽略</string>
     <string name="syscheck_exit">退出</string>
 
+    <string name="resource_unknown">未知</string>
+
     <string name="title_home">主页</string>
     <string name="title_manager">管理</string>
     <string name="title_settings">设置</string>
