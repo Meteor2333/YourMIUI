@@ -229,7 +229,6 @@ class AppPicker(
 
                         if (isChecked) selected.add(item.packageName)
                         else selected.remove(item.packageName)
-                        notifyItemChanged(layoutPosition)
                     }
 
                     if (multiSelect) {
