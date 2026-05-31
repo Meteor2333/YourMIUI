@@ -23,8 +23,8 @@
 
     <fragment
         android:id="@+id/navigation_scope"
-        android:name="cc.meteormc.yourmiui.ui.fragment.ScopeFragment"
+        android:name="cc.meteormc.yourmiui.ui.fragment.CategoryFragment"
         android:label="scope"
-        tools:layout="@layout/fragment_scope" />
+        tools:layout="@layout/fragment_category" />
 
 </navigation>

@@ -1,9 +1,11 @@
 package cc.meteormc.yourmiui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import cc.meteormc.yourmiui.common.bridge.Module
+import cc.meteormc.yourmiui.common.prefs.SharedPreferences
 import cc.meteormc.yourmiui.helper.SysVersion
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,6 +22,26 @@ class YourMIUI : Application() {
     }
 
     val moduleBridge = Module(this)
+    val prefs by lazy {
+        SharedPreferences(
+            // Xposed会阻止此方法SecurityException的发生
+            // 但是如果还没启用模块或者因为各种神秘问题导致报错
+            // 就先用MODE_PRIVATE
+            runCatching {
+                @Suppress("DEPRECATION")
+                @SuppressLint("WorldReadableFiles")
+                this.getSharedPreferences(
+                    SharedPreferences.SHARED_PREFERENCES_NAME,
+                    MODE_WORLD_READABLE
+                )
+            }.getOrElse {
+                this.getSharedPreferences(
+                    SharedPreferences.SHARED_PREFERENCES_NAME,
+                    MODE_PRIVATE
+                )
+            }
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()

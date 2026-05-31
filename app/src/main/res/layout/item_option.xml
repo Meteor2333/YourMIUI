@@ -17,7 +17,7 @@
         android:textSize="16sp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/option_summary"
+        android:id="@+id/option_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.BodySmall"

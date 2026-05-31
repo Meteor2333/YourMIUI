@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.ScopeFragment">
+    tools:context=".ui.fragment.CategoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             app:titleCollapseMode="scale">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/scope_toolbar"
+                android:id="@+id/category_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
