@@ -2,6 +2,7 @@ package cc.meteormc.yourmiui.common.prefs
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.OptionType
 import cc.meteormc.yourmiui.api.data.FeatureInfo
 
@@ -10,10 +11,10 @@ class SharedPreferences(val prefs: SharedPreferences) {
         const val SHARED_PREFERENCES_NAME = "shared"
     }
 
-    fun getFeature(feature: FeatureInfo) = Feature(feature.key)
+    fun getFeature(feature: FeatureInfo) = Feature(feature.category, feature.key)
 
-    inner class Feature internal constructor(featureKey: String) {
-        val featureKey = "feature_$featureKey"
+    inner class Feature internal constructor(category: Category, featureKey: String) {
+        val featureKey = "feature_${category.name.lowercase()}_$featureKey"
 
         var enabled: Boolean
             get() = prefs.getBoolean("${featureKey}_enabled", false)
