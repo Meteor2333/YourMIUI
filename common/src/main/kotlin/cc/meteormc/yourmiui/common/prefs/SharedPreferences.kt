@@ -28,7 +28,7 @@ class SharedPreferences(val prefs: SharedPreferences) {
                 prefs.all.keys
                     .filter { it.startsWith("${featureKey}_options") }
                     .forEach { remove(it) }
-                value.forEach { (k, v) -> setOption(k, v) }
+                value.forEach { (k, v) -> setOption(k, v, null) }
             }
 
         inline fun <reified T> getOption(key: String, type: OptionType<T>): T? {
@@ -45,7 +45,7 @@ class SharedPreferences(val prefs: SharedPreferences) {
             } as T?
         }
 
-        fun <T> setOption(key: String, value: T) {
+        fun <T> setOption(key: String, value: T, type: OptionType<T>?) {
             prefs.edit {
                 val format = "${featureKey}_options_$key"
                 when (value) {
