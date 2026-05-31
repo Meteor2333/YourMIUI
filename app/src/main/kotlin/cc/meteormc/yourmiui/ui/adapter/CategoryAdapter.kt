@@ -9,36 +9,33 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.api.Category
-import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.databinding.ItemScopeBinding
 
 class CategoryAdapter(
-    scopes: Map<Category, List<FeatureInfo>>
-) : BaseAdapter<ItemScopeBinding, Pair<Category, List<FeatureInfo>>>(
+    scopes: List<Category>
+) : BaseAdapter<ItemScopeBinding, Category>(
     scopes.toList().toTypedArray(),
     { inflater, parent -> ItemScopeBinding.inflate(inflater, parent, false) }
 ) {
-    override fun newHolder(binding: ItemScopeBinding): BaseAdapter<ItemScopeBinding, Pair<Category, List<FeatureInfo>>>.BaseViewHolder {
+    override fun newHolder(binding: ItemScopeBinding): BaseAdapter<ItemScopeBinding, Category>.BaseViewHolder {
         return ViewHolder(binding)
     }
 
     private inner class ViewHolder(
         binding: ItemScopeBinding
-    ) : BaseAdapter<ItemScopeBinding, Pair<Category, List<FeatureInfo>>>.BaseViewHolder(
+    ) : BaseAdapter<ItemScopeBinding, Category>.BaseViewHolder(
         binding,
         binding.root
     ) {
-        override fun onBind(item: Pair<Category, List<FeatureInfo>>) {
-            val category = item.first
-            val features = item.second
+        override fun onBind(item: Category) {
             // todo: 这里的获取方式比较耗时，后面会迁移到App打开时加载应用缓存
-            val name = getCategoryName(category)
-            val icon = getCategoryIcon(category)
+            val name = getCategoryName(item)
+            val icon = getCategoryIcon(item)
 
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("title", name)
-                bundle.putSerializable("features", features.toCollection(ArrayList()))
+                bundle.putInt("category", item.ordinal)
                 it.findNavController().navigate(R.id.action_manager_to_scope, bundle)
             }
 

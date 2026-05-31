@@ -18,7 +18,7 @@ class ManagerFragment : BaseFragment<FragmentManagerBinding>({ inflater, contain
             if (it.isEmpty()) return@observe
             emptyView.visibility = View.GONE
             scopeList.visibility = View.VISIBLE
-            scopeList.adapter = CategoryAdapter(it)
+            scopeList.adapter = CategoryAdapter(it.keys.toList())
         }
 
         return binding.root
