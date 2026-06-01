@@ -35,14 +35,14 @@ class SharedPreferences(val prefs: SharedPreferences) {
         inline fun <reified T> getOption(key: String, type: OptionType<T>): T? {
             val format = "${featureKey}_options_$key"
             @Suppress("UNCHECKED_CAST")
-            return when (T::class) {
+            return when (val clazz = T::class) {
                 String::class -> prefs.getString(format, null)
                 Boolean::class -> prefs.getBoolean(format, false)
                 Int::class -> prefs.getInt(format, -1)
                 Long::class -> prefs.getLong(format, -1L)
                 Float::class -> prefs.getFloat(format, -1F)
                 Set::class -> prefs.getStringSet(format, null)
-                else -> throw IllegalArgumentException("Unsupported type: $type")
+                else -> throw IllegalArgumentException("Unsupported type: $clazz")
             } as T?
         }
 
