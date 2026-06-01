@@ -7,6 +7,7 @@ import cc.meteormc.yourmiui.common.prefs.SharedPreferences
 import cc.meteormc.yourmiui.preferences.SettingsPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 
 object PreferencesIO {
@@ -35,7 +36,10 @@ object PreferencesIO {
             .all
             .entries
             .forEach {
-                single.put(it.key, it.value)
+                var value = it.value
+                if (value is Array<*>) value = value.toList()
+                if (value is Collection<*>) value = JSONArray(value)
+                single.put(it.key, value)
             }
         json.put(name, single)
     }
@@ -64,10 +68,14 @@ object PreferencesIO {
             preferences.edit {
                 when (value) {
                     is String -> putString(it, value)
+                    is Boolean -> putBoolean(it, value)
                     is Int -> putInt(it, value)
                     is Long -> putLong(it, value)
-                    is Float -> putFloat(it, value)
-                    is Boolean -> putBoolean(it, value)
+                    is Float, Double -> putFloat(it, (value as Number).toFloat())
+                    is JSONArray -> putStringSet(
+                        it,
+                        List(value.length()) { i -> value.optString(i) }.toSet()
+                    )
                 }
             }
         }
