@@ -54,7 +54,8 @@ object FixSplashScreen : FeatureHooker {
         val background: Int
     )
 
-    override fun hook(packageName: String) {val swiClass = operator("android.window.StartingWindowInfo") ?: return
+    override fun hook(packageName: String) {
+        val swiClass = operator("android.window.StartingWindowInfo") ?: return
         // name: targetActivityInfo | type: android.content.pm.ActivityInfo
         val targetActivityInfoField = swiClass.field("targetActivityInfo") ?: return
         // name: taskInfo | type: android.app.ActivityManager$RunningTaskInfo
@@ -86,6 +87,7 @@ object FixSplashScreen : FeatureHooker {
             val isDark = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
             val pm = context.packageManager
+            val packageName = this.packageName
             val icon = pm.getApplicationIcon(realIconMapping[packageName to targetActivity] ?: packageName)
             val info = infoCache.getOrPut(packageName) {
                 SplashScreenInfo(
