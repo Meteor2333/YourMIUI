@@ -17,6 +17,8 @@ data class OptionInfo(
 ) {
     companion object {
         fun fromSource(source: Field): OptionInfo? {
+            source.isAccessible = true
+
             if (source.isAnnotationPresent(AppOptionRegister::class.java)) {
                 val annotation = source.getDeclaredAnnotation(AppOptionRegister::class.java)!!
                 return OptionInfo(

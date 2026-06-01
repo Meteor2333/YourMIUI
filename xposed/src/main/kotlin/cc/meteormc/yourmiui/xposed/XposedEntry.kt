@@ -9,6 +9,7 @@ import cc.meteormc.yourmiui.api.OptionType
 import cc.meteormc.yourmiui.api.annotation.EntryClass
 import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.api.util.ClassUtil
+import cc.meteormc.yourmiui.api.util.PrimitiveUtil
 import cc.meteormc.yourmiui.api.util.SingletonUtil
 import cc.meteormc.yourmiui.common.bridge.Bridge
 import cc.meteormc.yourmiui.common.bridge.Host
@@ -59,19 +60,18 @@ class XposedEntry : IXposedHookLoadPackage {
                 runCatching {
                     it.options.forEach { option ->
                         val source = option.source
-                        val type = option.type as OptionType<Any>
-                        val value = prefs.getOption(option.key, type) ?: when (type) {
-                            is OptionType.App -> type.defaultPackages
-                            is OptionType.List -> type.defaultOptions
-                            is OptionType.Switch -> type.defaultValue
-                            is OptionType.Text -> type.defaultText
+                        val type = option.type
+                        val value = when (type) {
+                            is OptionType.App -> prefs.getOption(option.key, type) ?: type.defaultPackages
+                            is OptionType.List -> prefs.getOption(option.key, type) ?: type.defaultOptions
+                            is OptionType.Switch -> prefs.getOption(option.key, type) ?: type.defaultValue
+                            is OptionType.Text -> prefs.getOption(option.key, type) ?: type.defaultText
                         }
 
-                        if (!source.type.isAssignableFrom(value::class.java)) {
+                        if (!PrimitiveUtil.canAssign(value.javaClass, source.type)) {
                             throw IllegalStateException(
                                 "Option '${option.key}' in feature '${it.javaClass.simpleName}' " +
-                                        "expects a value of type ${source.type}, " +
-                                        "but got ${value::class.java}"
+                                        "expects a value of type ${source.type}, but got ${value.javaClass}"
                             )
                         }
 
