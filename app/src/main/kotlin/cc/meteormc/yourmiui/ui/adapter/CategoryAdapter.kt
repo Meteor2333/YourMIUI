@@ -9,21 +9,21 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.api.Category
-import cc.meteormc.yourmiui.databinding.ItemScopeBinding
+import cc.meteormc.yourmiui.databinding.ItemCategoryBinding
 
 class CategoryAdapter(
     scopes: List<Category>
-) : BaseAdapter<ItemScopeBinding, Category>(
+) : BaseAdapter<ItemCategoryBinding, Category>(
     scopes.toList().toTypedArray(),
-    { inflater, parent -> ItemScopeBinding.inflate(inflater, parent, false) }
+    { inflater, parent -> ItemCategoryBinding.inflate(inflater, parent, false) }
 ) {
-    override fun newHolder(binding: ItemScopeBinding): BaseAdapter<ItemScopeBinding, Category>.BaseViewHolder {
+    override fun newHolder(binding: ItemCategoryBinding): BaseAdapter<ItemCategoryBinding, Category>.BaseViewHolder {
         return ViewHolder(binding)
     }
 
     private inner class ViewHolder(
-        binding: ItemScopeBinding
-    ) : BaseAdapter<ItemScopeBinding, Category>.BaseViewHolder(
+        binding: ItemCategoryBinding
+    ) : BaseAdapter<ItemCategoryBinding, Category>.BaseViewHolder(
         binding,
         binding.root
     ) {
@@ -36,11 +36,11 @@ class CategoryAdapter(
                 val bundle = Bundle()
                 bundle.putString("title", name)
                 bundle.putInt("category", item.ordinal)
-                it.findNavController().navigate(R.id.action_manager_to_scope, bundle)
+                it.findNavController().navigate(R.id.action_home_to_category, bundle)
             }
 
-            binding.scopeName.text = name
-            binding.scopeIcon.setImageDrawable(icon)
+            binding.categoryName.text = name
+            binding.categoryIcon.setImageDrawable(icon)
         }
 
         private fun getCategoryName(category: Category): String {

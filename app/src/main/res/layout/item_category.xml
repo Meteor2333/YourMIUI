@@ -5,22 +5,24 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    android:padding="16dp">
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="12dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/scope_icon"
+        android:id="@+id/category_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginStart="12dp"
         android:layout_centerVertical="true"
         android:layout_marginEnd="20dp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/scope_name"
+        android:id="@+id/category_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@id/arrow_icon"
-        android:layout_toEndOf="@id/scope_icon"
+        android:layout_toEndOf="@id/category_icon"
         android:ellipsize="marquee"
         android:textAppearance="?android:attr/textAppearanceListItem"
         android:textSize="16sp" />

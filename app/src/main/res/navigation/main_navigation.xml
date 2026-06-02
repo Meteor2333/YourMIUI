@@ -6,8 +6,6 @@
 
     <include app:graph="@navigation/home_navigation" />
 
-    <include app:graph="@navigation/manager_navigation" />
-
     <include app:graph="@navigation/settings_navigation" />
 
 </navigation>

@@ -10,6 +10,22 @@
         android:id="@+id/navigation_home"
         android:name="cc.meteormc.yourmiui.ui.fragment.HomeFragment"
         android:label="home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_category"
+            app:destination="@id/navigation_category"
+            app:enterAnim="@anim/scale_in_expand"
+            app:exitAnim="@anim/scale_out_expand"
+            app:popEnterAnim="@anim/scale_in_shrink"
+            app:popExitAnim="@anim/scale_out_shrink" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_category"
+        android:name="cc.meteormc.yourmiui.ui.fragment.CategoryFragment"
+        android:label="category"
+        tools:layout="@layout/fragment_category" />
 
 </navigation>
