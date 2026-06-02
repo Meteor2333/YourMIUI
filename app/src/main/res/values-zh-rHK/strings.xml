@@ -11,7 +11,6 @@
     <string name="syscheck_exit">退出</string>
     <string name="resource_unknown">未知</string>
     <string name="title_home">主頁</string>
-    <string name="title_manager">管理</string>
     <string name="title_settings">設置</string>
     <string name="status_active">模組已啟動</string>
     <string name="status_inactive">模組未啟動</string>
@@ -24,8 +23,7 @@
     <string name="info_android_version">Android版本</string>
     <string name="info_miui_version">MIUI版本</string>
     <string name="info_cpu_abi">CPU架構</string>
-    <string name="manager_hint">請在你的Xposed管理器中勾選以下軟體的作用域\n未安裝的應用將不會顯示在這裡</string>
-    <string name="manager_empty">空清單</string>
+    <string name="search_hint">搜索</string>
     <string name="feature_warning">警告： %s</string>
     <string name="feature_test_environment">測試環境： %s</string>
     <string name="feature_original_author">原始作者： %s</string>
@@ -161,7 +159,7 @@
     <string name="feature_settings_remove_new_version_badge_description">清除設定中的系統新版本標記（不會阻止系統進行更新）</string>
     <string name="option_settings_remove_new_version_badge_modify_property_name">系統屬性修改</string>
     <string name="option_settings_remove_new_version_badge_modify_property_description">修改MIUI添加的一條新系統版本標記，更加激進的清除方式</string>
-    <string name="feature_wallpaper_disable_superwallpaper_pause_name">禁止壁紙暫停</string>
+    <string name="feature_wallpaper_disable_superwallpaper_pause_name">禁止超级壁纸暂停</string>
     <string name="feature_wallpaper_disable_superwallpaper_pause_description">阻止超級壁紙在鎖屏時暫停（注意： 請在作用域中勾選你所使用的超級壁紙）</string>
     <string name="feature_wallpaper_disable_superwallpaper_pause_warning">開啟此功能可能導致不必要的性能佔用</string>
 </resources>
