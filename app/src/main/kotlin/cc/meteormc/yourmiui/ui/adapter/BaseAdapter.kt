@@ -9,9 +9,6 @@ abstract class BaseAdapter<T : Any, I>(
     protected val items: Array<I>,
     private val factory: (inflater: LayoutInflater, parent: ViewGroup) -> T
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    protected lateinit var binding: T
-        private set
-
     protected abstract fun newHolder(binding: T): BaseViewHolder
 
     override fun onCreateViewHolder(
@@ -20,7 +17,6 @@ abstract class BaseAdapter<T : Any, I>(
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = factory(inflater, parent)
-        this.binding = binding
         return this.newHolder(binding)
     }
 

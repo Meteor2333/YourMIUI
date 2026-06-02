@@ -41,18 +41,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         { inflater, parent -> ItemHomeHeaderBinding.inflate(inflater, parent, false) }
     ) {
         override fun newHolder(binding: ItemHomeHeaderBinding): BaseAdapter<ItemHomeHeaderBinding, Unit?>.BaseViewHolder {
-            bindModuleStatus()
-            bindModuleUpdate()
-            bindDeviceInfo()
-            bindSearchView()
-            return object : BaseViewHolder(binding, binding.root) { }
+            return object : BaseViewHolder(binding, binding.root) {
+                override fun onBind(item: Unit?) {
+                    binding.bindModuleStatus()
+                    binding.bindModuleUpdate()
+                    binding.bindDeviceInfo()
+                    binding.bindSearchView()
+                }
+            }
         }
 
-        private fun bindModuleStatus() {
+        private fun ItemHomeHeaderBinding.bindModuleStatus() {
             var anchorX = 0f
             var anchorY = 0f
             @SuppressLint("ClickableViewAccessibility")
-            binding.statusCard.setOnTouchListener { view, event ->
+            statusCard.setOnTouchListener { view, event ->
                 fun curve(v: Float): Float {
                     val sign = sign(v)
                     val abs = abs(v)
@@ -102,35 +105,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             }
 
             HostStore.isActivated.observe(viewLifecycleOwner) {
-                binding.statusIcon.setImageResource(
+                statusIcon.setImageResource(
                     if (it) R.drawable.ic_check_24dp
                     else R.drawable.ic_cross_24dp
                 )
 
-                binding.statusText.setText(
+                statusText.setText(
                     if (it) R.string.status_active
                     else R.string.status_inactive
                 )
 
-                binding.statusVersion.text = getString(
+                statusVersion.text = getString(
                     R.string.status_version,
                     "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
                 )
 
-                binding.statusApi.text = if (it) {
+                statusApi.text = if (it) {
                     "Activated by ${HostStore.apiName.value} (API ${HostStore.apiVersion.value})"
                 } else "Not activated"
             }
         }
 
-        private fun bindModuleUpdate() {
+        private fun ItemHomeHeaderBinding.bindModuleUpdate() {
             lifecycleScope.launch {
                 UpdateChecker.fetch(requireContext())
                 if (!UpdateChecker.hasUpdate) return@launch
 
-                val card = binding.updateCard
-                card.visibility = View.VISIBLE
-                card.setOnClickListener {
+                updateCard.visibility = View.VISIBLE
+                updateCard.setOnClickListener {
                     UpdateChecker.downloadUrl?.let {
                         val uri = it.toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -141,7 +143,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         }
 
         @SuppressLint("SetTextI18n")
-        private fun bindDeviceInfo() {
+        private fun ItemHomeHeaderBinding.bindDeviceInfo() {
 //        binding.infoDeviceModel.text = PropertiesUtil.get("ro.product.marketname")
 //        binding.infoSystemCode.text = Build.DEVICE
 //        binding.infoAndroidVersion.text = "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
@@ -149,7 +151,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 //        binding.infoCpuAbi.text = Build.SUPPORTED_ABIS.firstOrNull() ?: System.getProperty("os.arch", Build.UNKNOWN)
         }
 
-        private fun bindSearchView() {
+        private fun ItemHomeHeaderBinding.bindSearchView() {
 
         }
     }
