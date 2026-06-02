@@ -1,11 +1,6 @@
 package cc.meteormc.yourmiui.ui.fragment
 
-import android.content.Context
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,39 +37,5 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>({ inflater, conta
         featureList.adapter = FeatureAdapter(features[category] ?: emptyList())
 
         return binding.root
-    }
-
-    override fun onAttach(context: Context) {
-        Log.d("B", "onAttach ${hashCode()}")
-        super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("B", "onCreate")
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Log.d("B", "onCreateView")
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("B", "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        Log.d("B", "onDestroyView")
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Log.d("B", "onDestroy")
-        super.onDestroy()
     }
 }
