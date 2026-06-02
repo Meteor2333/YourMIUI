@@ -100,7 +100,7 @@ class XposedEntry : IXposedHookLoadPackage {
 
     private fun initHostBridge(context: Context) {
         hostBridge = Host(context)
-        hostBridge.register(Bridge.RESTART_SCOPE_CHANNEL) {
+        hostBridge.register(Bridge.FORCE_STOP_CHANNEL) {
             Thread {
                 Thread.sleep(300)
                 Process.killProcess(Process.myPid())

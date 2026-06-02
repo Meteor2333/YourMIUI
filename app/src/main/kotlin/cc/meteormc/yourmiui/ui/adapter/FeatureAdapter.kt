@@ -78,7 +78,7 @@ class FeatureAdapter(
 
             fun request(packageName: String) {
                 YourMIUI.get().moduleBridge.request(
-                    Bridge.RESTART_SCOPE_CHANNEL,
+                    Bridge.FORCE_STOP_CHANNEL,
                     packageName,
                     object : ResponseCallback<Unit> {
                         private var successd = false
