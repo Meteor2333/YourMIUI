@@ -28,7 +28,6 @@ class CategoryAdapter(
         binding.root
     ) {
         override fun onBind(item: Category) {
-            // todo: 这里的获取方式比较耗时，后面会迁移到App打开时加载应用缓存
             val name = getCategoryName(item)
             val icon = getCategoryIcon(item)
 
