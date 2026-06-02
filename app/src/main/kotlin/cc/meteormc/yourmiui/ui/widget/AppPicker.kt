@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -112,12 +111,11 @@ class AppPicker(
 
         setView(container)
         setTitle(R.string.app_picker_title)
-        if (multiSelect) {
-            setNegativeButton(android.R.string.cancel, null)
-            setPositiveButton(android.R.string.ok) { _, _ -> saveListener(adapter.selected) }
-        }
+        setNegativeButton(android.R.string.cancel, null)
+        setPositiveButton(android.R.string.ok) { _, _ -> saveListener(adapter.selected) }
 
-        return super.create()
+        dialog = super.create()
+        return dialog
     }
 
     fun setSaveListener(listener: (selected: Set<String>) -> Unit): AppPicker {
@@ -221,22 +219,27 @@ class AppPicker(
 
                     val checkbox = binding.checkbox
                     fun toggle(isChecked: Boolean) {
-                        if (!multiSelect) {
-                            dialog.dismiss()
-                            saveListener(setOf(item.packageName))
-                            return
+                        if (multiSelect) {
+                            checkbox.isChecked = isChecked
+                            if (isChecked) selected.add(item.packageName)
+                            else selected.remove(item.packageName)
+                        } else {
+                            checkbox.isChecked = true
+                            items.mapIndexedNotNull { index, item ->
+                                if (item?.packageName in selected) index else null
+                            }.apply {
+                                selected.clear()
+                                selected.add(item.packageName)
+                            }.forEach {
+                                if (it == layoutPosition) return@forEach
+                                notifyItemChanged(it)
+                            }
                         }
-
-                        if (isChecked) selected.add(item.packageName)
-                        else selected.remove(item.packageName)
                     }
 
-                    if (multiSelect) {
-                        checkbox.visibility = View.VISIBLE
-                        checkbox.isChecked = selected.contains(item.packageName)
-                        checkbox.setOnCheckedChangeListener { _, isChecked ->
-                            toggle(isChecked)
-                        }
+                    checkbox.isChecked = selected.contains(item.packageName)
+                    checkbox.setOnClickListener {
+                        toggle(checkbox.isChecked)
                     }
 
                     itemView.setOnClickListener {
