@@ -23,7 +23,7 @@
     <string name="info_android_version">Android version</string>
     <string name="info_miui_version">MIUI version</string>
     <string name="info_cpu_abi">CPU ABI</string>
-    <string name="search_hint">搜索</string>
+    <string name="search_hint">Search</string>
     <string name="feature_warning">Warning: %s</string>
     <string name="feature_test_environment">Test Environment: %s</string>
     <string name="feature_original_author">Original Author: %s</string>
@@ -159,7 +159,7 @@
     <string name="feature_settings_remove_new_version_badge_description">Remove the system update badge (does not block updates)</string>
     <string name="option_settings_remove_new_version_badge_modify_property_name">Modify Property</string>
     <string name="option_settings_remove_new_version_badge_modify_property_description">A new system version marker added by MIUI has been changed, adopting a more aggressive removal method</string>
-    <string name="feature_wallpaper_disable_superwallpaper_pause_name">禁止超级壁纸暂停</string>
+    <string name="feature_wallpaper_disable_superwallpaper_pause_name">No super wallpaper pause</string>
     <string name="feature_wallpaper_disable_superwallpaper_pause_description">Prevent super wallpapers from pausing during lock screen (Note: Please check the super wallpaper you are using in scope)</string>
     <string name="feature_wallpaper_disable_superwallpaper_pause_warning">Enabling this feature may lead to unnecessary performance usage</string>
 </resources>
