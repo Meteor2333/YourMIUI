@@ -8,6 +8,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
+import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Member
@@ -51,8 +52,7 @@ class Reflect<T : Any>(val delegate: Class<T>) {
         }
 
         return runCatching {
-            val constructor = delegate.getDeclaredConstructor(*paramTypes)
-            constructor.isAccessible = true
+            val constructor = delegate.getDeclaredConstructor(*paramTypes).setAccessible()
             constructorCache[fullName] = constructor
             constructor
         }.onFailure {
@@ -61,11 +61,11 @@ class Reflect<T : Any>(val delegate: Class<T>) {
     }
 
     fun constructors(): List<Constructor<*>> {
-        return delegate.constructors.toList()
+        return delegate.constructors.toAccessibleList()
     }
 
     fun declaredConstructors(): List<Constructor<T>> {
-        return delegate.declaredConstructors.toList() as? List<Constructor<T>> ?: emptyList()
+        return delegate.declaredConstructors.toAccessibleList() as? List<Constructor<T>> ?: emptyList()
     }
 
     fun field(name: String): Field? {
@@ -75,10 +75,9 @@ class Reflect<T : Any>(val delegate: Class<T>) {
         }
 
         val field = findRecursive {
-            runCatching { it.getDeclaredField(name) }.getOrNull()
+            runCatching { it.getDeclaredField(name).setAccessible() }.getOrNull()
         }
         return if (field != null) {
-            field.isAccessible = true
             fieldCache[fullName] = field
             field
         } else {
@@ -93,18 +92,18 @@ class Reflect<T : Any>(val delegate: Class<T>) {
         do {
             for (field in superClass.declaredFields) {
                 if (!type.isAssignableFrom(field.type)) continue
-                result.add(field)
+                result.add(field.setAccessible())
             }
         } while ((superClass.getSuperclass()?.also { superClass = it }) != null)
         return result
     }
 
     fun fields(): List<Field> {
-        return delegate.fields.toList()
+        return delegate.fields.toAccessibleList()
     }
 
     fun declaredFields(): List<Field> {
-        return delegate.declaredFields.toList()
+        return delegate.declaredFields.toAccessibleList()
     }
 
     fun method(name: String, vararg paramTypes: Class<*>): Method? {
@@ -132,10 +131,9 @@ class Reflect<T : Any>(val delegate: Class<T>) {
                 }
             }
             return@findRecursive null
-        }?.let { result = it }
+        }?.let { result = it.setAccessible() }
 
         return if (result != null) {
-            result.isAccessible = true
             methodCache[fullName] = result
             result
         } else {
@@ -145,11 +143,20 @@ class Reflect<T : Any>(val delegate: Class<T>) {
     }
 
     fun methods(): List<Method> {
-        return delegate.methods.toList()
+        return delegate.methods.toAccessibleList()
     }
 
     fun declaredMethods(): List<Method> {
-        return delegate.declaredMethods.toList()
+        return delegate.declaredMethods.toAccessibleList()
+    }
+
+    private fun <T : AccessibleObject> T.setAccessible(): T {
+        isAccessible = true
+        return this
+    }
+
+    private fun <T : AccessibleObject> Array<T>.toAccessibleList(): List<T> {
+        return this.map { it.setAccessible() }
     }
 
     private fun getParametersString(vararg clazzes: Class<*>): String {
