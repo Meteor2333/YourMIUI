@@ -14,5 +14,5 @@ kotlin {
 }
 
 dependencies {
-    api("androidx.core:core-ktx:1.18.0")
+    api("androidx.core:core-ktx:1.19.0")
 }
