@@ -1,21 +1,39 @@
 package cc.meteormc.yourmiui.ui.fragment
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.PathInterpolator
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.databinding.ItemHomeHeaderBinding
+import cc.meteormc.yourmiui.helper.ResourceParser
 import cc.meteormc.yourmiui.helper.UpdateChecker
 import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
 import cc.meteormc.yourmiui.ui.adapter.CategoryAdapter
+import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sign
@@ -40,13 +58,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         arrayOfNulls(1),
         { inflater, parent -> ItemHomeHeaderBinding.inflate(inflater, parent, false) }
     ) {
+        private var isInitialized: Boolean = false
+
         override fun newHolder(binding: ItemHomeHeaderBinding): BaseAdapter<ItemHomeHeaderBinding, Unit?>.BaseViewHolder {
             return object : BaseViewHolder(binding, binding.root) {
                 override fun onBind(item: Unit?) {
+                    if (isInitialized) return
                     binding.bindModuleStatus()
                     binding.bindModuleUpdate()
                     binding.bindDeviceInfo()
-                    binding.bindSearchView()
+                    binding.bindSearchAnchor()
+                    isInitialized = true
                 }
             }
         }
@@ -151,8 +173,236 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 //        binding.infoCpuAbi.text = Build.SUPPORTED_ABIS.firstOrNull() ?: System.getProperty("os.arch", Build.UNKNOWN)
         }
 
-        private fun ItemHomeHeaderBinding.bindSearchView() {
+        private fun ItemHomeHeaderBinding.bindSearchAnchor() {
+            val homeAppbar = binding.homeAppbar
+            val searchOverlay = binding.searchOverlay
+            val searchScrim = binding.searchScrim
+            val searchPanel = binding.searchPanel
+            val searchInput = binding.searchInput
+            val searchCancel = binding.searchCancel
+            val searchResultList = binding.searchResultList
+            val searchEmpty = binding.searchEmpty
 
+            var panelStartY = 0f
+            var statusbarHeight = 0
+            var animator: ValueAnimator? = null
+            lateinit var backCallback: OnBackPressedCallback
+
+            fun buildAnimator(
+                from: Float, to: Float,
+                startListener: (animator: Animator) -> Unit = { },
+                endListener: (animator: Animator) -> Unit = { }
+            ) {
+                animator = ValueAnimator.ofFloat(from, to).apply {
+                    duration = 500L
+                    interpolator = PathInterpolator(0.2f, 0f, 0f, 1f)
+
+                    addUpdateListener {
+                        val progress = it.animatedValue as Float
+                        val reverse = 1f - progress
+                        val searchCancelLeftMargin = searchCancel.width + searchCancel.marginEnd
+                        homeAppbar.alpha = reverse
+                        homeAppbar.isEnabled = progress == 0f
+                        searchScrim.alpha = progress
+                        searchPanel.translationY = panelStartY * reverse
+                        searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                            marginStart = searchInput.marginStart
+                            marginEnd = (searchCancelLeftMargin * progress).toInt() + marginStart
+                        }
+                        searchCancel.alpha = progress
+                        searchCancel.translationX = searchCancelLeftMargin * reverse
+                        searchResultList.alpha = progress
+                        searchEmpty.alpha = progress
+//                        pageList.translationY = panelStartY * 0.08f * reverse
+                    }
+                    doOnStart(startListener)
+                    doOnEnd(endListener)
+                    start()
+                }
+            }
+
+            fun isInSearch(): Boolean {
+                return searchOverlay.visibility == View.VISIBLE
+            }
+
+            fun enterSearch() {
+                if (isInSearch()) return
+                if (!searchAnchor.isLaidOut) {
+                    searchAnchor.post { enterSearch() }
+                    return
+                }
+
+                animator?.cancel()
+//                searchInputEdit.text?.clear()
+//                searchInputEdit.requestFocus()
+
+                buildAnimator(
+                    0f, 1f,
+                    startListener = {
+                        val rootLocation = IntArray(2)
+                        val viewLocation = IntArray(2)
+                        binding.root.getLocationInWindow(rootLocation)
+                        searchAnchor.getLocationInWindow(viewLocation)
+                        val rootY = (viewLocation[1] - rootLocation[1]).toFloat()
+                        panelStartY = (rootY - searchAnchor.marginTop - statusbarHeight).coerceAtLeast(0f)
+
+                        searchAnchor.alpha = 0f
+                        homeAppbar.alpha = 1f
+                        homeAppbar.isEnabled = true
+                        searchOverlay.visibility = View.VISIBLE
+                        searchScrim.alpha = 0f
+                        searchPanel.translationY = panelStartY
+                        searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                            marginStart = searchInput.marginStart
+                            marginEnd = marginStart
+                        }
+//                        searchInputEdit.text?.clear()
+                        searchCancel.alpha = 0f
+                        searchCancel.translationX = (searchCancel.width + searchCancel.marginEnd).toFloat()
+                        searchResultList.alpha = 0f
+                        searchResultList.adapter = FeatureAdapter(emptyList())
+                        searchEmpty.alpha = 0f
+//                        pageList.translationY = 0f
+                    },
+                    endListener = {
+                        backCallback.isEnabled = true
+//                        searchInputEdit.post {
+//                            inputMethodManager().showSoftInput(searchInputEdit, InputMethodManager.SHOW_IMPLICIT)
+//                        }
+                    }
+                )
+            }
+
+            fun exitSearch() {
+                if (!isInSearch()) return
+
+                animator?.cancel()
+
+                buildAnimator(
+                    1f, 0f,
+                    startListener = {
+                        backCallback.isEnabled = false
+//                        searchInputEdit.post {
+//                            inputMethodManager().hideSoftInputFromWindow(searchInputEdit.windowToken, 0)
+//                        }
+                    },
+                    endListener = {
+                        searchAnchor.alpha = 1f
+                        homeAppbar.alpha = 1f
+                        homeAppbar.isEnabled = true
+                        searchOverlay.visibility = View.GONE
+                        searchScrim.alpha = 0f
+                        searchPanel.translationY = 0f
+                        searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                            marginStart = searchInput.marginStart
+                            marginEnd = marginStart
+                        }
+//                        searchInputEdit.text?.clear()
+                        searchCancel.alpha = 0f
+                        searchCancel.translationX = 0f
+                        searchResultList.alpha = 0f
+                        searchResultList.adapter = FeatureAdapter(emptyList())
+                        searchEmpty.alpha = 0f
+//                        pageList.translationY = 0f
+                    }
+                )
+            }
+
+            val searchPanelHeight by lazy { searchPanel.layoutParams.height }
+            val searchPanelTopPadding by lazy { searchPanel.paddingTop }
+            val searchResultListTopMargin by lazy { searchResultList.marginTop }
+            val searchEmptyTopMargin by lazy { searchEmpty.marginTop }
+            backCallback = object : OnBackPressedCallback(false) {
+                override fun handleOnBackPressed() {
+                    exitSearch()
+                }
+            }
+
+            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+                statusbarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+                searchPanel.updateLayoutParams {
+                    height = searchPanelHeight + statusbarHeight
+                }
+                searchPanel.setPadding(
+                    searchPanel.paddingLeft,
+                    searchPanelTopPadding + statusbarHeight,
+                    searchPanel.paddingRight,
+                    searchPanel.paddingBottom
+                )
+                searchResultList.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    topMargin = searchResultListTopMargin + statusbarHeight
+                }
+                searchEmpty.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    topMargin = searchEmptyTopMargin + statusbarHeight
+                }
+                insets
+            }
+            ViewCompat.requestApplyInsets(binding.root)
+
+//            searchScrim.setOnClickListener {
+//                if (searchInputEdit.text.isNullOrEmpty()) close()
+//            }
+//            searchInputEdit.addTextChangedListener(object : TextWatcher {
+//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+//
+//                override fun afterTextChanged(s: Editable?) {
+//                    updateResults(s?.toString().orEmpty())
+//                }
+//            })
+            searchCancel.setOnClickListener { exitSearch() }
+            searchResultList.layoutManager = LinearLayoutManager(requireContext())
+            searchResultList.adapter = FeatureAdapter(emptyList())
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backCallback)
+
+            searchAnchor.setOnClickListener {
+                enterSearch()
+            }
+        }
+    }
+
+    private inner class HomeSearchController {
+        private var isOpen = false
+        private var panelStartY = 0f
+        private var searchTopInset = 0
+
+        fun updateResults(query: String) {
+            if (query.isBlank()) {
+                binding.searchResultList.visibility = View.GONE
+                binding.searchEmpty.visibility = View.GONE
+                binding.searchResultList.adapter = FeatureAdapter(emptyList())
+                return
+            }
+
+            val results = allFeatures().filter { it.matches(query) }
+            binding.searchResultList.visibility = View.VISIBLE
+            binding.searchEmpty.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
+            binding.searchResultList.adapter = FeatureAdapter(results)
+        }
+
+        fun FeatureInfo.matches(query: String): Boolean {
+            val context = requireContext()
+            val normalized = query.trim()
+            val name = context.getString(ResourceParser.parseResName(context, this.name))
+            val description = context.getString(ResourceParser.parseResName(context, this.description))
+            return name.contains(normalized, ignoreCase = true) ||
+                    description.contains(normalized, ignoreCase = true)
+        }
+
+        fun allFeatures(): List<FeatureInfo> {
+            return HostStore.features.value?.values?.flatten().orEmpty()
+        }
+
+        fun rootYOf(view: View): Float {
+            val rootLocation = IntArray(2)
+            val viewLocation = IntArray(2)
+            binding.root.getLocationInWindow(rootLocation)
+            view.getLocationInWindow(viewLocation)
+            return (viewLocation[1] - rootLocation[1]).toFloat()
+        }
+
+        fun inputMethodManager(): InputMethodManager {
+            return requireContext().getSystemService(InputMethodManager::class.java)
         }
     }
 }
