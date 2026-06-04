@@ -56,8 +56,8 @@ object DisableAdbInstallAlert : FeatureHooker {
                 if (!requireUnlock || (km != null && !km.isKeyguardLocked)) {
                     // name: (obfuscated) | type: int
                     fields(Int::class.javaPrimitiveType!!).firstOrNull { field ->
-                        field.get<Int>(it) == 0
-                    }?.set(it, -1)
+                        field.get<Int>(activity) == 0
+                    }?.set(activity, -1)
                 }
 
                 activity.finish()
