@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.store
 
-import androidx.lifecycle.MutableLiveData
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
@@ -11,21 +10,25 @@ import cc.meteormc.yourmiui.common.bridge.Bridge
 import java.util.EnumMap
 
 object HostStore {
-    val apiName = MutableLiveData("Unknown")
-    val apiVersion = MutableLiveData(-1)
-    val isActivated = MutableLiveData(false)
-    val features = MutableLiveData<EnumMap<Category, List<FeatureInfo>>>()
+    var apiName = "Unknown"
+        private set
+    var apiVersion = -1
+        private set
+    var isActivated = false
+        private set
+    lateinit var features: EnumMap<Category, List<FeatureInfo>>
+        private set
 
     fun init() {
         val apiName = Bridge.apiName
         val apiVersion = Bridge.apiVersion
         if (apiName != null && apiVersion != null) {
-            this.apiName.value = apiName
-            this.apiVersion.value = apiVersion
-            this.isActivated.value = true
+            this.apiName = apiName
+            this.apiVersion = apiVersion
+            this.isActivated = true
         }
 
-        this.features.value = ClassUtil.getClass(
+        this.features = ClassUtil.getClass(
             javaClass.classLoader!!,
             "${BuildConfig.APPLICATION_ID}.FeatureRegistry",
             true

@@ -45,12 +45,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
     override fun onCreate(): View {
         val pageList = binding.pageList
         pageList.layoutManager = LinearLayoutManager(requireContext())
-        HostStore.features.observe(viewLifecycleOwner) {
-            pageList.adapter = ConcatAdapter(
-                HeaderAdapter(),
-                CategoryAdapter(it.keys.toList())
-            )
-        }
+        pageList.adapter = ConcatAdapter(
+            HeaderAdapter(),
+            CategoryAdapter(HostStore.features.keys.toList())
+        )
         return binding.root
     }
 
@@ -126,26 +124,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                 true
             }
 
-            HostStore.isActivated.observe(viewLifecycleOwner) {
-                statusIcon.setImageResource(
-                    if (it) R.drawable.ic_check_24dp
-                    else R.drawable.ic_cross_24dp
-                )
+            statusIcon.setImageResource(
+                if (HostStore.isActivated) R.drawable.ic_check_24dp
+                else R.drawable.ic_cross_24dp
+            )
 
-                statusText.setText(
-                    if (it) R.string.status_active
-                    else R.string.status_inactive
-                )
+            statusText.setText(
+                if (HostStore.isActivated) R.string.status_active
+                else R.string.status_inactive
+            )
 
-                statusVersion.text = getString(
-                    R.string.status_version,
-                    "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
-                )
+            statusVersion.text = getString(
+                R.string.status_version,
+                "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"
+            )
 
-                statusApi.text = if (it) {
-                    "Activated by ${HostStore.apiName.value} (API ${HostStore.apiVersion.value})"
-                } else "Not activated"
-            }
+            statusApi.text = if (HostStore.isActivated) {
+                "Activated by ${HostStore.apiName} (API ${HostStore.apiVersion})"
+            } else "Not activated"
         }
 
         private fun ItemHomeHeaderBinding.bindModuleUpdate() {
@@ -390,7 +386,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         }
 
         fun allFeatures(): List<FeatureInfo> {
-            return HostStore.features.value?.values?.flatten().orEmpty()
+            return HostStore.features.values.flatten()
         }
 
         fun rootYOf(view: View): Float {

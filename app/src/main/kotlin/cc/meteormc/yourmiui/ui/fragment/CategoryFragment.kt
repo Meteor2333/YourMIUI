@@ -20,8 +20,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>({ inflater, conta
             ?.let { Category.entries[it] }
 
     override fun onCreate(): View {
-        val features = HostStore.features.value
-        if (title == null || category == null || features == null) {
+        if (title == null || category == null) {
             findNavController().navigateUp()
             return binding.root
         }
@@ -34,7 +33,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>({ inflater, conta
 
         val featureList = binding.featureList
         featureList.layoutManager = LinearLayoutManager(requireContext())
-        featureList.adapter = FeatureAdapter(features[category] ?: emptyList())
+        featureList.adapter = FeatureAdapter(HostStore.features[category] ?: emptyList())
 
         return binding.root
     }
