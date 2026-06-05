@@ -11,6 +11,7 @@ import android.view.animation.PathInterpolator
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.net.toUri
@@ -36,7 +37,6 @@ import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
 import cc.meteormc.yourmiui.ui.adapter.CategoryAdapter
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sign
@@ -174,7 +174,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 
         private fun ItemHomeHeaderBinding.bindSearchAnchor(itemView: View) {
             val homeAppbar = binding.homeAppbar
-            val homeToolbar = binding.homeToolbar
             val pageList = binding.pageList
             val searchOverlay = binding.searchOverlay
             val searchScrim = binding.searchScrim
@@ -249,9 +248,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     startListener = {
                         searchAnchor.alpha = 0f
                         homeAppbar.alpha = 1f
-                        homeToolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
-                            scrollFlags = scrollFlags and SCROLL_FLAG_SCROLL.inv()
-                        }
                         itemView.alpha = 1f
                         pageList.stopScroll()
                         pageList.translationY = 0f
@@ -294,9 +290,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     endListener = {
                         searchAnchor.alpha = 1f
                         homeAppbar.alpha = 1f
-                        homeToolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
-                            scrollFlags = scrollFlags or SCROLL_FLAG_SCROLL
-                        }
                         itemView.alpha = 1f
                         pageList.translationY = 0f
                         searchOverlay.visibility = View.GONE
@@ -365,6 +358,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 
             searchAnchor.setOnClickListener {
                 enterSearch()
+            }
+
+            homeAppbar.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                behavior = object : AppBarLayout.Behavior() {
+                    override fun onStartNestedScroll(
+                        parent: CoordinatorLayout,
+                        child: AppBarLayout,
+                        directTargetChild: View,
+                        target: View,
+                        nestedScrollAxes: Int,
+                        type: Int
+                    ): Boolean {
+                        if (isInSearch()) return false
+                        return super.onStartNestedScroll(
+                            parent,
+                            child,
+                            directTargetChild,
+                            target,
+                            nestedScrollAxes,
+                            type
+                        )
+                    }
+                }
             }
         }
     }
