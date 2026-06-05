@@ -16,6 +16,7 @@ import androidx.core.animation.doOnStart
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
@@ -34,6 +35,8 @@ import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
 import cc.meteormc.yourmiui.ui.adapter.CategoryAdapter
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sign
@@ -65,7 +68,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     binding.bindModuleStatus()
                     binding.bindModuleUpdate()
                     binding.bindDeviceInfo()
-                    binding.bindSearchAnchor()
+                    binding.bindSearchAnchor(itemView)
                     isInitialized = true
                 }
             }
@@ -169,8 +172,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 //        binding.infoCpuAbi.text = Build.SUPPORTED_ABIS.firstOrNull() ?: System.getProperty("os.arch", Build.UNKNOWN)
         }
 
-        private fun ItemHomeHeaderBinding.bindSearchAnchor() {
+        private fun ItemHomeHeaderBinding.bindSearchAnchor(itemView: View) {
             val homeAppbar = binding.homeAppbar
+            val homeToolbar = binding.homeToolbar
+            val pageList = binding.pageList
             val searchOverlay = binding.searchOverlay
             val searchScrim = binding.searchScrim
             val searchPanel = binding.searchPanel
@@ -190,7 +195,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                 endListener: (animator: Animator) -> Unit = { }
             ) {
                 animator = ValueAnimator.ofFloat(from, to).apply {
-                    duration = 500L
+                    duration = 300L
                     interpolator = PathInterpolator(0.2f, 0f, 0f, 1f)
 
                     addUpdateListener {
@@ -198,7 +203,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                         val reverse = 1f - progress
                         val searchCancelLeftMargin = searchCancel.width + searchCancel.marginEnd
                         homeAppbar.alpha = reverse
-                        homeAppbar.isEnabled = progress == 0f
+                        itemView.alpha = reverse
+                        pageList.translationY = panelStartY * progress * -0.382f
                         searchScrim.alpha = progress
                         searchPanel.translationY = panelStartY * reverse
                         searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
@@ -209,7 +215,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                         searchCancel.translationX = searchCancelLeftMargin * reverse
                         searchResultList.alpha = progress
                         searchEmpty.alpha = progress
-//                        pageList.translationY = panelStartY * 0.08f * reverse
                     }
                     doOnStart(startListener)
                     doOnEnd(endListener)
@@ -218,7 +223,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             }
 
             fun isInSearch(): Boolean {
-                return searchOverlay.visibility == View.VISIBLE
+                return searchOverlay.isVisible
             }
 
             fun enterSearch() {
@@ -232,19 +237,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 //                searchInputEdit.text?.clear()
 //                searchInputEdit.requestFocus()
 
+                val rootLocation = IntArray(2)
+                val viewLocation = IntArray(2)
+                binding.root.getLocationInWindow(rootLocation)
+                searchAnchor.getLocationInWindow(viewLocation)
+                val rootY = (viewLocation[1] - rootLocation[1]).toFloat()
+                panelStartY = (rootY - searchAnchor.marginTop - statusbarHeight).coerceAtLeast(0f)
+
                 buildAnimator(
                     0f, 1f,
                     startListener = {
-                        val rootLocation = IntArray(2)
-                        val viewLocation = IntArray(2)
-                        binding.root.getLocationInWindow(rootLocation)
-                        searchAnchor.getLocationInWindow(viewLocation)
-                        val rootY = (viewLocation[1] - rootLocation[1]).toFloat()
-                        panelStartY = (rootY - searchAnchor.marginTop - statusbarHeight).coerceAtLeast(0f)
-
                         searchAnchor.alpha = 0f
                         homeAppbar.alpha = 1f
-                        homeAppbar.isEnabled = true
+                        homeToolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
+                            scrollFlags = scrollFlags and SCROLL_FLAG_SCROLL.inv()
+                        }
+                        itemView.alpha = 1f
+                        pageList.stopScroll()
+                        pageList.translationY = 0f
                         searchOverlay.visibility = View.VISIBLE
                         searchScrim.alpha = 0f
                         searchPanel.translationY = panelStartY
@@ -258,7 +268,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                         searchResultList.alpha = 0f
                         searchResultList.adapter = FeatureAdapter(emptyList())
                         searchEmpty.alpha = 0f
-//                        pageList.translationY = 0f
                     },
                     endListener = {
                         backCallback.isEnabled = true
@@ -285,7 +294,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     endListener = {
                         searchAnchor.alpha = 1f
                         homeAppbar.alpha = 1f
-                        homeAppbar.isEnabled = true
+                        homeToolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
+                            scrollFlags = scrollFlags or SCROLL_FLAG_SCROLL
+                        }
+                        itemView.alpha = 1f
+                        pageList.translationY = 0f
                         searchOverlay.visibility = View.GONE
                         searchScrim.alpha = 0f
                         searchPanel.translationY = 0f
@@ -299,7 +312,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                         searchResultList.alpha = 0f
                         searchResultList.adapter = FeatureAdapter(emptyList())
                         searchEmpty.alpha = 0f
-//                        pageList.translationY = 0f
                     }
                 )
             }
