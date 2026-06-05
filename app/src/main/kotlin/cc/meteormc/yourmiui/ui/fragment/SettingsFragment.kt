@@ -40,7 +40,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
             val successd = PreferencesIO.export(context, it)
             Toast.makeText(
                 context,
-                if (successd) R.string.settings_misc_export_success else R.string.settings_misc_export_failure,
+                if (successd) R.string.settings_misc_export_preferences_success else R.string.settings_misc_export_preferences_failure,
                 if (successd) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
             ).show()
         }
@@ -54,7 +54,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
             val successd = PreferencesIO.import(context, it)
             Toast.makeText(
                 context,
-                if (successd) R.string.settings_misc_import_success else R.string.settings_misc_import_failure,
+                if (successd) R.string.settings_misc_import_preferences_success else R.string.settings_misc_import_preferences_failure,
                 if (successd) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
             ).show()
             if (successd) {
@@ -163,8 +163,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
             R.string.settings_misc,
             SettingItem(
                 R.drawable.ic_export_24dp,
-                R.string.settings_misc_export_title,
-                R.string.settings_misc_export_summary
+                R.string.settings_misc_export_preferences_title,
+                R.string.settings_misc_export_preferences_summary
             ) {
                 val appName = getString(R.string.app_name)
                 val time = SimpleDateFormat("yyyyMMdd+HHmmss", Locale.getDefault()).format(Date())
@@ -172,10 +172,23 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
             },
             SettingItem(
                 R.drawable.ic_import_24dp,
-                R.string.settings_misc_import_title,
-                R.string.settings_misc_import_summary
+                R.string.settings_misc_import_preferences_title,
+                R.string.settings_misc_import_preferences_summary
             ) {
                 importPrefsLauncher.launch(PreferencesIO.MINE_TYPE)
+            },
+            SettingItem(
+                R.drawable.ic_reset_24dp,
+                R.string.settings_misc_reset_preferences_title,
+                R.string.settings_misc_reset_preferences_summary
+            ) {
+                PreferencesIO.reset(requireContext())
+                Toast.makeText(
+                    context,
+                    R.string.settings_misc_reset_preferences_notice,
+                    Toast.LENGTH_SHORT
+                ).show()
+                requireActivity().recreate()
             }
         )
     )
