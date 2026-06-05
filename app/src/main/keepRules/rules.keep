@@ -1,3 +1,9 @@
+# Add project specific R8 rules here.
+# AGP will combine all keep rule files in src/main/keepRules to pass to R8
+#
+# For more details, see
+#   https://d.android.com/r/tools/r8/keep-rules
+
 -dontobfuscate
 -dontwarn de.robv.android.xposed.**
 -dontwarn android.app.AndroidAppHelper
