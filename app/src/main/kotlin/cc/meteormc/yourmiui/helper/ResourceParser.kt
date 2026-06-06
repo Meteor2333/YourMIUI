@@ -2,6 +2,7 @@ package cc.meteormc.yourmiui.helper
 
 import android.content.Context
 import cc.meteormc.yourmiui.R
+import cc.meteormc.yourmiui.api.util.PrimitiveUtil
 
 object ResourceParser {
     private var resourceMap = R::class.java
@@ -9,7 +10,11 @@ object ResourceParser {
         .asSequence()
         .flatMap { clazz ->
             val resType = clazz.simpleName
-            clazz.declaredFields.map { field ->
+            clazz.declaredFields.mapNotNull { field ->
+                if (PrimitiveUtil.toPrimitiveClass(field.type) != Int::class.javaPrimitiveType) {
+                    return@mapNotNull null
+                }
+
                 val resName = field.name
                 "@$resType/$resName" to field.getInt(null)
             }
