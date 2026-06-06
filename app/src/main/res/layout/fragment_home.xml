@@ -44,18 +44,12 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/search_overlay"
+        android:id="@+id/search_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone">
-
-        <View
-            android:id="@+id/search_scrim"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:windowBackground" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/search_panel"
@@ -64,30 +58,16 @@
             android:gravity="center_vertical"
             android:paddingTop="4dp">
 
-            <com.google.android.material.search.SearchBar
+            <cc.meteormc.yourmiui.ui.view.SearchBar
                 android:id="@+id/search_input"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/search_cancel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <!--<EditText-->
-            <!--    android:id="@+id/search_input"-->
-            <!--    android:layout_width="0dp"-->
-            <!--    android:layout_height="match_parent"-->
-            <!--    android:layout_weight="1"-->
-            <!--    android:background="@null"-->
-            <!--    android:hint="@string/search_hint"-->
-            <!--    android:imeOptions="actionSearch"-->
-            <!--    android:inputType="text"-->
-            <!--    android:singleLine="true"-->
-            <!--    android:textColor="?android:textColorPrimary"-->
-            <!--    android:textColorHint="?android:textColorHint"-->
-            <!--    android:textSize="15sp" />-->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/search_cancel"
@@ -110,22 +90,17 @@
             android:id="@+id/search_result_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="68dp"
-            android:clipToPadding="false"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="24dp"
-            tools:listitem="@layout/item_feature" />
+            android:layout_marginTop="72dp"
+            tools:listitem="@layout/item_search_result" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/search_empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="92dp"
+            android:layout_marginTop="250dp"
             android:gravity="center"
-            android:text="@string/langauge"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="15sp"
+            android:textColor="@android:color/darker_gray"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:visibility="gone" />
 
     </FrameLayout>

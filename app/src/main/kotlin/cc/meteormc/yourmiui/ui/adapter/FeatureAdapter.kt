@@ -1,8 +1,15 @@
 package cc.meteormc.yourmiui.ui.adapter
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.view.View
+import android.view.animation.PathInterpolator
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.YourMIUI
 import cc.meteormc.yourmiui.api.data.FeatureInfo
@@ -12,6 +19,7 @@ import cc.meteormc.yourmiui.common.prefs.SharedPreferences
 import cc.meteormc.yourmiui.databinding.ItemFeatureBinding
 import cc.meteormc.yourmiui.helper.ResourceParser
 import cc.meteormc.yourmiui.ui.widget.BottomSheet
+import com.google.android.material.color.MaterialColors
 import java.util.concurrent.atomic.AtomicInteger
 
 class FeatureAdapter(
@@ -22,6 +30,11 @@ class FeatureAdapter(
 ) {
     override fun newHolder(binding: ItemFeatureBinding): BaseAdapter<ItemFeatureBinding, FeatureInfo>.BaseViewHolder {
         return ViewHolder(binding)
+    }
+
+    fun highlightFeature(holder: RecyclerView.ViewHolder) {
+        check(holder is ViewHolder) { "ViewHolder must be of type FeatureAdapter.ViewHolder" }
+        holder.highlight()
     }
 
     private inner class ViewHolder(
@@ -73,6 +86,26 @@ class FeatureAdapter(
             list.adapter = OptionAdapter(options, prefs)
             list.layoutManager = LinearLayoutManager(context)
             if (prefs.enabled) list.visibility = View.VISIBLE
+        }
+
+        fun highlight() {
+            val originalForeground = itemView.foreground
+            val foreground = MaterialColors.getColor(itemView, androidx.appcompat.R.attr.colorControlHighlight).toDrawable()
+            itemView.foreground = foreground
+            foreground.alpha = 0
+
+            val animator = ObjectAnimator.ofInt(foreground, "alpha", 0, 255)
+            animator.duration = 1000L
+            animator.interpolator = PathInterpolator(0.4f, 0f, 0.2f, 1f)
+            animator.repeatMode = ValueAnimator.REVERSE
+            animator.repeatCount = 1
+            animator.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    itemView.foreground = originalForeground
+                }
+            })
+            animator.start()
         }
 
         // todo: 未来会做成长按功能弹出菜单 然后能够执行如 重启所需作用域 等功能

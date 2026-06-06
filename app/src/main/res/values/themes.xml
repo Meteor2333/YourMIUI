@@ -7,4 +7,10 @@
     <style name="Theme.YourMIUI.ToolbarTitleTextAppearance">
         <item name="android:textSize">32sp</item>
     </style>
+
+    <style name="Theme.YourMIUI.SearchBar" parent="android:Widget">
+        <item name="android:background">?attr/colorSurfaceContainerHigh</item>
+        <item name="shapeAppearance">?attr/shapeAppearanceMediumComponent</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Material3.SearchBar</item>
+    </style>
 </resources>

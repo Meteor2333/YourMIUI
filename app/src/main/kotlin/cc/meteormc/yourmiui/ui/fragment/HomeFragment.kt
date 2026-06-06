@@ -4,11 +4,15 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.PathInterpolator
-import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -27,15 +31,16 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
-import cc.meteormc.yourmiui.api.data.FeatureInfo
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.databinding.ItemHomeHeaderBinding
+import cc.meteormc.yourmiui.helper.CategoryResProvider.getDiaplayName
 import cc.meteormc.yourmiui.helper.ResourceParser
 import cc.meteormc.yourmiui.helper.UpdateChecker
 import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
 import cc.meteormc.yourmiui.ui.adapter.CategoryAdapter
-import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
+import cc.meteormc.yourmiui.ui.adapter.SearchResultAdapter
+import cc.meteormc.yourmiui.ui.data.SearchResultItem
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -68,7 +73,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     binding.bindModuleStatus()
                     binding.bindModuleUpdate()
                     binding.bindDeviceInfo()
-                    binding.bindSearchAnchor(itemView)
+                    binding.bindSearchAnchor()
                     isInitialized = true
                 }
             }
@@ -172,11 +177,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
 //        binding.infoCpuAbi.text = Build.SUPPORTED_ABIS.firstOrNull() ?: System.getProperty("os.arch", Build.UNKNOWN)
         }
 
-        private fun ItemHomeHeaderBinding.bindSearchAnchor(itemView: View) {
+        private fun ItemHomeHeaderBinding.bindSearchAnchor() {
             val homeAppbar = binding.homeAppbar
             val pageList = binding.pageList
-            val searchOverlay = binding.searchOverlay
-            val searchScrim = binding.searchScrim
+            val searchContainer = binding.searchContainer
             val searchPanel = binding.searchPanel
             val searchInput = binding.searchInput
             val searchCancel = binding.searchCancel
@@ -186,6 +190,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             var panelStartY = 0f
             var statusbarHeight = 0
             var animator: ValueAnimator? = null
+            lateinit var adapter: SearchResultAdapter
             lateinit var backCallback: OnBackPressedCallback
 
             fun buildAnimator(
@@ -202,9 +207,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                         val reverse = 1f - progress
                         val searchCancelLeftMargin = searchCancel.width + searchCancel.marginEnd
                         homeAppbar.alpha = reverse
-                        itemView.alpha = reverse
+                        pageList.alpha = reverse
                         pageList.translationY = panelStartY * progress * -0.382f
-                        searchScrim.alpha = progress
                         searchPanel.translationY = panelStartY * reverse
                         searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
                             marginStart = searchInput.marginStart
@@ -222,7 +226,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             }
 
             fun isInSearch(): Boolean {
-                return searchOverlay.isVisible
+                return searchContainer.isVisible
             }
 
             fun enterSearch() {
@@ -233,8 +237,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                 }
 
                 animator?.cancel()
-//                searchInputEdit.text?.clear()
-//                searchInputEdit.requestFocus()
+                adapter.submitList(emptyList())
+                pageList.stopScroll()
+                searchInput.text?.clear()
 
                 val rootLocation = IntArray(2)
                 val viewLocation = IntArray(2)
@@ -248,28 +253,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     startListener = {
                         searchAnchor.alpha = 0f
                         homeAppbar.alpha = 1f
-                        itemView.alpha = 1f
-                        pageList.stopScroll()
                         pageList.translationY = 0f
-                        searchOverlay.visibility = View.VISIBLE
-                        searchScrim.alpha = 0f
+                        searchContainer.visibility = View.VISIBLE
                         searchPanel.translationY = panelStartY
                         searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
                             marginStart = searchInput.marginStart
                             marginEnd = marginStart
                         }
-//                        searchInputEdit.text?.clear()
                         searchCancel.alpha = 0f
                         searchCancel.translationX = (searchCancel.width + searchCancel.marginEnd).toFloat()
                         searchResultList.alpha = 0f
-                        searchResultList.adapter = FeatureAdapter(emptyList())
                         searchEmpty.alpha = 0f
                     },
                     endListener = {
                         backCallback.isEnabled = true
-//                        searchInputEdit.post {
-//                            inputMethodManager().showSoftInput(searchInputEdit, InputMethodManager.SHOW_IMPLICIT)
-//                        }
+                        pageList.visibility = View.GONE
+                        searchInput.showKeyboard()
+                        searchInput.requestFocus()
                     }
                 )
             }
@@ -278,32 +278,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                 if (!isInSearch()) return
 
                 animator?.cancel()
+                adapter.submitList(emptyList())
+                pageList.stopScroll()
+                searchInput.text?.clear()
 
                 buildAnimator(
                     1f, 0f,
                     startListener = {
                         backCallback.isEnabled = false
-//                        searchInputEdit.post {
-//                            inputMethodManager().hideSoftInputFromWindow(searchInputEdit.windowToken, 0)
-//                        }
+                        pageList.visibility = View.VISIBLE
+                        searchInput.hideKeyboard()
+                        searchInput.clearFocus()
                     },
                     endListener = {
                         searchAnchor.alpha = 1f
                         homeAppbar.alpha = 1f
-                        itemView.alpha = 1f
                         pageList.translationY = 0f
-                        searchOverlay.visibility = View.GONE
-                        searchScrim.alpha = 0f
+                        searchContainer.visibility = View.GONE
                         searchPanel.translationY = 0f
                         searchInput.updateLayoutParams<ConstraintLayout.LayoutParams> {
                             marginStart = searchInput.marginStart
                             marginEnd = marginStart
                         }
-//                        searchInputEdit.text?.clear()
                         searchCancel.alpha = 0f
                         searchCancel.translationX = 0f
                         searchResultList.alpha = 0f
-                        searchResultList.adapter = FeatureAdapter(emptyList())
                         searchEmpty.alpha = 0f
                     }
                 )
@@ -313,6 +312,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             val searchPanelTopPadding by lazy { searchPanel.paddingTop }
             val searchResultListTopMargin by lazy { searchResultList.marginTop }
             val searchEmptyTopMargin by lazy { searchEmpty.marginTop }
+            adapter = SearchResultAdapter(emptyArray())
             backCallback = object : OnBackPressedCallback(false) {
                 override fun handleOnBackPressed() {
                     exitSearch()
@@ -340,26 +340,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             }
             ViewCompat.requestApplyInsets(binding.root)
 
-//            searchScrim.setOnClickListener {
-//                if (searchInputEdit.text.isNullOrEmpty()) close()
-//            }
-//            searchInputEdit.addTextChangedListener(object : TextWatcher {
-//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-//
-//                override fun afterTextChanged(s: Editable?) {
-//                    updateResults(s?.toString().orEmpty())
-//                }
-//            })
-            searchCancel.setOnClickListener { exitSearch() }
-            searchResultList.layoutManager = LinearLayoutManager(requireContext())
-            searchResultList.adapter = FeatureAdapter(emptyList())
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backCallback)
-
-            searchAnchor.setOnClickListener {
-                enterSearch()
-            }
-
             homeAppbar.updateLayoutParams<CoordinatorLayout.LayoutParams> {
                 behavior = object : AppBarLayout.Behavior() {
                     override fun onStartNestedScroll(
@@ -382,51 +362,75 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
                     }
                 }
             }
-        }
-    }
-
-    private inner class HomeSearchController {
-        private var isOpen = false
-        private var panelStartY = 0f
-        private var searchTopInset = 0
-
-        fun updateResults(query: String) {
-            if (query.isBlank()) {
-                binding.searchResultList.visibility = View.GONE
-                binding.searchEmpty.visibility = View.GONE
-                binding.searchResultList.adapter = FeatureAdapter(emptyList())
-                return
+            searchInput.setOnEditorActionListener { view, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchInput.hideKeyboard()
+                    searchInput.clearFocus()
+                    true
+                } else false
             }
+            searchInput.addTextChangedListener(onTextChanged = { text, _, _, _ ->
+                var results = emptyList<SearchResultItem>()
+                if (text.isNullOrBlank()) {
+                    binding.searchEmpty.visibility = View.GONE
+                } else {
+                    val query = text.toString()
+                    val context = requireContext()
+                    val primaryColor by lazy {
+                        val typedValue = TypedValue()
+                        context.theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
+                        typedValue.data
+                    }
 
-            val results = allFeatures().filter { it.matches(query) }
-            binding.searchResultList.visibility = View.VISIBLE
-            binding.searchEmpty.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
-            binding.searchResultList.adapter = FeatureAdapter(results)
-        }
+                    results = HostStore.features.entries.flatMap { entry ->
+                        val category = entry.key
+                        val features = entry.value
+                        features.flatMap { feature ->
+                            buildList {
+                                fun match(title: String, path: String): SearchResultItem? {
+                                    val spannableTitle = SpannableString(title)
+                                    val index = title.indexOf(query, ignoreCase = true).takeIf { it >= 0 } ?: return null
+                                    spannableTitle.setSpan(
+                                        ForegroundColorSpan(primaryColor),
+                                        index,
+                                        index + query.length,
+                                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
 
-        fun FeatureInfo.matches(query: String): Boolean {
-            val context = requireContext()
-            val normalized = query.trim()
-            val name = context.getString(ResourceParser.parseResName(context, this.name))
-            val description = context.getString(ResourceParser.parseResName(context, this.description))
-            return name.contains(normalized, ignoreCase = true) ||
-                    description.contains(normalized, ignoreCase = true)
-        }
+                                    val result = SearchResultItem(category, feature, spannableTitle, path)
+                                    add(result)
+                                    return result
+                                }
 
-        fun allFeatures(): List<FeatureInfo> {
-            return HostStore.features.values.flatten()
-        }
+                                val categoryName = category.getDiaplayName()
+                                val featureName = context.getString(ResourceParser.parseResName(context, feature.name))
+                                val featureDesc = context.getString(ResourceParser.parseResName(context, feature.description))
+                                match(featureName, categoryName) ?:
+                                match(featureDesc, "$categoryName / $featureName") ?:
+                                feature.options.forEach { option ->
+                                    val optionName = context.getString(ResourceParser.parseResName(context, option.name))
+                                    val optionDesc = context.getString(ResourceParser.parseResName(context, option.description))
+                                    match(optionName, "$categoryName / $featureName") ?:
+                                    match(optionDesc, "$categoryName / $featureName / $optionName")
+                                }
+                            }
+                        }
+                    }
 
-        fun rootYOf(view: View): Float {
-            val rootLocation = IntArray(2)
-            val viewLocation = IntArray(2)
-            binding.root.getLocationInWindow(rootLocation)
-            view.getLocationInWindow(viewLocation)
-            return (viewLocation[1] - rootLocation[1]).toFloat()
-        }
+                    binding.searchEmpty.text = getString(R.string.feature_search_empty, query)
+                    binding.searchEmpty.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
+                }
 
-        fun inputMethodManager(): InputMethodManager {
-            return requireContext().getSystemService(InputMethodManager::class.java)
+                adapter.submitList(results)
+            })
+            searchCancel.setOnClickListener { exitSearch() }
+            searchResultList.adapter = adapter
+            searchResultList.layoutManager = LinearLayoutManager(requireContext())
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backCallback)
+
+            searchAnchor.setOnClickListener {
+                enterSearch()
+            }
         }
     }
 }

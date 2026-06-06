@@ -17,6 +17,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>({ inflater, conta
         get() = arguments?.getInt("category", -1)
             ?.takeIf { it >= 0 }
             ?.let { Category.entries[it] }
+    private var focusFeature: String?
+        get() = arguments?.getString("focusFeature", null)
+        set(value) { arguments?.putString("focusFeature", value) }
 
     override fun onCreate(): View {
         if (category == null) {
@@ -30,9 +33,21 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>({ inflater, conta
             it.findNavController().navigateUp()
         }
 
+        val features = HostStore.features[category] ?: emptyList()
         val featureList = binding.featureList
+        val adapter = FeatureAdapter(features)
         featureList.layoutManager = LinearLayoutManager(requireContext())
-        featureList.adapter = FeatureAdapter(HostStore.features[category] ?: emptyList())
+        featureList.adapter = adapter
+        if (focusFeature != null) featureList.post {
+            val position = features.indexOfFirst { it.key == focusFeature }
+            focusFeature = null
+
+            if (position < 0) return@post
+            featureList.smoothScrollToPosition(position)
+            featureList.findViewHolderForAdapterPosition(position)?.let {
+                adapter.highlightFeature(it)
+            }
+        }
 
         return binding.root
     }

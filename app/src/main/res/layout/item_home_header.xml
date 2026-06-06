@@ -27,6 +27,7 @@
                 android:id="@+id/status_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_centerVertical="true"
                 android:tint="?colorOnPrimary" />
 
@@ -34,7 +35,6 @@
                 android:id="@+id/status_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
                 android:layout_toEndOf="@id/status_icon"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?colorOnPrimary"
@@ -85,6 +85,7 @@
                 android:id="@+id/update_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_update_24dp" />
 
@@ -92,7 +93,6 @@
                 android:id="@+id/update_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
                 android:layout_toEndOf="@id/update_icon"
                 android:text="@string/update_title"
                 android:textAppearance="?textAppearanceTitleMedium"
@@ -126,9 +126,9 @@
     <com.google.android.material.search.SearchBar
         android:id="@+id/search_anchor"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="@dimen/search_bar_height"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="8dp"
-        android:hint="@string/search_hint" />
+        android:hint="@string/feature_search_hint" />
 
 </LinearLayout>

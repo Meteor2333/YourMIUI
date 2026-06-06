@@ -1,6 +1,7 @@
 package cc.meteormc.yourmiui.ui
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val controller = (fragment as NavHostFragment).navController
         binding.nav.setupWithNavController(controller)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         HostStore.init()
     }
