@@ -2,7 +2,6 @@ package cc.meteormc.yourmiui.ui.fragment
 
 import android.animation.Animator
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.SpannableString
 import android.text.Spanned
@@ -82,7 +81,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
         private fun ItemHomeHeaderBinding.bindModuleStatus() {
             var anchorX = 0f
             var anchorY = 0f
-            @SuppressLint("ClickableViewAccessibility")
             statusCard.setOnTouchListener { view, event ->
                 fun curve(v: Float): Float {
                     val sign = sign(v)
@@ -168,7 +166,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
             }
         }
 
-        @SuppressLint("SetTextI18n")
         private fun ItemHomeHeaderBinding.bindDeviceInfo() {
 //        binding.infoDeviceModel.text = PropertiesUtil.get("ro.product.marketname")
 //        binding.infoSystemCode.text = Build.DEVICE

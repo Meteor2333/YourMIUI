@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="ClickableViewAccessibility" severity="ignore" />
+    <issue id="ExtraTranslation" severity="ignore" />
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="RestrictedApi" severity="ignore" />
+    <issue id="SetTextI18n" severity="ignore" />
+    <issue id="UnspecifiedRegisterReceiverFlag" severity="ignore" />
+    <issue id="WorldReadableFiles" severity="ignore" />
+</lint>

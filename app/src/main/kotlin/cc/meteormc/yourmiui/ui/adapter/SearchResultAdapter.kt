@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.ui.adapter
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -37,7 +36,6 @@ class SearchResultAdapter(
         return ViewHolder(ItemSearchResultBinding.inflate(inflater, parent, false))
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int

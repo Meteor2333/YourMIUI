@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
@@ -29,7 +28,6 @@ class YourMIUI : Application() {
             // 就先用MODE_PRIVATE
             runCatching {
                 @Suppress("DEPRECATION")
-                @SuppressLint("WorldReadableFiles")
                 this.getSharedPreferences(
                     SharedPreferences.SHARED_PREFERENCES_NAME,
                     MODE_WORLD_READABLE

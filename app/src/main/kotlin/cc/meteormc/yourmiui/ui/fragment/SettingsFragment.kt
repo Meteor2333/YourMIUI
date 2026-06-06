@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.ui.fragment
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -79,7 +78,6 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
                         } else {
                             requireContext().createConfigurationContext(
                                 Configuration(resources.configuration).apply {
-                                    @SuppressLint("AppBundleLocaleChanges")
                                     setLocale(Locale.forLanguageTag(option.value))
                                 }
                             ).getString(R.string.langauge)

@@ -133,7 +133,6 @@ class AppPicker(
         override fun hashCode() = packageName.hashCode()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private inner class AppAdapter(
         size: Int,
         val selected: MutableSet<String>
@@ -160,6 +159,7 @@ class AppPicker(
                 }
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             notifyDataSetChanged()
         }
 
@@ -202,6 +202,7 @@ class AppPicker(
                 this.apps.add(app)
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             notifyDataSetChanged()
         }
 

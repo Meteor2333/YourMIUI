@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.xposed.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.RectF
 import android.graphics.Region
@@ -150,7 +149,6 @@ object EditGxzwQuickOpen : FeatureHooker {
                     Context::class.java
                 )?.new(*args) ?: return@operator null
                 if (context != null) {
-                    @SuppressLint("DiscouragedApi")
                     val identifier = context.resources.getIdentifier(
                         iconResName,
                         "drawable",

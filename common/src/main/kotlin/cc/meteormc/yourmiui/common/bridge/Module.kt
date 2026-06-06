@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.common.bridge
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -21,7 +20,6 @@ class Module(private val context: Context) : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED)
         } else {
-            @SuppressLint("UnspecifiedRegisterReceiverFlag")
             context.registerReceiver(this, filter)
         }
     }

@@ -1,6 +1,5 @@
 package cc.meteormc.yourmiui.ui.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.text.Editable
@@ -33,7 +32,6 @@ class SearchBar @JvmOverloads constructor(
     init {
         minimumHeight = resources.getDimensionPixelSize(R.dimen.search_bar_height)
         setNavigationIcon(R.drawable.ic_search_24dp)
-        @SuppressLint("RestrictedApi")
         ToolbarUtils.getNavigationIconButton(this)?.let {
             it.background = null
             it.isClickable = false
