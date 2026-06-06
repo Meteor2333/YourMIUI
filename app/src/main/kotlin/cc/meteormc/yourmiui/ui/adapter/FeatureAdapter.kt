@@ -52,16 +52,20 @@ class FeatureAdapter(
 
             this.prefs = YourMIUI.get().prefs.getFeature(item)
 
-            // 本来想做一个开关时的折叠动画 但能力有限
-            // 折腾了两个晚上之后效果也不满意 遂放弃 以后再说
             val list = binding.optionList
             val switch = binding.featureSwitch
-            switch.isChecked = prefs.enabled
-            switch.setOnCheckedChangeListener { _, isChecked ->
-                prefs.enabled = isChecked
-                if (isChecked) list.visibility = View.VISIBLE
-                else list.visibility = View.GONE
+            fun toggle(enabled: Boolean) {
+                prefs.enabled = enabled
+                switch.isChecked = enabled
+                if (enabled) binding.optionList.visibility = View.VISIBLE
+                else binding.optionList.visibility = View.GONE
             }
+
+            // 本来想做一个开关时的折叠动画 但能力有限
+            // 折腾了两个晚上之后效果也不满意 遂放弃 以后再说
+            switch.isChecked = prefs.enabled
+            switch.setOnCheckedChangeListener { _, isChecked -> toggle(isChecked) }
+            itemView.setOnClickListener { toggle(!switch.isChecked) }
 
             val options = item.options
             if (options.isEmpty()) return

@@ -6,7 +6,7 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:paddingHorizontal="25dp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/option_name"
