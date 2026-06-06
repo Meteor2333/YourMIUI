@@ -35,6 +35,7 @@ class CategoryAdapter(
             }
 
             binding.categoryName.text = displayName
+            binding.categoryName.isSelected = true
             binding.categoryIcon.setImageDrawable(icon)
         }
     }

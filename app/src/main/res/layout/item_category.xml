@@ -13,8 +13,8 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="12dp"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp" />
+        android:layout_marginEnd="20dp"
+        android:layout_centerVertical="true" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/category_name"
@@ -24,6 +24,7 @@
         android:layout_toStartOf="@id/arrow_icon"
         android:layout_toEndOf="@id/category_icon"
         android:ellipsize="marquee"
+        android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItem"
         android:textSize="16sp" />
 
