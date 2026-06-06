@@ -4,7 +4,7 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="Theme.YourMIUI.ToolbarTitleTextAppearance">
+    <style name="Theme.YourMIUI.ToolbarExpandedTitleTextAppearance" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textSize">32sp</item>
     </style>
 

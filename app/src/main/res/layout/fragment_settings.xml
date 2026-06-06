@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
             android:layout_marginStart="8dp"
-            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarTitleTextAppearance"
+            app:expandedTitleTextAppearance="@style/Theme.YourMIUI.ToolbarExpandedTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleCollapseMode="scale">
 
