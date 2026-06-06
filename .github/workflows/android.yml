@@ -29,7 +29,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Decode keystore
-        run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/release.jks
+        run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/keystore.jks
 
       - name: Generate properties
         run: |
