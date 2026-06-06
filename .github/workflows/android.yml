@@ -31,6 +31,16 @@ jobs:
       - name: Decode keystore
         run: printf "%s" "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ runner.temp }}/release.jks
 
+      - name: Generate properties
+        run: |
+          cat <<EOF >> gradle.properties
+
+          android.storeFile=${{ runner.temp }}/keystore.jks
+          android.storePassword=${{ secrets.KEY_STORE_PASSWORD }}
+          android.keyAlias=${{ secrets.ALIAS }}
+          android.keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
       - name: Build with Gradle
         run: ./gradlew build
         env:
