@@ -11,7 +11,7 @@ abstract class BaseFragment<T : Any>(
 ) : Fragment() {
     protected lateinit var binding: T
 
-    protected abstract fun onCreate(): View
+    protected abstract fun onCreateView(): View
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,6 +19,6 @@ abstract class BaseFragment<T : Any>(
         savedInstanceState: Bundle?
     ): View {
         binding = factory(inflater, container)
-        return this.onCreate()
+        return this.onCreateView()
     }
 }

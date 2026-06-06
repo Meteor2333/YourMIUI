@@ -50,7 +50,7 @@ import kotlin.math.tanh
 class HomeFragment : BaseFragment<FragmentHomeBinding>({ inflater, container ->
     FragmentHomeBinding.inflate(inflater, container, false)
 }) {
-    override fun onCreate(): View {
+    override fun onCreateView(): View {
         val pageList = binding.pageList
         pageList.layoutManager = LinearLayoutManager(requireContext())
         pageList.adapter = ConcatAdapter(

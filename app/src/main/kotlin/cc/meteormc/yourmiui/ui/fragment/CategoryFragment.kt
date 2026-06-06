@@ -21,7 +21,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>({ inflater, conta
         get() = arguments?.getString("focusFeature", null)
         set(value) { arguments?.putString("focusFeature", value) }
 
-    override fun onCreate(): View {
+    override fun onCreateView(): View {
         if (category == null) {
             findNavController().navigateUp()
             return binding.root

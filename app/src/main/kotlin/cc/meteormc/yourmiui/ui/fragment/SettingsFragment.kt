@@ -180,11 +180,10 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>({ inflater, conta
         )
     )
 
-    override fun onCreate(): View {
+    override fun onCreateView(): View {
         val settingGroupList = binding.settingGroupList
         settingGroupList.adapter = SettingGroupAdapter(settingGroups)
         settingGroupList.layoutManager = LinearLayoutManager(requireContext())
-
         return binding.root
     }
 
