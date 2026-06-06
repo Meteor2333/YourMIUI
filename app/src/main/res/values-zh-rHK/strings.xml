@@ -23,7 +23,8 @@
     <string name="info_android_version">Android版本</string>
     <string name="info_miui_version">MIUI版本</string>
     <string name="info_cpu_abi">CPU架構</string>
-    <string name="search_hint">搜索</string>
+    <string name="feature_search_hint">搜索功能</string>
+    <string name="feature_search_empty">找不到功能 %s</string>
     <string name="feature_warning">警告： %s</string>
     <string name="feature_test_environment">測試環境： %s</string>
     <string name="feature_original_author">原始作者： %s</string>
