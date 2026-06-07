@@ -1,6 +1,6 @@
 pull_request_title: 'chore(i18n): update translation from Crowdin'
 files:
   - source: /app/src/main/res/values/strings.xml
-    translation: /app/src/main/res/%android_code%/%original_file_name%
+    translation: /app/src/main/res/values-%android_code%/%original_file_name%
     dest: /app/strings.xml
     type: android
