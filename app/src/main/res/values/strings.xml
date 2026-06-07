@@ -1,207 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="langauge">简体中文</string>
+    <string name="langauge">English</string>
 
     <string name="app_name">YourMIUI</string>
-    <string name="module_description">一款优化 MIUI 系统中各种不友好功能的模块</string>
+    <string name="module_description">A module that improves various pain points in MIUI</string>
 
-    <string name="syscheck_title">系统检查</string>
-    <string name="syscheck_hyperos">本模块暂不支持澎湃系统！</string>
-    <string name="syscheck_unknown_system">本模块仅支持 MIUI 系统！</string>
-    <string name="syscheck_unsupported_version">本模块仅支持 MIUI11 及以上的系统！\n当前版本：%d</string>
-    <string name="syscheck_ignore">忽略</string>
-    <string name="syscheck_exit">退出</string>
+    <string name="syscheck_title">System Check</string>
+    <string name="syscheck_hyperos">This module does not support HyperOS!</string>
+    <string name="syscheck_unknown_system">This module only supports MIUI!</string>
+    <string name="syscheck_unsupported_version">This module only supports MIUI 11 and above!\nCurrent version: %d</string>
+    <string name="syscheck_ignore">Ignore</string>
+    <string name="syscheck_exit">Exit</string>
 
-    <string name="resource_unknown">未知</string>
+    <string name="resource_unknown">Unknown</string>
 
-    <string name="title_home">主页</string>
-    <string name="title_settings">设置</string>
+    <string name="title_home">Home</string>
+    <string name="title_settings">Settings</string>
 
-    <string name="status_active">模块已激活</string>
-    <string name="status_inactive">模块未激活</string>
-    <string name="status_version">版本: %s</string>
+    <string name="status_active">Module Activated</string>
+    <string name="status_inactive">Module Not Activated</string>
+    <string name="status_version">Module Version: %s</string>
 
-    <string name="update_title">有新版本可用</string>
-    <string name="update_summary">更新到最新版本以获得更好的体验</string>
+    <string name="update_title">New version available</string>
+    <string name="update_summary">Update to the latest version for a better experience</string>
 
-    <string name="info_device_brand">设备品牌</string>
-    <string name="info_device_model">设备型号</string>
-    <string name="info_system_code">系统代号</string>
-    <string name="info_android_version">Android版本</string>
-    <string name="info_miui_version">MIUI版本</string>
-    <string name="info_cpu_abi">CPU架构</string>
+    <string name="info_device_brand">Device brand</string>
+    <string name="info_device_model">Device model</string>
+    <string name="info_system_code">System code</string>
+    <string name="info_android_version">Android version</string>
+    <string name="info_miui_version">MIUI version</string>
+    <string name="info_cpu_abi">CPU ABI</string>
 
-    <string name="feature_search_hint">搜索功能</string>
-    <string name="feature_search_empty">找不到功能 %s</string>
+    <string name="feature_search_hint">Search function</string>
+    <string name="feature_search_empty">No function found %s</string>
 
-    <string name="feature_warning">警告: %s</string>
-    <string name="feature_test_environment">测试环境: %s</string>
-    <string name="feature_original_author">原作者: %s</string>
+    <string name="feature_warning">Warning: %s</string>
+    <string name="feature_test_environment">Test Environment: %s</string>
+    <string name="feature_original_author">Original Author: %s</string>
 
-    <string name="app_picker_title">App选择器</string>
-    <string name="app_picker_hint">搜索应用名称或包名</string>
+    <string name="app_picker_title">App Picker</string>
+    <string name="app_picker_hint">App name or package name</string>
 
-    <string name="switch_menu_enable">开启</string>
-    <string name="switch_menu_disable">关闭</string>
+    <string name="switch_menu_enable">Enable</string>
+    <string name="switch_menu_disable">Disable</string>
 
-    <string name="github_issue_found_app">Github App暂不支持问题模板\n请选择其他打开方式</string>
-    <string name="github_issue_no_browser">未找到其他打开方式 :)\n请手动在Github提交issue</string>
+    <string name="github_issue_found_app">GitHub App can’t open issue templates\nPlease choose another way</string>
+    <string name="github_issue_no_browser">No other method found :)\nPlease create the issue manually</string>
 
-    <string name="restart_scope_title">重启作用域</string>
-    <string name="restart_scope_content">此操作将重启以下软件包以应用更改:\n%s\n\n是否继续？</string>
-    <string name="restart_scope_success">重启成功！</string>
-    <string name="restart_scope_failure">重启成功！\n若更改未起效再次执行重启即可</string>
+    <string name="restart_scope_title">Restart Scope</string>
+    <string name="restart_scope_content">The following packages will be restarted to apply changes:\n%s\n\nContinue?</string>
+    <string name="restart_scope_success">Restart successful!</string>
+    <string name="restart_scope_failure">Restart successful!\nIf changes didn’t apply, try again</string>
 
-    <string name="settings_language">语言</string>
-    <string name="settings_language_language_title">语言</string>
-    <string name="settings_language_language_followsystem">跟随系统</string>
-    <string name="settings_language_translate_title">贡献翻译</string>
-    <string name="settings_language_translate_summary">帮助作者让本软件拥有你的语言</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_language_title">Language</string>
+    <string name="settings_language_language_followsystem">Follow system</string>
+    <string name="settings_language_translate_title">Contribute Translation</string>
+    <string name="settings_language_translate_summary">Help bring this app to your language</string>
 
-    <string name="settings_theme">主题</string>
-    <string name="settings_theme_colormode_title">颜色模式</string>
-    <string name="settings_theme_colormode_followsystem">跟随系统</string>
-    <string name="settings_theme_colormode_light">浅色模式</string>
-    <string name="settings_theme_colormode_dark">深色模式</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_colormode_title">Color Mode</string>
+    <string name="settings_theme_colormode_followsystem">Follow system</string>
+    <string name="settings_theme_colormode_light">Light</string>
+    <string name="settings_theme_colormode_dark">Dark</string>
 
-    <string name="settings_basic">基础</string>
-    <string name="settings_basic_hideicon_title">隐藏桌面图标</string>
-    <string name="settings_basic_hideicon_summary">从系统桌面中隐藏本软件的图标</string>
-    <string name="settings_basic_hideicon_notice">如需恢复 请在你所使用的Xposed管理器中进入本软件</string>
-    <string name="settings_basic_checkupdate_title">检查更新</string>
-    <string name="settings_basic_checkupdate_summary">在第一时间获取到最新版本</string>
+    <string name="settings_basic">Basic</string>
+    <string name="settings_basic_hideicon_title">Hide launcher icon</string>
+    <string name="settings_basic_hideicon_summary">Hide this module icon in the launcher</string>
+    <string name="settings_basic_hideicon_notice">To restore it, open this app in your Xposed manager.</string>
+    <string name="settings_basic_checkupdate_title">Check updates</string>
+    <string name="settings_basic_checkupdate_summary">Get the latest version as soon as it’s available</string>
 
-    <string name="settings_misc">杂项</string>
-    <string name="settings_misc_export_title">导出首选项</string>
-    <string name="settings_misc_export_summary">将首选项导出为文件</string>
-    <string name="settings_misc_export_success">导出成功！</string>
-    <string name="settings_misc_export_failure">导出失败！\n请重试</string>
-    <string name="settings_misc_import_title">导入首选项</string>
-    <string name="settings_misc_import_summary">从文件导入首选项</string>
-    <string name="settings_misc_import_success">导入成功！</string>
-    <string name="settings_misc_import_failure">导入失败！\n请检查首选项文件后重试</string>
+    <string name="settings_misc">Misc</string>
+    <string name="settings_misc_export_title">Export preferences</string>
+    <string name="settings_misc_export_summary">Export preferences as a file</string>
+    <string name="settings_misc_export_success">Export successful!</string>
+    <string name="settings_misc_export_failure">Export failed!\nPlease try again</string>
+    <string name="settings_misc_import_title">Import preferences</string>
+    <string name="settings_misc_import_summary">Import preferences from file</string>
+    <string name="settings_misc_import_success">Import successful!</string>
+    <string name="settings_misc_import_failure">Import failed!\nPlease check the preferences file and try again</string>
 
-    <string name="category_system">系统</string>
-    <string name="category_ui">界面</string>
-    <string name="category_desktop">桌面</string>
+    <string name="category_system">System</string>
+    <string name="category_ui">interface</string>
+    <string name="category_desktop">Desktop</string>
     <string name="category_miuiplus">MIUI+</string>
     <string name="category_nfc">NFC</string>
-    <string name="category_notification">通知</string>
-    <string name="category_packageinstaller">软件安装器</string>
+    <string name="category_notification">Notification</string>
+    <string name="category_packageinstaller">Software installer</string>
 
-    <string name="feature_system_block_process_kill_name">阻止结束进程</string>
-    <string name="feature_system_block_process_kill_description">阻止系统或第三方应用结束指定软件的进程</string>
-    <string name="option_system_block_process_kill_blocked_packages_name">阻止的软件列表</string>
-    <string name="option_system_block_process_kill_blocked_packages_description">选择要阻止的软件</string>
+    <string name="feature_system_block_process_kill_name">Prevent ending the process</string>
+    <string name="feature_system_block_process_kill_description">Prevent the system or third-party application from ending the process of the specified software</string>
+    <string name="option_system_block_process_kill_blocked_packages_name">List of blocked software</string>
+    <string name="option_system_block_process_kill_blocked_packages_description">Select the software you want to block</string>
 
-    <string name="feature_system_disable_adb_install_alert_name">禁用ADB安装弹窗</string>
-    <string name="feature_system_disable_adb_install_alert_description">禁用ADB安装时的确认弹窗</string>
-    <string name="option_system_disable_adb_install_alert_require_unlock_name">需要解锁</string>
-    <string name="option_system_disable_adb_install_alert_require_unlock_description">安装时需要解锁才能进行</string>
+    <string name="feature_system_disable_adb_install_alert_name">Disable ADB installation pop-ups</string>
+    <string name="feature_system_disable_adb_install_alert_description">Disable confirmation pop-ups during ADB installation</string>
+    <string name="option_system_disable_adb_install_alert_require_unlock_name">Unlock required</string>
+    <string name="option_system_disable_adb_install_alert_require_unlock_description">Unlocking is required for installation</string>
 
-    <string name="feature_system_remove_splash_ads_name">滚你妈的开屏广告</string>
-    <string name="feature_system_remove_splash_ads_description">去除大多数系统应用的开屏广告</string>
+    <string name="feature_system_remove_splash_ads_name">Get lost, splash screen ads</string>
+    <string name="feature_system_remove_splash_ads_description">Removes splash screen ads from most system apps</string>
 
-    <string name="feature_ui_edit_gxzw_quick_open_name">编辑指纹快捷功能</string>
-    <string name="feature_ui_edit_gxzw_quick_open_description">编辑长按指纹区域时呼出的快捷功能菜单</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_name">保留的功能项列表</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_description">选择要保留的功能项</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_add_event">新建日程</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_qr_code">扫描二维码</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_search">搜索</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_alipay_pay">支付宝: 付款码</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_alipay_scan">支付宝: 扫一扫</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_wechat_pay">微信: 付款码</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_wechat_scan">微信: 扫一扫</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_xiaoai">小爱同学</string>
-    <string name="option_ui_edit_gxzw_quick_open_reserved_items_torch">手电筒（本模块新增项）</string>
+    <string name="feature_ui_edit_gxzw_quick_open_name">Edit fingerprint shortcuts</string>
+    <string name="feature_ui_edit_gxzw_quick_open_description">Edit the shortcut menu that appears when long-pressing the fingerprint area</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_name">List of reserved items</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_description">Select the items you want to keep</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_add_event">Create a new schedule</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_qr_code">Scan the QR code</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_search">Search</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_alipay_pay">Alipay: Payment code</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_alipay_scan">Alipay: Scan the code</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_wechat_pay">WeChat: Payment code</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_wechat_scan">WeChat: Scan the QR code</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_xiaoai">Xiao Ai</string>
+    <string name="option_ui_edit_gxzw_quick_open_reserved_items_torch">Flashlight (new item in this module)</string>
 
-    <string name="feature_ui_fix_splash_screen_name">修复启动画面</string>
-    <string name="feature_ui_fix_splash_screen_description">修复没有主动适配开屏画面的软件不显示启动遮罩动画的问题</string>
-    <string name="option_ui_fix_splash_screen_replace_background_color_name">替换背景颜色</string>
-    <string name="option_ui_fix_splash_screen_replace_background_color_description">将启动画面的背景颜色替换为相应的图标主题色</string>
+    <string name="feature_ui_fix_splash_screen_name">Fixed the startup screen</string>
+    <string name="feature_ui_fix_splash_screen_description">Fixed an issue where software without active splash screen adaptation would not display the startup mask animation</string>
+    <string name="option_ui_fix_splash_screen_replace_background_color_name">Replace the background color</string>
+    <string name="option_ui_fix_splash_screen_replace_background_color_description">Replace the background color of the startup screen with the corresponding icon theme color</string>
 
-    <string name="feature_ui_hide_status_bar_icons_name">隐藏状态栏图标</string>
-    <string name="feature_ui_hide_status_bar_icons_description">隐藏状态栏中指定的图标项</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_name">隐藏的图标列表</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_description">选择要隐藏的图标</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_privacy">隐私模式</string>
+    <string name="feature_ui_hide_status_bar_icons_name">Hide the status bar icon</string>
+    <string name="feature_ui_hide_status_bar_icons_description">Hide the icon items specified in the status bar</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_name">List of hidden icons</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_description">Select the icon you want to hide</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_privacy">Privacy mode</string>
     <string name="option_ui_hide_status_bar_icons_hidden_icons_nfc">NFC</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_zen">勿扰模式</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_cast">投屏</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_bluetooth">蓝牙</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_bluetooth_battery">蓝牙设备电量</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_stealth">隐身模式</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_volume">静音模式</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_alarm_clock">闹钟</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_zen">Do Not Disturb mode</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_cast">Screen projection</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_bluetooth">Bluetooth</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_bluetooth_battery">Bluetooth device power</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_stealth">Stealth mode</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_volume">Silent mode</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_alarm_clock">Alarm clock</string>
     <string name="option_ui_hide_status_bar_icons_hidden_icons_vpn">VPN</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_airplane">飞行模式</string>
-    <string name="option_ui_hide_status_bar_icons_hidden_icons_hotspot">热点</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_airplane">Airplane mode</string>
+    <string name="option_ui_hide_status_bar_icons_hidden_icons_hotspot">Hot spots</string>
     <string name="option_ui_hide_status_bar_icons_hidden_icons_wifi">WiFi</string>
 
-    <string name="feature_desktop_disable_today_recommend_name">禁用今日推荐</string>
-    <string name="feature_desktop_disable_today_recommend_description">禁用桌面文件夹中的今日推荐相关内容</string>
+    <string name="feature_desktop_disable_today_recommend_name">Disable Today\'s Recommendation</string>
+    <string name="feature_desktop_disable_today_recommend_description">Disable Today\'s Recommendations related content in the desktop folder</string>
 
-    <string name="feature_desktop_hide_folder_scroll_bar_name">隐藏文件夹滚动条</string>
-    <string name="feature_desktop_hide_folder_scroll_bar_description">隐藏桌面文件夹中软件较多时出现的滚动条</string>
+    <string name="feature_desktop_hide_folder_scroll_bar_name">Hide the folder scrollbar</string>
+    <string name="feature_desktop_hide_folder_scroll_bar_description">Hide the scrollbar that appears when there is a lot of software in the desktop folder</string>
 
-    <string name="feature_market_disable_notification_recall_name">禁用开启通知弹窗</string>
-    <string name="feature_market_disable_notification_recall_description">禁用应用商店不定时弹出的提醒开启通知弹窗</string>
+    <string name="feature_market_disable_notification_recall_name">Disable the opening notification pop-up</string>
+    <string name="feature_market_disable_notification_recall_description">Disable the reminder that pops up from time to time in the app store to open the notification pop-up</string>
 
-    <string name="feature_market_remove_ads_name">去广告</string>
-    <string name="feature_market_remove_ads_description">去除应用商店中的各种广告和赞助商应用推荐</string>
-    <string name="option_market_remove_ads_hidden_tags_name">隐藏的底栏项列表</string>
-    <string name="option_market_remove_ads_hidden_tags_description">选择要隐藏的底栏项</string>
-    <string name="option_market_remove_ads_hidden_tags_home">主页</string>
-    <string name="option_market_remove_ads_hidden_tags_video">视频号</string>
-    <string name="option_market_remove_ads_hidden_tags_agent">智能体</string>
-    <string name="option_market_remove_ads_hidden_tags_assemble">应用号</string>
-    <string name="option_market_remove_ads_hidden_tags_game">游戏</string>
-    <string name="option_market_remove_ads_hidden_tags_rank">榜单</string>
-    <string name="option_market_remove_ads_hidden_tags_software">软件</string>
-    <string name="option_market_remove_ads_hidden_tags_mine">我的</string>
+    <string name="feature_market_remove_ads_name">Remove Ads</string>
+    <string name="feature_market_remove_ads_description">Remove various ads and sponsored app recommendations</string>
+    <string name="option_market_remove_ads_hidden_tags_name">Hidden Bottom Tabs List</string>
+    <string name="option_market_remove_ads_hidden_tags_description">Select the bottom bar items you want to hide</string>
+    <string name="option_market_remove_ads_hidden_tags_home">Home</string>
+    <string name="option_market_remove_ads_hidden_tags_video">Video</string>
+    <string name="option_market_remove_ads_hidden_tags_agent">agent</string>
+    <string name="option_market_remove_ads_hidden_tags_assemble">Assemble</string>
+    <string name="option_market_remove_ads_hidden_tags_game">g</string>
+    <string name="option_market_remove_ads_hidden_tags_rank">Rank</string>
+    <string name="option_market_remove_ads_hidden_tags_software">Software</string>
+    <string name="option_market_remove_ads_hidden_tags_mine">Mine</string>
 
-    <string name="feature_miuiplus_disable_clip_tip_name">禁用剪切板提醒</string>
-    <string name="feature_miuiplus_disable_clip_tip_description">禁用设备互联的信息流转功能同步剪贴板时的提醒</string>
+    <string name="feature_miuiplus_disable_clip_tip_name">Disable clipboard reminders</string>
+    <string name="feature_miuiplus_disable_clip_tip_description">Disable reminders when syncing clipboards when device interconnect information flow is disabled</string>
 
-    <string name="feature_mms_remove_ads_name">去广告</string>
-    <string name="feature_mms_remove_ads_description">去除短信消息下方的各种广告按钮</string>
+    <string name="feature_mms_remove_ads_name">Remove Ads</string>
+    <string name="feature_mms_remove_ads_description">Remove various ad buttons below messages</string>
 
-    <string name="feature_nfc_allow_locked_access_name">允许锁定时识别卡片</string>
-    <string name="feature_nfc_allow_locked_access_description">使手机在未解锁的状态下依然能够识别卡片</string>
-    <string name="feature_nfc_allow_locked_access_warning">开启此功能可能导致NFC失去鉴权作用</string>
+    <string name="feature_nfc_allow_locked_access_name">Allow Locked Access</string>
+    <string name="feature_nfc_allow_locked_access_description">Allow the phone to access NFC cards even when locked</string>
+    <string name="feature_nfc_allow_locked_access_warning">Enabling this may compromise NFC authentication functionality</string>
 
-    <string name="feature_notification_disable_force_notification_name">禁用强制通知</string>
-    <string name="feature_notification_disable_force_notification_description">解除系统应用不允许关闭通知的限制</string>
+    <string name="feature_notification_disable_force_notification_name">Disable Force Notification</string>
+    <string name="feature_notification_disable_force_notification_description">Remove the restriction that prevents disabling notifications for system apps</string>
 
-    <string name="feature_packageinstaller_disable_safe_check_name">禁用应用安全检测</string>
-    <string name="feature_packageinstaller_disable_safe_check_description">禁止安装应用时对应用进行安全检测</string>
-    <string name="feature_packageinstaller_disable_safe_check_warning">开启此功能可能导致恶意应用在未被检测的情况下被安装</string>
+    <string name="feature_packageinstaller_disable_safe_check_name">Disable App Security Check</string>
+    <string name="feature_packageinstaller_disable_safe_check_description">Disable security checks during app installation</string>
+    <string name="feature_packageinstaller_disable_safe_check_warning">Enabling this may allow malicious apps to be installed without detection</string>
 
-    <string name="feature_portal_fix_link_handling_name">修复链接打开方式</string>
-    <string name="feature_portal_fix_link_handling_description">修复默认浏览器被修改后无法正常打开链接的问题</string>
+    <string name="feature_portal_fix_link_handling_name">Fixed the way links were opened</string>
+    <string name="feature_portal_fix_link_handling_description">Fixed the issue where the default browser could not open links properly after being modified</string>
 
-    <string name="feature_securitycenter_disable_unnecessary_scans_name">禁用不重要的扫描项</string>
-    <string name="feature_securitycenter_disable_unnecessary_scans_description">禁用手机管家中的开发者模式、USB调试开关等扫描项</string>
+    <string name="feature_securitycenter_disable_unnecessary_scans_name">Disable Unnecessary Scans</string>
+    <string name="feature_securitycenter_disable_unnecessary_scans_description">Disable unnecessary scan items (such as developer mode and USB debugging)</string>
 
-    <string name="feature_securitycenter_fix_traffic_correction_name">修复流量校正</string>
-    <string name="feature_securitycenter_fix_traffic_correction_description">修复网络助手的校正总是失败的问题</string>
+    <string name="feature_securitycenter_fix_traffic_correction_name">Fix Traffic Correction</string>
+    <string name="feature_securitycenter_fix_traffic_correction_description">Fix the issue where traffic correction in the network assistant fails</string>
 
-    <string name="feature_settings_disable_countdown_dialog_name">取消倒计时对话框</string>
-    <string name="feature_settings_disable_countdown_dialog_description">取消更改危险设置时的对话框确定倒计时</string>
+    <string name="feature_settings_disable_countdown_dialog_name">Cancel the countdown dialog</string>
+    <string name="feature_settings_disable_countdown_dialog_description">Disable the dialog box for changing hazard settings to set the countdown</string>
 
-    <string name="feature_settings_remove_adb_switch_restrictions_name">移除ADB开关限制</string>
-    <string name="feature_settings_remove_adb_switch_restrictions_description">移除设置中ADB的开关限制（如要求联网、插入SIM卡、登录小米账号）</string>
+    <string name="feature_settings_remove_adb_switch_restrictions_name">Removed ADB switch restrictions</string>
+    <string name="feature_settings_remove_adb_switch_restrictions_description">Remove ADB toggle restrictions in settings (such as requiring internet connection, inserting SIM card, logging into Xiaomi account)</string>
 
-    <string name="feature_settings_remove_header_tips_name">移除页眉提醒</string>
-    <string name="feature_settings_remove_header_tips_description">移除设置中页眉出现的提醒横幅（如推荐开启小米云）</string>
+    <string name="feature_settings_remove_header_tips_name">Remove header alerts</string>
+    <string name="feature_settings_remove_header_tips_description">Remove the reminder banner that appears in the header in the settings (if it is recommended to turn on Xiaomi Cloud)</string>
 
-    <string name="feature_settings_remove_new_version_badge_name">清除新版本标记</string>
-    <string name="feature_settings_remove_new_version_badge_description">清除设置中的系统新版本标记（不会阻止系统进行更新）</string>
-    <string name="option_settings_remove_new_version_badge_modify_property_name">系统属性修改</string>
-    <string name="option_settings_remove_new_version_badge_modify_property_description">修改MIUI添加的一条新系统版本标记，更加激进的清除方式</string>
+    <string name="feature_settings_remove_new_version_badge_name">Remove New Version Badge</string>
+    <string name="feature_settings_remove_new_version_badge_description">Remove the system update badge (does not block updates)</string>
+    <string name="option_settings_remove_new_version_badge_modify_property_name">Modify Property</string>
+    <string name="option_settings_remove_new_version_badge_modify_property_description">A new system version marker added by MIUI has been changed, adopting a more aggressive removal method</string>
 
-    <string name="feature_wallpaper_disable_superwallpaper_pause_name">禁止超级壁纸暂停</string>
-    <string name="feature_wallpaper_disable_superwallpaper_pause_description">阻止超级壁纸在锁屏时暂停（注意: 请在作用域中勾选你所使用的超级壁纸）</string>
-    <string name="feature_wallpaper_disable_superwallpaper_pause_warning">开启此功能可能导致不必要的性能占用</string>
+    <string name="feature_wallpaper_disable_superwallpaper_pause_name">No super wallpaper pause</string>
+    <string name="feature_wallpaper_disable_superwallpaper_pause_description">Prevent super wallpapers from pausing during lock screen (Note: Please check the super wallpaper you are using in scope)</string>
+    <string name="feature_wallpaper_disable_superwallpaper_pause_warning">Enabling this feature may lead to unnecessary performance usage</string>
 </resources>
