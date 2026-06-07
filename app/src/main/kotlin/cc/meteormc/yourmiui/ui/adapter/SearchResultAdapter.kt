@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.ItemSearchResultBinding
-import cc.meteormc.yourmiui.helper.CategoryResProvider.getIcon
+import cc.meteormc.yourmiui.helper.ResourceParser.getIcon
 import cc.meteormc.yourmiui.ui.data.SearchResultItem
 
 class SearchResultAdapter(

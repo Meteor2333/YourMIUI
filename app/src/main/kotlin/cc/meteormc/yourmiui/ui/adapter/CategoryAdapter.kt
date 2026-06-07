@@ -5,8 +5,8 @@ import androidx.navigation.findNavController
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.databinding.ItemCategoryBinding
-import cc.meteormc.yourmiui.helper.CategoryResProvider.getDiaplayName
-import cc.meteormc.yourmiui.helper.CategoryResProvider.getIcon
+import cc.meteormc.yourmiui.helper.ResourceParser.getDiaplayName
+import cc.meteormc.yourmiui.helper.ResourceParser.getIcon
 
 class CategoryAdapter(
     scopes: List<Category>

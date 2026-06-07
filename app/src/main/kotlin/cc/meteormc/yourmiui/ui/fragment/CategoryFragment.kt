@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.databinding.FragmentCategoryBinding
-import cc.meteormc.yourmiui.helper.CategoryResProvider.getDiaplayName
+import cc.meteormc.yourmiui.helper.ResourceParser.getDiaplayName
 import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.adapter.FeatureAdapter
 

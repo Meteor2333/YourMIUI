@@ -32,8 +32,8 @@ import cc.meteormc.yourmiui.BuildConfig
 import cc.meteormc.yourmiui.R
 import cc.meteormc.yourmiui.databinding.FragmentHomeBinding
 import cc.meteormc.yourmiui.databinding.ItemHomeHeaderBinding
-import cc.meteormc.yourmiui.helper.CategoryResProvider.getDiaplayName
 import cc.meteormc.yourmiui.helper.ResourceParser
+import cc.meteormc.yourmiui.helper.ResourceParser.getDiaplayName
 import cc.meteormc.yourmiui.helper.UpdateChecker
 import cc.meteormc.yourmiui.store.HostStore
 import cc.meteormc.yourmiui.ui.adapter.BaseAdapter
