@@ -23,7 +23,8 @@
     <string name="info_android_version">Android version</string>
     <string name="info_miui_version">MIUI version</string>
     <string name="info_cpu_abi">CPU ABI</string>
-    <string name="search_hint">Search</string>
+    <string name="feature_search_hint">Search function</string>
+    <string name="feature_search_empty">No function found %s</string>
     <string name="feature_warning">Warning: %s</string>
     <string name="feature_test_environment">Test Environment: %s</string>
     <string name="feature_original_author">Original Author: %s</string>
