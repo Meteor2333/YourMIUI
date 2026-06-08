@@ -39,19 +39,20 @@ object DisableAdbInstallAlert : FeatureHooker {
             method("asInterface")
         } ?: return
 
-        context.reflect("com.miui.common.base.AlertActivity") {
+        val targetClass = "com.miui.permcenter.install.AdbInstallActivity"
+        context.reflect(targetClass) {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {
                 val activity = it.instance<Activity>()
                 // 判断当前子类环境是否为所需的类
-                if (activity.javaClass.name != "com.miui.permcenter.install.AdbInstallActivity") {
+                if (activity.javaClass.name != targetClass) {
                     return@hookAfter
                 }
 
                 val binder = getBinderMethod.call(null, activity.intent, "observer")
                 val messenger = asInterfaceMethod.call(null, binder)
                 // name: (obfuscated) | type: android.os.IMessenger
-                fields(messagerClass).firstOrNull()?.set(it, messenger)
+                fields(messagerClass).firstOrNull()?.set(activity, messenger)
 
                 val km = activity.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager?
                 if (!requireUnlock || (km != null && !km.isKeyguardLocked)) {
