@@ -5,9 +5,10 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
 import cc.meteormc.yourmiui.xposed.hookResult
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.NFC,
@@ -20,15 +21,15 @@ object AllowLockedAccess : FeatureHooker {
     private const val SCREEN_STATE_ON_UNLOCKED = 8
     private const val MSG_APPLY_SCREEN_STATE = 16
 
-    override fun hook(packageName: String) {
-        operator($$"com.android.nfc.NfcService$NfcServiceHandler") {
+    override fun hook(context: HookContext) {
+        context.reflect($$"com.android.nfc.NfcService$NfcServiceHandler") {
             // modifier: public | signature: handleMessage(Landroid/os/Message;)V
             method("handleMessage")?.hookDoNothing {
                 it.argByGenerics<Message>()?.what == MSG_APPLY_SCREEN_STATE
             }
         }
 
-        operator("com.android.nfc.ScreenStateHelper") {
+        context.reflect("com.android.nfc.ScreenStateHelper") {
             // modifier: (default) | signature: checkScreenState()I
             method("checkScreenState")?.hookResult(SCREEN_STATE_ON_UNLOCKED)
         }

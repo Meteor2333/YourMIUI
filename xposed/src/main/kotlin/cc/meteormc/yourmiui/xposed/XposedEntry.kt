@@ -8,6 +8,7 @@ import cc.meteormc.yourmiui.FeatureRegistry
 import cc.meteormc.yourmiui.api.OptionType
 import cc.meteormc.yourmiui.api.annotation.EntryClass
 import cc.meteormc.yourmiui.api.data.FeatureInfo
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.api.util.ClassUtil
 import cc.meteormc.yourmiui.api.util.PrimitiveUtil
 import cc.meteormc.yourmiui.api.util.SingletonUtil
@@ -22,18 +23,7 @@ import java.lang.reflect.Modifier
 
 @EntryClass
 class XposedEntry : IXposedHookLoadPackage {
-    companion object {
-        lateinit var INSTANCE: XposedEntry
-            private set
-    }
-
-    init {
-        INSTANCE = this
-    }
-
     lateinit var hostBridge: Host
-    lateinit var classLoader: ClassLoader
-
     private val prefs by lazy {
         SharedPreferences(
             XSharedPreferences(
@@ -48,7 +38,13 @@ class XposedEntry : IXposedHookLoadPackage {
 
     @Suppress("UNCHECKED_CAST")
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        classLoader = lpparam.classLoader
+        val classLoader = lpparam.classLoader
+        val context = HookContext(
+            lpparam.appInfo.uid,
+            lpparam.packageName,
+            lpparam.processName,
+            lpparam.classLoader
+        )
 
         val packageName = lpparam.packageName
         FeatureRegistry.features[packageName]
@@ -80,7 +76,7 @@ class XposedEntry : IXposedHookLoadPackage {
                         source[instance] = value
                     }
 
-                    it.hooker.hook(packageName)
+                    it.hooker.hook(context)
                 }.onFailure { exception ->
                     XposedBridge.log(
                         "[YourMIUI] Failed to " +
@@ -91,14 +87,12 @@ class XposedEntry : IXposedHookLoadPackage {
                 }
             }
 
-        operator(Application::class.java) {
-            method("attach")?.hookAfter {
-                initHostBridge(it.instance())
-            }
+        Application::class.reflect.method("attach")?.hookAfter {
+            initHostBridge(it.instance(), classLoader)
         }
     }
 
-    private fun initHostBridge(context: Context) {
+    private fun initHostBridge(context: Context, classLoader: ClassLoader) {
         hostBridge = Host(context)
         hostBridge.register(Bridge.FORCE_STOP_CHANNEL) {
             Thread {
@@ -107,16 +101,13 @@ class XposedEntry : IXposedHookLoadPackage {
             }.start()
         }.attach()
 
-        val bridgeClass = ClassUtil.getClass(classLoader, Bridge::class.java.name, true)
-        if (bridgeClass != null) {
-            operator(bridgeClass) {
-                val apiName = Reflect(XposedBridge::class.java).run {
-                    field("TAG")?.get(null)
-                } ?: "Unknown"
-                val apiVersion = XposedBridge.getXposedVersion()
-                field("apiName")?.set(null, apiName)
-                field("apiVersion")?.set(null, apiVersion)
-            }
+        ClassUtil.getClass(classLoader, Bridge::class.java.name, true)?.reflect {
+            val apiName = Reflect(XposedBridge::class.java).run {
+                field("TAG")?.get(null)
+            } ?: "Unknown"
+            val apiVersion = XposedBridge.getXposedVersion()
+            field("apiName")?.set(null, apiName)
+            field("apiVersion")?.set(null, apiVersion)
         }
     }
 }

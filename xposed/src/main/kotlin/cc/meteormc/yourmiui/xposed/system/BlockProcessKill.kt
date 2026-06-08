@@ -8,9 +8,10 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.AppOptionRegister
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.get
 import cc.meteormc.yourmiui.xposed.hookDoNothing
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.SYSTEM,
@@ -25,13 +26,13 @@ object BlockProcessKill : FeatureHooker {
     )
     private lateinit var blockedPackages: Set<String>
 
-    override fun hook(packageName: String) {
+    override fun hook(context: HookContext) {
         // 从 /system_ext/framework/miui-services.jar 提取
-        operator("com.android.server.am.ProcessCleanerBase") {
+        context.reflect("com.android.server.am.ProcessCleanerBase") {
             // 从 /system/framework/services.jar 提取
-            val operator = operator("com.android.server.am.ProcessRecord") ?: return@operator
+            val operator = context.reflect("com.android.server.am.ProcessRecord") ?: return@reflect
             // name: info | type: android.content.pm.ApplicationInfo
-            val infoField = operator.field("info") ?: return@operator
+            val infoField = operator.field("info") ?: return@reflect
             val recordClass = operator.delegate
 
             // modifier: (default) | signature: killOnce(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;ILandroid/os/Handler;Landroid/content/Context;)V

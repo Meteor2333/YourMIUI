@@ -4,8 +4,9 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookAfter
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.PACKAGE_INSTALLER,
@@ -15,11 +16,11 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.miui.packageinstaller")
 object DisableSafeCheck : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.miui.packageInstaller.model.ApkInfo") {
-            val operator = operator("com.miui.packageInstaller.model.CloudParams") ?: return@operator
-            val storeListedField = operator.field("storeListed") ?: return@operator
-            val secureWarningTipField = operator.field("secureWarningTip") ?: return@operator
+    override fun hook(context: HookContext) {
+        context.reflect("com.miui.packageInstaller.model.ApkInfo") {
+            val operator = context.reflect("com.miui.packageInstaller.model.CloudParams") ?: return@reflect
+            val storeListedField = operator.field("storeListed") ?: return@reflect
+            val secureWarningTipField = operator.field("secureWarningTip") ?: return@reflect
 
             // modifier: public final | signature: getCloudParams()Lcom/miui/packageInstaller/model/CloudParams;
             method("getCloudParams")?.hookAfter {

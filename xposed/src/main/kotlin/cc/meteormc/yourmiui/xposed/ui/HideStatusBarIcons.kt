@@ -5,8 +5,9 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookBefore
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.UI,
@@ -51,12 +52,12 @@ object HideStatusBarIcons : FeatureHooker {
     )
     private lateinit var hiddenIcons: Set<String>
 
-    override fun hook(packageName: String) {
+    override fun hook(context: HookContext) {
         setOf(
             "StatusBarIconControllerImpl",
             "MiuiDripLeftStatusBarIconControllerImpl"
         ).forEach {
-            operator("com.android.systemui.statusbar.phone.$it") {
+            context.reflect("com.android.systemui.statusbar.phone.$it") {
                 // modifier: public | signature: setIconVisibility(Ljava/lang/String;ZI)V
                 method(
                     "setIconVisibility",

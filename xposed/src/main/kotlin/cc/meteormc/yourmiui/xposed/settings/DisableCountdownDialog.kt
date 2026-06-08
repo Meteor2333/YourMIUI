@@ -5,11 +5,12 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.api.data.HookParam
 import cc.meteormc.yourmiui.xposed.Reflect
 import cc.meteormc.yourmiui.xposed.get
 import cc.meteormc.yourmiui.xposed.hookAfter
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.SETTINGS,
@@ -18,15 +19,15 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.miui.securitycenter")
 object DisableCountdownDialog : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.miui.permcenter.privacymanager.InterceptBaseFragment") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {
                 // name: (obfuscated) | type: (obfuscated)
                 val handler = fields(Handler::class.java)
                     .firstOrNull()
                     ?.get<Handler>(it.instance) ?: return@hookAfter
-                operator(handler.javaClass) {
+                handler.javaClass.reflect {
                     // name: (obfuscated) | type: int
                     fields(Int::class.java).firstOrNull()?.set(handler, -1)
                 }
@@ -51,14 +52,14 @@ object DisableCountdownDialog : FeatureHooker {
             }
         }
 
-        operator("com.miui.permcenter.install.AdbInputApplyActivity") {
+        context.reflect("com.miui.permcenter.install.AdbInputApplyActivity") {
             // modifier: public | signature: onClick(Landroid/view/View;)V
             method("onClick")?.hookAfter(hookGetter(this))
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter(hookGetter(this))
         }
         // 根据倒计时特征匹配到的 但从来没有见过这个界面 为什么呢
-        operator("com.miui.permcenter.root.RootApplyActivity") {
+        context.reflect("com.miui.permcenter.root.RootApplyActivity") {
             // modifier: public | signature: onClick(Landroid/view/View;)V
             method("onClick")?.hookAfter(hookGetter(this))
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V

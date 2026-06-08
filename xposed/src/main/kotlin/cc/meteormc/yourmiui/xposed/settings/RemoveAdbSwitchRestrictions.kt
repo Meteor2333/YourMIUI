@@ -4,8 +4,9 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.SETTINGS,
@@ -14,8 +15,8 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.miui.securitycenter")
 object RemoveAdbSwitchRestrictions : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator($$"com.miui.permcenter.install.AdbInstallVerifyActivity$a") {
+    override fun hook(context: HookContext) {
+        context.reflect($$"com.miui.permcenter.install.AdbInstallVerifyActivity$a") {
             // modifier: protected bridge synthetic | signature: doInBackground([Ljava/lang/Object;)Ljava/lang/Object;
             method("doInBackground")?.hookDoNothing()
         }

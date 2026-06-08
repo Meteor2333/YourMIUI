@@ -5,9 +5,10 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.call
 import cc.meteormc.yourmiui.xposed.hookBefore
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.SECURITY_CENTER,
@@ -16,10 +17,10 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.miui.securitycenter")
 object FixTrafficCorrection : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.miui.sdk.tc.TcManager") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.miui.sdk.tc.TcManager") {
             // modifier: public | signature: getAllInstructions(I)Ljava/util/List<Lcom/miui/sdk/tc/TcDirection;>;
-            val refreshMethod = method("getAllInstructions") ?: return@operator
+            val refreshMethod = method("getAllInstructions") ?: return@reflect
 
             // modifier: private synchronized | signature: isInBlockNumberList(Ljava/lang/String;I)Z
             method("isInBlockNumberList")?.hookBefore {
@@ -38,7 +39,7 @@ object FixTrafficCorrection : FeatureHooker {
         }
 
         // for debug
-//        operator("com.miui.networkassistant.service.tm.TrafficSimManager") {
+//        context.reflect("com.miui.networkassistant.service.tm.TrafficSimManager") {
 //            // modifier: public | signature: checkCorrectTime(IZZII)I
 //            method("checkCorrectTime")?.hookResult(-1)
 //        }

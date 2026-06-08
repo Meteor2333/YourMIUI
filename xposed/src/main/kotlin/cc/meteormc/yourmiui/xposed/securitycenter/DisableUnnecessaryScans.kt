@@ -4,8 +4,9 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.SECURITY_CENTER,
@@ -21,9 +22,9 @@ object DisableUnnecessaryScans : FeatureHooker {
         "com.miui.securityscan.model.system.UsbModel"
     )
 
-    override fun hook(packageName: String) {
+    override fun hook(context: HookContext) {
         for (scan in unnecessaryScans) {
-            operator(scan) {
+            context.reflect(scan) {
                 // modifier: public | signature: scan()V
                 method("scan")?.hookDoNothing()
             }

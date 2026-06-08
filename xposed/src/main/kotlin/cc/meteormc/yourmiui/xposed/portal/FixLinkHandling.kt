@@ -6,8 +6,9 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookAfter
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.PORTAL,
@@ -16,8 +17,8 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.miui.contentextension")
 object FixLinkHandling : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.miui.contentextension.utils.AppsUtils") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.miui.contentextension.utils.AppsUtils") {
             // modifier: private static | signature: getIntentWithBrowser(Ljava/lang/String;)Landroid/content/Intent;
             method("getIntentWithBrowser")?.hookAfter {
                 it.result<Intent>()?.apply {

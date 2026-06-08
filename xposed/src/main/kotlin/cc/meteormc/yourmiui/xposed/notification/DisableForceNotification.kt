@@ -9,12 +9,13 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.call
 import cc.meteormc.yourmiui.xposed.get
 import cc.meteormc.yourmiui.xposed.hookAfter
 import cc.meteormc.yourmiui.xposed.hookResult
-import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.overrideResult
+import cc.meteormc.yourmiui.xposed.reflect
 import cc.meteormc.yourmiui.xposed.replaceResult
 
 @FeatureRegister(
@@ -33,7 +34,7 @@ object DisableForceNotification : FeatureHooker {
     private const val FLAG_PERMISSION_GRANTED_BY_DEFAULT = 1 shl 5
     private const val FLAG_PERMISSION_GRANTED_BY_ROLE = 1 shl 15
 
-    override fun hook(packageName: String) {
+    override fun hook(context: HookContext) {
         // 调用链:
         // (通知管理) -> d.a.b.g.h.a(d.a.b.h$b, miui.notification.management.model.AppItem, int, android.widget.CompoundButton, boolean)
         // (通知管理) -> miui.notification.management.activity.NotificationAppListActivity.a(d.a.b.f)
@@ -44,33 +45,33 @@ object DisableForceNotification : FeatureHooker {
         // (services) -> com.android.server.notification.PermissionHelper.setNotificationPermission(java.lang.String, int, boolean, boolean)
 
         // global hook
-        operator("miui.util.NotificationFilterHelper") {
+        context.reflect("miui.util.NotificationFilterHelper") {
             // modifier: public static | signature: isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z
             method("isNotificationForcedFor")?.hookResult(false)
         }
 
-        when (packageName) {
-            "android" -> hookAndroid()
-            "com.miui.notification" -> hookNotification()
-            "com.android.settings" -> hookSettings()
-            "com.android.systemui" -> hookSystemUi()
+        when (context.packageName) {
+            "android" -> hookAndroid(context)
+            "com.miui.notification" -> hookNotification(context)
+            "com.android.settings" -> hookSettings(context)
+            "com.android.systemui" -> hookSystemUi(context)
         }
     }
 
-    private fun hookAndroid() {
-        val permInfoField = operator("com.android.server.pm.permission.Permission") {
+    private fun hookAndroid(context: HookContext) {
+        val permInfoField = context.reflect("com.android.server.pm.permission.Permission") {
             // name: mPermissionInfo | type: android.content.pm.PermissionInfo
             field("mPermissionInfo")
         } ?: return
 
-        operator("com.android.server.notification.PermissionHelper") {
+        context.reflect("com.android.server.notification.PermissionHelper") {
             // modifier: private | signature: packageRequestsNotificationPermission(Ljava/lang/String;I)Z
             method("packageRequestsNotificationPermission")?.hookResult(true)
         }
 
-        operator("com.android.server.pm.permission.PermissionState") {
+        context.reflect("com.android.server.pm.permission.PermissionState") {
             // name: mPermission | type: com.android.server.pm.permission.Permission
-            val permField = field("mPermission") ?: return@operator
+            val permField = field("mPermission") ?: return@reflect
             // modifier: public | signature: getFlags()I
             method("getFlags")?.replaceResult {
                 val permission = permField.get<Any>(it.instance) ?: return@replaceResult Unit
@@ -81,15 +82,15 @@ object DisableForceNotification : FeatureHooker {
         }
     }
 
-    private fun hookNotification() {
-        operator("miui.notification.management.model.AppItem") {
+    private fun hookNotification(context: HookContext) {
+        context.reflect("miui.notification.management.model.AppItem") {
             // modifier: public | signature: isSystemApp()Z
             method("isSystemApp")?.hookResult(false)
         }
     }
 
-    private fun hookSettings() {
-        operator("com.android.settings.notification.BaseNotificationSettings") {
+    private fun hookSettings(context: HookContext) {
+        context.reflect("com.android.settings.notification.BaseNotificationSettings") {
             // modifier: public | signature: onCreate(Landroid/os/Bundle;)V
             method("onCreate")?.hookAfter {
                 // name: mHasNotifPermission | type: boolean
@@ -97,7 +98,7 @@ object DisableForceNotification : FeatureHooker {
             }
         }
 
-        operator("com.android.settings.notification.MiuiNotificationBackend") {
+        context.reflect("com.android.settings.notification.MiuiNotificationBackend") {
             // 此方法会加载基本数据
             // modifier: public | signature: loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/ApplicationInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;
             val loadMethod = method(
@@ -105,7 +106,7 @@ object DisableForceNotification : FeatureHooker {
                 Context::class.java,
                 PackageManager::class.java,
                 ApplicationInfo::class.java
-            ) ?: return@operator
+            ) ?: return@reflect
             // 此方法在前者的基础上额外加载了我们不希望它加载的数据(如是否为系统应用)
             // modifier: public | signature: loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/PackageInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;
             method(
@@ -125,13 +126,13 @@ object DisableForceNotification : FeatureHooker {
         }
     }
 
-    private fun hookSystemUi() {
-        operator("miui.util.NotificationFilterHelper") {
+    private fun hookSystemUi(context: HookContext) {
+        context.reflect("miui.util.NotificationFilterHelper") {
             // modifier: public static | signature: isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z
             method("isNotificationForcedFor")?.hookResult(false)
         }
 
-        operator("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow") {
+        context.reflect("com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow") {
             // modifier: public static | signature: canBlock(Landroid/content/Context;Lcom/android/systemui/statusbar/notification/ExpandedNotification;)Z
             method("canBlock")?.hookResult(true)
         }

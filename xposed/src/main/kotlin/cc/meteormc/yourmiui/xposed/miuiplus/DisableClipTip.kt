@@ -4,8 +4,9 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.MIUI_PLUS,
@@ -14,8 +15,8 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.xiaomi.mirror")
 object DisableClipTip : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.xiaomi.mirror.widget.ClipTipHelper") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.xiaomi.mirror.widget.ClipTipHelper") {
             // modifier: private static | signature: showToast(Ljava/lang/String;)V
             method("showToast")?.hookDoNothing()
         }

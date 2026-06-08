@@ -2,6 +2,7 @@
 
 package cc.meteormc.yourmiui.xposed
 
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.api.data.HookParam
 import cc.meteormc.yourmiui.api.util.ClassUtil
 import de.robv.android.xposed.XC_MethodHook
@@ -13,28 +14,35 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Method
+import kotlin.reflect.KClass
 
-fun <T : Any> operator(clazz: Class<T>): Reflect<T> {
-    return Reflect(clazz)
+val <T : Any> KClass<T>.reflect: Reflect<T>
+    get() = this.java.reflect
+
+fun <T : Any, R> KClass<T>.reflect(block: Reflect<T>.() -> R): R {
+    return reflect.run(block)
 }
 
-fun operator(className: String): Reflect<Any>? {
-    val clazz = ClassUtil.getClass(XposedEntry.INSTANCE.classLoader, className, false)
+val <T : Any> Class<T>.reflect: Reflect<T>
+    get() = Reflect(this)
+
+fun <T : Any, R> Class<T>.reflect(block: Reflect<T>.() -> R): R {
+    return reflect.run(block)
+}
+
+fun HookContext.reflect(className: String): Reflect<Any>? {
+    val clazz = ClassUtil.getClass(classLoader, className, false)
     return if (clazz != null) {
         @Suppress("UNCHECKED_CAST")
         Reflect(clazz as Class<Any>)
     } else {
-        XposedBridge.log("[YourMIUI] Class not found: $className!")
+        XposedBridge.log("[YourMIUI] Class not found: $this!")
         null
     }
 }
 
-fun <T : Any, R> operator(clazz: Class<T>, operator: Reflect<T>.() -> R): R {
-    return operator(clazz).run(operator)
-}
-
-fun <R> operator(className: String, operator: Reflect<Any>.() -> R): R? {
-    return operator(className)?.run(operator)
+fun <R> HookContext.reflect(className: String, block: Reflect<Any>.() -> R): R? {
+    return reflect(className)?.run(block)
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -172,41 +180,36 @@ class Reflect<T : Any>(val delegate: Class<T>) {
     }
 }
 
-fun <T : Member> T.hookResult(result: Any?): T {
-    XposedBridge.hookMethod(this, XC_MethodReplacement.returnConstant(result))
-    return this
+fun Member.hookResult(result: Any?): XC_MethodHook.Unhook {
+    return XposedBridge.hookMethod(this, XC_MethodReplacement.returnConstant(result))
 }
 
-fun <T : Member> T.hookDoNothing(): T {
-    XposedBridge.hookMethod(this, XC_MethodReplacement.DO_NOTHING)
-    return this
+fun Member.hookDoNothing(): XC_MethodHook.Unhook {
+    return XposedBridge.hookMethod(this, XC_MethodReplacement.DO_NOTHING)
 }
 
-fun <T : Member> T.hookDoNothing(condition: (param: HookParam) -> Boolean): T {
-    this.hookBefore {
+fun Member.hookDoNothing(condition: (param: HookParam) -> Boolean): XC_MethodHook.Unhook {
+    return this.hookBefore {
         if (condition(it)) it.result = null
     }
-    return this
 }
 
-fun <T : Member> T.overrideResult(block: (param: HookParam) -> Any?): T {
-    this.hookBefore {
+fun Member.overrideResult(block: (param: HookParam) -> Any?): XC_MethodHook.Unhook {
+    return this.hookBefore {
         val result = block(it)
         if (result != Unit) it.result = result
     }
-    return this
 }
 
-fun <T : Member> T.replaceResult(block: (param: HookParam) -> Any?): T {
-    this.hookAfter {
+fun Member.replaceResult(block: (param: HookParam) -> Any?): XC_MethodHook.Unhook {
+    return this.hookAfter {
         val result = block(it)
         if (result != Unit) it.result = result
     }
-    return this
 }
 
-fun <T : Member> T.hookBefore(callback: (param: HookParam) -> Unit): T {
-    XposedBridge.hookMethod(
+fun Member.hookBefore(callback: (param: HookParam) -> Unit): XC_MethodHook.Unhook {
+    return XposedBridge.hookMethod(
         this,
         object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
@@ -216,11 +219,10 @@ fun <T : Member> T.hookBefore(callback: (param: HookParam) -> Unit): T {
             }
         }
     )
-    return this
 }
 
-fun <T : Member> T.hookAfter(callback: (param: HookParam) -> Unit): T {
-    XposedBridge.hookMethod(
+fun Member.hookAfter(callback: (param: HookParam) -> Unit): XC_MethodHook.Unhook {
+    return XposedBridge.hookMethod(
         this,
         object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
@@ -230,7 +232,6 @@ fun <T : Member> T.hookAfter(callback: (param: HookParam) -> Unit): T {
             }
         }
     )
-    return this
 }
 
 private fun MethodHookParam.toInternal(): HookParam {

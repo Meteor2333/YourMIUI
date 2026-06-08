@@ -7,9 +7,9 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.api.annotation.SwitchOptionRegister
-import cc.meteormc.yourmiui.xposed.hookBefore
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.SETTINGS,
@@ -26,19 +26,21 @@ object RemoveNewVersionBadge : FeatureHooker {
     )
     private var modifyProperty = false
 
-    override fun hook(packageName: String) {
-        operator("com.android.settings.device.MiuiAboutPhoneUtils") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.android.settings.device.MiuiAboutPhoneUtils") {
             // modifier: public static | signature: getUpdateInfo(Landroid/content/Context;)Ljava/lang/String;
-            method("getUpdateInfo")?.hookBefore {
-                if (modifyProperty) {
-                    val context = it.argByGenerics<Context>() ?: return@hookBefore
+            method("getUpdateInfo")?.hookDoNothing {
+                val androidContext = it.argByGenerics<Context>()
+                if (modifyProperty && androidContext != null) {
                     Settings.Global.putString(
-                        context.contentResolver,
+                        androidContext.contentResolver,
                         PROPERTY_MIUI_NEW_VERSION,
                         null
                     )
                 }
-            }?.hookDoNothing()
+
+                true
+            }
         }
     }
 }

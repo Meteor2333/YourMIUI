@@ -4,9 +4,10 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
 import cc.meteormc.yourmiui.xposed.hookResult
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.DESKTOP,
@@ -15,16 +16,15 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.miui.home")
 object DisableTodayRecommend : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.miui.home.launcher.Folder") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.miui.home.launcher.Folder") {
             // modifier: public | signature: showRecommendAppsSwitch(ZZ)V
             method("showRecommendAppsSwitch")?.hookDoNothing()
         }
 
-        operator("com.miui.home.launcher.commercial.recommend.RecommendController") {
+        context.reflect("com.miui.home.launcher.commercial.recommend.RecommendController") {
             // modifier: public | signature: canRecommendScreenShow()Z
             method("canRecommendScreenShow")?.hookResult(false)
-
         }
     }
 }

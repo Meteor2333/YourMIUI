@@ -6,12 +6,13 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.get
 import cc.meteormc.yourmiui.xposed.hookAfter
 import cc.meteormc.yourmiui.xposed.hookBefore
 import cc.meteormc.yourmiui.xposed.hookResult
 import cc.meteormc.yourmiui.xposed.new
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -66,8 +67,8 @@ object RemoveAds : FeatureHooker {
         "com.xiaomi.market.common.component.componentbeans.RecommendCollectionComponent"
     )
 
-    override fun hook(packageName: String) {
-        operator("com.xiaomi.market.model.TabInfo") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.xiaomi.market.model.TabInfo") {
             val tabInfo = TabInfoWrapper()
             // modifier: public static | signature: fromJSON(Lorg/json/JSONArray;)Ljava/util/List;
             method("fromJSON", JSONArray::class.java)?.hookAfter {
@@ -78,7 +79,7 @@ object RemoveAds : FeatureHooker {
             }
         }
 
-        operator("com.xiaomi.market.ui.PagerTabsInfo") {
+        context.reflect("com.xiaomi.market.ui.PagerTabsInfo") {
             // modifier: public | signature: fromNativeTabs(Ljava/util/List;)Lcom/xiaomi/market/ui/PagerTabsInfo;
             method("fromNativeTabs")?.hookBefore {
                 it.argByGenerics<MutableList<Any>>()?.removeIf { tab ->
@@ -91,11 +92,11 @@ object RemoveAds : FeatureHooker {
             val tabInfo = TabInfoWrapper()
             val subTabInfo = TabInfoWrapper()
             val emptyTabInfo by lazy {
-                TabInfoWrapper().new()!!
+                TabInfoWrapper().new(context)!!
             }
             // modifier: public static | signature: fromTabInfo(Lcom/xiaomi/market/model/TabInfo;)Lcom/xiaomi/market/ui/PagerTabsInfo;
             method("fromTabInfo")?.hookBefore {
-                val tabInfoClass = operator(tabInfo.className)?.delegate ?: return@hookBefore
+                val tabInfoClass = context.reflect(tabInfo.className)?.delegate ?: return@hookBefore
                 val arg = it.argByClass(tabInfoClass) ?: return@hookBefore
                 tabInfo.from(arg)
 
@@ -112,7 +113,7 @@ object RemoveAds : FeatureHooker {
             }
         }
 
-        operator("com.xiaomi.market.business_ui.base.NativeFeedFragment") {
+        context.reflect("com.xiaomi.market.business_ui.base.NativeFeedFragment") {
             // modifier: protected | signature: parseResponseData(Lorg/json/JSONObject;Z)Ljava/util/List;
             method("parseResponseData")?.hookAfter {
                 it.result<MutableList<Any>>()?.removeIf { component ->
@@ -121,7 +122,7 @@ object RemoveAds : FeatureHooker {
             }
         }
 
-        operator("com.xiaomi.market.business_ui.main.MarketTabActivity") {
+        context.reflect("com.xiaomi.market.business_ui.main.MarketTabActivity") {
             setOf(
                 // modifier: private | signature: tryShowRecallReCommend()V
                 "tryShowRecallReCommend",
@@ -134,7 +135,7 @@ object RemoveAds : FeatureHooker {
             }
         }
 
-        operator("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
+        context.reflect("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3") {
             setOf(
                 // modifier: public final | signature: isBrowserMarketAdOff()Z
                 "isBrowserMarketAdOff",
@@ -167,10 +168,10 @@ object RemoveAds : FeatureHooker {
         }
 
         // 搜索页推荐广告
-        operator("com.xiaomi.market.business_ui.base.NativeViewModel") {
-            val keptComponentClass = operator(
+        context.reflect("com.xiaomi.market.business_ui.base.NativeViewModel") {
+            val keptComponentClass = context.reflect(
                 "com.xiaomi.market.common.component.componentbeans.SearchHistoryComponent"
-            )?.delegate ?: return@operator
+            )?.delegate ?: return@reflect
             // modifier: private final | signature: modifySearchSugData(Lcom/xiaomi/market/common/component/base/INativeFragmentContext;Ljava/util/List;)V
             method("modifySearchSugData")?.hookBefore {
                 val components = it.argByGenerics<MutableList<Any>>() ?: return@hookBefore
@@ -182,7 +183,7 @@ object RemoveAds : FeatureHooker {
         }
 
         // 软件页轮播广告
-        operator("com.xiaomi.market.common.webview.WebEvent") {
+        context.reflect("com.xiaomi.market.common.webview.WebEvent") {
             // modifier: public | signature: sendDataToCallback(Ljava/lang/String;Ljava/lang/String;)V
             method("sendDataToCallback")?.hookBefore {
                 val callback = it.stringArg(0) ?: return@hookBefore
@@ -209,25 +210,25 @@ object RemoveAds : FeatureHooker {
         }
 
         // 个人页横幅广告
-        operator("com.xiaomi.market.business_ui.main.mine.NativeMinePagerFragment") {
+        context.reflect("com.xiaomi.market.business_ui.main.mine.NativeMinePagerFragment") {
             // modifier: private final | signature: parseMenuData(Lorg/json/JSONArray;)Ljava/util/Map;
             method("parseMenuData")?.hookResult(emptyMap<Any, Any>())
         }
 
         // 下载队列页推荐广告
-        operator("com.xiaomi.market.ui.DownloadListFragment") {
+        context.reflect("com.xiaomi.market.ui.DownloadListFragment") {
             // modifier: private final | signature: parseRecommendGroupResult(Lorg/json/JSONObject;)Lcom/xiaomi/market/viewmodels/RecommendGroupResult;
             method("parseRecommendGroupResult")?.hookResult(null)
         }
 
         // 应用升级页推荐广告
-        operator("com.xiaomi.market.ui.UpdateListRvAdapter") {
+        context.reflect("com.xiaomi.market.ui.UpdateListRvAdapter") {
             // modifier: private final | signature: generateRecommendGroupItems(Ljava/util/ArrayList;I)Z
             method("generateRecommendGroupItems")?.hookResult(null)
         }
 
         // 应用详情页推荐广告
-        operator($$"com.xiaomi.market.business_ui.detail.DetailType$Companion") {
+        context.reflect($$"com.xiaomi.market.business_ui.detail.DetailType$Companion") {
             // modifier: public final | signature: getDetailType(Landroid/content/Intent;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/xiaomi/market/business_ui/detail/DetailType;
             method(
                 "getDetailType",
@@ -235,7 +236,7 @@ object RemoveAds : FeatureHooker {
                 Boolean::class.javaPrimitiveType!!,
                 Boolean::class.javaPrimitiveType!!
             )?.hookResult(
-                operator("com.xiaomi.market.business_ui.detail.DetailType") {
+                context.reflect("com.xiaomi.market.business_ui.detail.DetailType") {
                     // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
                     field("UNKNOWN")?.get(null)
                 }
@@ -250,9 +251,9 @@ object RemoveAds : FeatureHooker {
             wrapped = instance
         }
 
-        fun new() = operator(className) outer@{
+        fun new(context: HookContext) = context.reflect(className) outer@{
             val newInstance = constructor()!!.new()
-            operator(this@Wrapper.javaClass) {
+            this@Wrapper.javaClass.reflect {
                 declaredFields().map {
                     this@outer.field(it.name) to it.get<Any>(this@Wrapper)
                 }.forEach { (field, value) ->
@@ -263,11 +264,11 @@ object RemoveAds : FeatureHooker {
             }
         }
 
-        protected fun <T : Any> getField(name: String) = operator(wrapped.javaClass) {
+        protected fun <T : Any> getField(name: String) = wrapped.javaClass.reflect {
             field(name)?.get<T>(wrapped)
         }
 
-        protected fun <T : Any> updateField(name: String, value: T?) = operator(wrapped.javaClass) {
+        protected fun <T : Any> updateField(name: String, value: T?) =wrapped.javaClass.reflect {
             field(name)?.set(wrapped, value)
             Unit
         }

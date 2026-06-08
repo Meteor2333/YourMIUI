@@ -19,11 +19,12 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
 import cc.meteormc.yourmiui.api.annotation.SwitchOptionRegister
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.call
 import cc.meteormc.yourmiui.xposed.get
 import cc.meteormc.yourmiui.xposed.hookAfter
 import cc.meteormc.yourmiui.xposed.hookBefore
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 import kotlinx.coroutines.channels.Channel
 import kotlin.math.sqrt
 
@@ -54,8 +55,8 @@ object FixSplashScreen : FeatureHooker {
         val background: Int
     )
 
-    override fun hook(packageName: String) {
-        val swiClass = operator("android.window.StartingWindowInfo") ?: return
+    override fun hook(context: HookContext) {
+        val swiClass = context.reflect("android.window.StartingWindowInfo") ?: return
         // name: targetActivityInfo | type: android.content.pm.ActivityInfo
         val targetActivityInfoField = swiClass.field("targetActivityInfo") ?: return
         // name: taskInfo | type: android.app.ActivityManager$RunningTaskInfo
@@ -63,11 +64,11 @@ object FixSplashScreen : FeatureHooker {
         // name: mlaunchPackageName | type: java.lang.String
         val launchPackageNameField = swiClass.field("mlaunchPackageName") ?: return
 
-        val rtiClass = operator($$"android.app.ActivityManager$RunningTaskInfo") ?: return
+        val rtiClass = context.reflect($$"android.app.ActivityManager$RunningTaskInfo") ?: return
         // name: topActivityInfo | type: android.content.pm.ActivityInfo
         val topActivityInfoField = rtiClass.field("topActivityInfo") ?: return
 
-        val sswaClass = operator($$"com.android.wm.shell.startingsurface.SplashscreenContentDrawer$SplashScreenWindowAttrs") ?: return
+        val sswaClass = context.reflect($$"com.android.wm.shell.startingsurface.SplashscreenContentDrawer$SplashScreenWindowAttrs") ?: return
         // name: mIconBgColor | type: int
         val iconBgColorField = sswaClass.field("mIconBgColor") ?: return
         // name: mSplashScreenIcon | type: android.graphics.drawable.Drawable
@@ -105,13 +106,13 @@ object FixSplashScreen : FeatureHooker {
             return info
         }
 
-        operator("com.android.wm.shell.startingsurface.SplashscreenContentDrawer") {
+        context.reflect("com.android.wm.shell.startingsurface.SplashscreenContentDrawer") {
             // name: mIconSize | type: int
-            val iconSizeField = field("mIconSize") ?: return@operator
+            val iconSizeField = field("mIconSize") ?: return@reflect
             // name: mDefaultIconSize | type: int
-            val iconDefaultSizeField = field("mDefaultIconSize") ?: return@operator
+            val iconDefaultSizeField = field("mDefaultIconSize") ?: return@reflect
             // modifier: public final | signature: updateDensity()V
-            val updateDensityMethod = method("updateDensity") ?: return@operator
+            val updateDensityMethod = method("updateDensity") ?: return@reflect
             // modifier: public final | signature: makeSplashScreenContentView(Landroid/content/Context;Landroid/window/StartingWindowInfo;ILjava/util/function/Consumer;)Landroid/window/SplashScreenView;
             method("makeSplashScreenContentView")?.hookBefore {
                 val swi = it.argByClass(swiClass.delegate) ?: return@hookBefore

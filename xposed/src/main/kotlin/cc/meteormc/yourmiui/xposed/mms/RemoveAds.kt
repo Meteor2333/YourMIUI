@@ -4,9 +4,10 @@ import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.hookDoNothing
 import cc.meteormc.yourmiui.xposed.hookResult
-import cc.meteormc.yourmiui.xposed.operator
+import cc.meteormc.yourmiui.xposed.reflect
 
 @FeatureRegister(
     Category.MMS,
@@ -15,13 +16,13 @@ import cc.meteormc.yourmiui.xposed.operator
 )
 @RequiredScope("com.android.mms")
 object RemoveAds : FeatureHooker {
-    override fun hook(packageName: String) {
-        operator("com.miui.smsextra.ui.UnderstandButton") {
+    override fun hook(context: HookContext) {
+        context.reflect("com.miui.smsextra.ui.UnderstandButton") {
             // modifier: private | signature: needRequestAD(Ljava/lang/Object;Lcom/miui/smsextra/sdk/ItemExtra;Lcom/miui/smsextra/ui/UnderstandButton$ADCallback;)Z
             method("needRequestAD")?.hookResult(false)
         }
 
-        operator("com.miui.smsextra.ui.BottomMenu") {
+        context.reflect("com.miui.smsextra.ui.BottomMenu") {
             // modifier: public | signature: requestMenu(Lcom/miui/smsextra/ui/BottomMenuOnLoadDataTaskCallBack;)V
             method("requestMenu")?.hookDoNothing()
 

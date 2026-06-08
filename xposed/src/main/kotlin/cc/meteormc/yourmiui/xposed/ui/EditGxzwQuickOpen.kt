@@ -9,12 +9,14 @@ import cc.meteormc.yourmiui.api.FeatureHooker
 import cc.meteormc.yourmiui.api.annotation.FeatureRegister
 import cc.meteormc.yourmiui.api.annotation.ListOptionRegister
 import cc.meteormc.yourmiui.api.annotation.RequiredScope
+import cc.meteormc.yourmiui.api.data.HookContext
 import cc.meteormc.yourmiui.xposed.call
 import cc.meteormc.yourmiui.xposed.get
 import cc.meteormc.yourmiui.xposed.hookDoNothing
 import cc.meteormc.yourmiui.xposed.new
-import cc.meteormc.yourmiui.xposed.operator
 import cc.meteormc.yourmiui.xposed.overrideResult
+import cc.meteormc.yourmiui.xposed.reflect
+import java.lang.reflect.Constructor
 
 @FeatureRegister(
     Category.UI,
@@ -61,10 +63,10 @@ object EditGxzwQuickOpen : FeatureHooker {
     private const val EXTRA_ITEM_CLASS = "com.android.keyguard.fod.item.AddEventItem"
     private const val EXTRA_ITEM_IDENTIFIER = "cc.meteormc.yourmiui.xposed.EditGxzwQuickOpen#ExtraQuickOpenItem"
 
-    override fun hook(packageName: String) {
-        QuickOpenItem.entries.forEach { it.extra?.init() }
+    override fun hook(context: HookContext) {
+        QuickOpenItem.entries.forEach { it.extra?.init(context) }
 
-        operator("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {
+        context.reflect("com.android.keyguard.fod.MiuiGxzwQuickOpenUtil") {
             // modifier: public static | signature: getValidItemIdList(Landroid/content/Context;)Ljava/util/List<Ljava/lang/Integer;>;
             method("getValidItemIdList")?.overrideResult {
                 reservedItems.mapNotNull { item ->
@@ -78,11 +80,11 @@ object EditGxzwQuickOpen : FeatureHooker {
                 val item = QuickOpenItem.entries.firstOrNull { entry -> entry.id == id } ?: return@overrideResult Unit
                 val rectF = it.argByGenerics<RectF>()
                 val region = it.argByGenerics<Region>()
-                val context = it.argByGenerics<Context>()
+                val androidContext = it.argByGenerics<Context>()
                 if (item.extra != null) {
-                    item.extra.newInstance(it.argByGenerics<Context>(), rectF, region, context)
+                    item.extra.newInstance(androidContext, context, rectF, region, androidContext)
                 } else {
-                    item.constructor?.new(rectF, region, context)
+                    item.getConstructor(context)?.new(rectF, region, androidContext)
                 }
             }
         }
@@ -91,7 +93,7 @@ object EditGxzwQuickOpen : FeatureHooker {
     private enum class QuickOpenItem(
         val id: Int,
         val key: String,
-        clazzName: String?,
+        val clazzName: String?,
         val extra: ExtraQuickOpenItem? = null
     ) {
         ADD_EVENT(6, "add_event", "AddEventItem"),
@@ -109,16 +111,16 @@ object EditGxzwQuickOpen : FeatureHooker {
             "打开手电筒",
             ""
         ) {
-            operator("com.miui.systemui.util.CommonUtil") {
+            it.reflect("com.miui.systemui.util.CommonUtil") {
                 // modifier: public static | signature: toggleTorch()Z
                 method("toggleTorch")?.call(null)
             }
             return@ExtraQuickOpenItem true
         });
 
-        val constructor by lazy {
-            if (clazzName == null) return@lazy null
-            operator("com.android.keyguard.fod.item.$clazzName") {
+        fun getConstructor(context: HookContext): Constructor<*>? {
+            return if (clazzName == null) null
+            else context.reflect("com.android.keyguard.fod.item.$clazzName") {
                 // modifier: public | signature: <init>(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;)V
                 constructor(RectF::class.java, Region::class.java, Context::class.java)
             }
@@ -131,25 +133,25 @@ object EditGxzwQuickOpen : FeatureHooker {
         val iconResName: String,
         val title: String,
         val subtitle: String,
-        val handler: () -> Boolean
+        val handler: (context: HookContext) -> Boolean
     ) {
         private fun identifierOf() = "$EXTRA_ITEM_IDENTIFIER$$identifier"
 
-        fun newInstance(context: Context?, vararg args: Any?): Any? {
+        fun newInstance(androidContext: Context?, context: HookContext, vararg args: Any?): Any? {
             // 利用AddEventItem来实现额外功能项
-            return operator(EXTRA_ITEM_CLASS) {
+            return context.reflect(EXTRA_ITEM_CLASS) {
                 // name: mView | type: android.widget.ImageView
-                val viewField = field("mView") ?: return@operator null
+                val viewField = field("mView") ?: return@reflect null
                 // name: mPackageName | type: java.lang.String
-                val identifierField = field("mPackageName") ?: return@operator null
+                val identifierField = field("mPackageName") ?: return@reflect null
                 // modifier: public | signature: <init>(Landroid/graphics/RectF;Landroid/graphics/Region;Landroid/content/Context;)V
                 val instance = constructor(
                     RectF::class.java,
                     Region::class.java,
                     Context::class.java
-                )?.new(*args) ?: return@operator null
-                if (context != null) {
-                    val identifier = context.resources.getIdentifier(
+                )?.new(*args) ?: return@reflect null
+                if (androidContext != null) {
+                    val identifier = androidContext.resources.getIdentifier(
                         iconResName,
                         "drawable",
                         "com.android.systemui"
@@ -158,12 +160,12 @@ object EditGxzwQuickOpen : FeatureHooker {
                     identifierField[instance] = identifierOf()
                 }
 
-                return@operator instance
+                return@reflect instance
             }
         }
 
-        fun init() {
-            val identifierField = operator(EXTRA_ITEM_CLASS) {
+        fun init(context: HookContext) {
+            val identifierField = context.reflect(EXTRA_ITEM_CLASS) {
                 // name: mPackageName | type: java.lang.String
                 field("mPackageName")
             } ?: return
@@ -173,7 +175,7 @@ object EditGxzwQuickOpen : FeatureHooker {
                 return identifierField.get<String>(this) == identifierOf()
             }
 
-            operator(EXTRA_ITEM_CLASS) {
+            context.reflect(EXTRA_ITEM_CLASS) {
                 // modifier: public | signature: getTag()Ljava/lang/String;
                 method("getTag")?.overrideResult {
                     if (!it.instance!!.isExtraClass()) Unit
@@ -193,11 +195,11 @@ object EditGxzwQuickOpen : FeatureHooker {
                 }
             }
 
-            operator("com.android.keyguard.fod.MiuiGxzwQuickOpenView") {
-                val itemClass = operator("com.android.keyguard.fod.item.IQuickOpenItem")?.delegate ?: return@operator
+            context.reflect("com.android.keyguard.fod.MiuiGxzwQuickOpenView") {
+                val itemClass = context.reflect("com.android.keyguard.fod.item.IQuickOpenItem")?.delegate ?: return@reflect
                 // modifier: public final | signature: handleQuickOpenItemTouchUp(Lcom/android/keyguard/fod/item/IQuickOpenItem;)V
                 (method("handleQucikOpenItemTouchUp") ?: method("handleQuickOpenItemTouchUp"))?.hookDoNothing {
-                    it.argByClass(itemClass)?.isExtraClass() == true && handler()
+                    it.argByClass(itemClass)?.isExtraClass() == true && handler(context)
                 }
             }
         }
