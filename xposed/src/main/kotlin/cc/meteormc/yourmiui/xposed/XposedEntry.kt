@@ -40,7 +40,7 @@ class XposedEntry : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         val classLoader = lpparam.classLoader
         val context = HookContext(
-            lpparam.appInfo.uid,
+            lpparam.appInfo?.uid ?: 0,
             lpparam.packageName,
             lpparam.processName,
             lpparam.classLoader
