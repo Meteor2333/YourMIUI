@@ -29,8 +29,8 @@ class Module(private val context: Context) : BroadcastReceiver() {
         channel: Channel<REQ, RES>,
         packageName: String,
         onResponse: ResponseCallback<RES>,
-        timeout: Long = 1000L,
-        body: REQ = Unit as REQ
+        body: REQ,
+        timeout: Long = 1000L
     ) {
         val id = UUID.randomUUID()
         pendings[id] = onResponse as ResponseCallback<Any>

@@ -138,7 +138,8 @@ class FeatureAdapter(
                                 if (successd) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
                             ).show()
                         }
-                    }
+                    },
+                    Unit
                 )
             }
 
