@@ -54,7 +54,7 @@ class Reflect<T : Any>(val delegate: Class<T>) {
     }
 
     fun constructor(vararg paramTypes: Class<*>): Constructor<T>? {
-        val fullName = "${delegate.getName()}(${getParametersString(*paramTypes)})"
+        val fullName = "${delegate.name}(${getParametersString(*paramTypes)})"
         if (constructorCache.containsKey(fullName)) {
             return constructorCache[fullName] as? Constructor<T>
         }
@@ -77,7 +77,7 @@ class Reflect<T : Any>(val delegate: Class<T>) {
     }
 
     fun field(name: String): Field? {
-        val fullName = "${delegate.getName()}#$name"
+        val fullName = "${delegate.name}#$name"
         if (fieldCache.containsKey(fullName)) {
             return fieldCache[fullName]
         }
@@ -115,7 +115,7 @@ class Reflect<T : Any>(val delegate: Class<T>) {
     }
 
     fun method(name: String, vararg paramTypes: Class<*>): Method? {
-        val fullName = "${delegate.getName()}#$name(${getParametersString(*paramTypes)})"
+        val fullName = "${delegate.name}#$name(${getParametersString(*paramTypes)})"
         if (methodCache.containsKey(fullName)) {
             return methodCache[fullName]
         }
@@ -127,7 +127,7 @@ class Reflect<T : Any>(val delegate: Class<T>) {
             }.getOrNull()?.let { dm ->
                 return@findRecursive dm
             }
-            for (method in it.getDeclaredMethods()) {
+            for (method in it.declaredMethods) {
                 // compare name and parameters
                 if (method.name == name && (result == null || ClassUtil.compareParameterTypes(
                         method.parameterTypes,

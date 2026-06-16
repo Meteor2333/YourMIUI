@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="AppBundleLocaleChanges" severity="ignore" />
     <issue id="ClickableViewAccessibility" severity="ignore" />
+    <issue id="DiscouragedApi" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="RestrictedApi" severity="ignore" />

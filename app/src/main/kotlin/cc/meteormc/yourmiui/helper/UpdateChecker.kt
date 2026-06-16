@@ -40,8 +40,8 @@ object UpdateChecker {
         withContext(Dispatchers.IO) {
             runCatching {
                 URL(CHECK_URL).openConnection().apply {
-                    setConnectTimeout(10000)
-                    setReadTimeout(10000)
+                    connectTimeout = 10000
+                    readTimeout = 10000
                     setRequestProperty("Accept", "application/vnd.github.v3+json")
                 }.getInputStream().use {
                     val json = JSONObject(it.bufferedReader().use { reader -> reader.readText() })
