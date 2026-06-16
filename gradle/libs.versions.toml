@@ -1,7 +1,7 @@
 [versions]
 agp = "9.2.1"
 appcompat = "1.7.1"
-core = "1.18.0"
+core = "1.19.0"
 kotlin = "2.4.0"
 kotlinpoetKsp = "2.3.0"
 ksp = "2.3.9"
