@@ -55,7 +55,7 @@ class SharedPreferences(val prefs: SharedPreferences) {
                     is Int -> putInt(format, value)
                     is Long -> putLong(format, value)
                     is Float -> putFloat(format, value)
-                    is Set<*> -> putStringSet(format, value.mapNotNull { it as? String }.toSet())
+                    is Set<*> -> putStringSet(format, value.filterIsInstance<String>().toSet())
                 }
             }
         }
