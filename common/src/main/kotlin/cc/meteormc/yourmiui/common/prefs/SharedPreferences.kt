@@ -1,10 +1,10 @@
 package cc.meteormc.yourmiui.common.prefs
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
 import cc.meteormc.yourmiui.api.Category
 import cc.meteormc.yourmiui.api.OptionType
 import cc.meteormc.yourmiui.api.data.FeatureInfo
+import java.util.concurrent.Executors
 
 class SharedPreferences(val prefs: SharedPreferences) {
     companion object {
@@ -15,6 +15,13 @@ class SharedPreferences(val prefs: SharedPreferences) {
 
     inner class Feature internal constructor(category: Category, featureKey: String) {
         val featureKey = "feature_${category.name.lowercase()}_$featureKey"
+
+        private val executor = Executors.newSingleThreadExecutor()
+        private val persistListeners = mutableListOf<Feature.() -> Unit>()
+
+        fun addOnPersistedListener(listener: Feature.() -> Unit) {
+            persistListeners.add(listener)
+        }
 
         var enabled: Boolean
             get() = prefs.getBoolean("${featureKey}_enabled", false)
@@ -58,6 +65,22 @@ class SharedPreferences(val prefs: SharedPreferences) {
                     is Set<*> -> putStringSet(format, value.filterIsInstance<String>().toSet())
                 }
             }
+        }
+
+        private fun SharedPreferences.edit(
+            commit: Boolean = false,
+            action: SharedPreferences.Editor.() -> Unit,
+        ) {
+            val editor = edit()
+            action(editor)
+
+            fun commit() {
+                if (editor.commit()) {
+                    persistListeners.forEach { it() }
+                }
+            }
+            if (commit) commit()
+            else executor.execute { commit() }
         }
     }
 }

@@ -56,6 +56,10 @@ class XposedEntry : IXposedHookLoadPackage {
                     Thread.sleep(300)
                     Process.killProcess(Process.myPid())
                 }.start()
+            }.register(Bridge.NOTIFY_FEATURE_CHANGED_CHANNEL) {
+                val feature = features.firstOrNull { feature -> feature.key == it } ?: return@register
+                (prefs.prefs as? XSharedPreferences)?.reload()
+                syncFeature(context, feature)
             }.attach()
 
             ClassUtil.getClass(classLoader, Bridge::class.java.name, true)?.reflect {

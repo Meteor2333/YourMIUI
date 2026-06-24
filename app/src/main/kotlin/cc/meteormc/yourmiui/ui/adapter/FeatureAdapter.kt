@@ -64,6 +64,19 @@ class FeatureAdapter(
             }
 
             this.prefs = YourMIUI.get().prefs.getFeature(item)
+            prefs.addOnPersistedListener {
+                item.scopes.forEach {
+                    YourMIUI.get().moduleBridge.request(
+                        Bridge.NOTIFY_FEATURE_CHANGED_CHANNEL,
+                        it,
+                        object : ResponseCallback<Unit> {
+                            override fun onSuccess(data: Unit) { }
+                            override fun onFailure() { }
+                        },
+                        item.key
+                    )
+                }
+            }
 
             val list = binding.optionList
             val switch = binding.featureSwitch

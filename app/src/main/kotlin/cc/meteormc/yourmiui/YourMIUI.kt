@@ -45,7 +45,7 @@ class YourMIUI : Application() {
         super.onCreate()
         checkSystem()
         SettingsPreferences.init(this)
-        initModuleBridge()
+        moduleBridge.attach()
     }
 
     private fun checkSystem() {
@@ -77,9 +77,5 @@ class YourMIUI : Application() {
                 override fun onActivityStopped(activity: Activity) { }
             }
         )
-    }
-
-    private fun initModuleBridge() {
-        moduleBridge.attach()
     }
 }
