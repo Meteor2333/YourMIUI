@@ -4,22 +4,8 @@ plugins {
     alias(libs.plugins.agp.application)
 }
 
-val minSdkVersion: Int by rootProject.extra
-val targetSdkVersion: Int by rootProject.extra
-val appVersionCode: Int by rootProject.extra
-val appVersionName: String by rootProject.extra
-val projectNamespace: String by rootProject.extra
-
 android {
-    namespace = projectNamespace
-
-    defaultConfig {
-        applicationId = projectNamespace
-        minSdk = minSdkVersion
-        targetSdk = targetSdkVersion
-        versionCode = appVersionCode
-        versionName = appVersionName
-    }
+    namespace = "cc.meteormc.yourmiui"
 
     val keystoreProp = Properties()
     val keystorePropFile = rootProject.file("keystore.properties")

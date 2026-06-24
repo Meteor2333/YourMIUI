@@ -2,10 +2,8 @@ plugins {
     alias(libs.plugins.agp.library)
 }
 
-val projectNamespace: String by rootProject.extra
-
 android {
-    namespace = "$projectNamespace.common"
+    namespace = "cc.meteormc.yourmiui.common"
     androidResources.enable = false
 }
 

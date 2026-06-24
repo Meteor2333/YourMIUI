@@ -4,12 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
 }
 
-val minSdkVersion by extra(24)
-val targetSdkVersion by extra(37)
-val appVersionCode by extra(10)
-val appVersionName by extra("1.3.2")
+val minSdkVersion = 24
+val targetSdkVersion = 37
 
-val projectNamespace by extra("cc.meteormc.yourmiui")
+val projectAppId = "cc.meteormc.yourmiui"
+val projectVersionCode = 10
+val projectVersionName = "1.3.2"
 
 subprojects {
     plugins.withType<com.android.build.gradle.BasePlugin> {
@@ -21,6 +21,18 @@ subprojects {
             defaultConfig.minSdk = minSdkVersion
             compileOptions.sourceCompatibility = JavaVersion.VERSION_11
             compileOptions.targetCompatibility = JavaVersion.VERSION_11
+        }
+    }
+
+    plugins.withType<com.android.build.gradle.AppPlugin> {
+        extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
+            defaultConfig {
+                applicationId = projectAppId
+                minSdk = minSdkVersion
+                targetSdk = targetSdkVersion
+                versionCode = projectVersionCode
+                versionName = projectVersionName
+            }
         }
     }
 }
