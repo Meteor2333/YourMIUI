@@ -36,7 +36,7 @@ fun HookContext.reflect(className: String): Reflect<Any>? {
         @Suppress("UNCHECKED_CAST")
         Reflect(clazz as Class<Any>)
     } else {
-        XposedBridge.log("[YourMIUI] Class not found: $this!")
+        XposedBridge.log("[YourMIUI] Class not found: $className!")
         null
     }
 }
