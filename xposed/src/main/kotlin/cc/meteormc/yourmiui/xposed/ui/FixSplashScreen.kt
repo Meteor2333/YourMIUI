@@ -1,5 +1,6 @@
 package cc.meteormc.yourmiui.xposed.ui
 
+import android.app.TaskInfo
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -122,7 +123,7 @@ object FixSplashScreen : FeatureHooker {
                 iconSizeChannel.trySend(iconSizeField.get<Int>(it.instance))
                 iconDefaultSizeChannel.trySend(iconDefaultSizeField.get<Int>(it.instance))
                 activityInfoChannel.trySend(
-                    targetActivityInfoField.get<ActivityInfo>(swi) ?: topActivityInfoField.get<ActivityInfo>(taskInfoField[swi])
+                    targetActivityInfoField.get<ActivityInfo>(swi) ?: topActivityInfoField.get<ActivityInfo>(taskInfoField.get<TaskInfo>(swi))
                 )
             }
 

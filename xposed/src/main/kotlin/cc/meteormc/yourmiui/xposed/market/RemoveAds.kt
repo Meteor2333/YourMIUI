@@ -238,7 +238,7 @@ object RemoveAds : FeatureHooker {
             )?.hookResult(
                 context.reflect("com.xiaomi.market.business_ui.detail.DetailType") {
                     // name: UNKNOWN | type: com.xiaomi.market.business_ui.detail.DetailType
-                    field("UNKNOWN")?.get(null)
+                    field("UNKNOWN")?.get<Any>(null)
                 }
             )
         }
