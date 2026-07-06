@@ -75,6 +75,7 @@ class SearchBar @JvmOverloads constructor(
 
     fun showKeyboard() {
         editText.post {
+            @Suppress("DEPRECATION")
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         }
     }
