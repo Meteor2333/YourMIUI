@@ -65,7 +65,7 @@ dependencies {
     implementation(project(":common"))
     runtimeOnly(project(":xposed"))
 
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("com.google.android.material:material:1.14.0")
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.8")
